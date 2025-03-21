@@ -1,5 +1,5 @@
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import MainNavigator from './src/navigation/MainNavigator.tsx';
+import MainNavigator from './src/components/navigation/MainNavigator.tsx';
 
 export default function App() {
     return (

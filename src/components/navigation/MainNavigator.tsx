@@ -13,7 +13,8 @@ export default function MainNavigator() {
                 drawerContent={props => <CustomDrawer {...props} />}
                 screenOptions={{
                     headerShown: false,
-                    drawerType: 'slide',
+                    drawerType: 'front',
+                    drawerPosition: 'right',
                 }}>
                 <Drawer.Screen name="Home" component={HomeScreen} />
                 {/*<Drawer.Screen name="Profile" component={ProfileScreen} />*/}
