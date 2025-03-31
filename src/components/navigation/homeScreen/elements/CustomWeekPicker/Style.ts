@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {colors} from '../../../../../constants/colors.ts';
+import {colors, fonts} from '../../../../../constants/theme.ts';
 
 export const styles = StyleSheet.create({
     container: {
@@ -12,18 +12,18 @@ export const styles = StyleSheet.create({
     },
     dayContainer: {
         padding: 10,
-        borderRadius: 20,
-        backgroundColor: '#333',
+        borderRadius: 30,
         minWidth: 50,
         alignItems: 'center',
+        // elevation: 5,
     },
     selectedDay: {
-        borderWidth: 2,
-        borderColor: 'red',
+        borderWidth: 4,
+        borderColor: `${colors.lightRed}`,
     },
     dateText: {
         fontSize: 18,
-        fontWeight: 'bold',
+        fontFamily: `${fonts.bold}`,
         color: `${colors.lightGrey}`,
     },
     dayText: {
