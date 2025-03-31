@@ -4,6 +4,7 @@ import {useTranslation} from 'react-i18next';
 import {addDays, format, isToday, startOfWeek} from 'date-fns';
 import {enUS, pl} from 'date-fns/locale';
 import {styles} from './Style';
+import {ShadowedView} from 'react-native-fast-shadow';
 
 export default function CustomWeekPicker() {
     const {t, i18n} = useTranslation();
@@ -49,7 +50,7 @@ export default function CustomWeekPicker() {
                         <TouchableOpacity
                             onPress={() => setSelectedDay(item)}
                             style={styles.button}>
-                            <View
+                            <ShadowedView
                                 style={[
                                     styles.dayContainer,
                                     isSelected && styles.selectedDay,
@@ -58,7 +59,7 @@ export default function CustomWeekPicker() {
                                     {item.dateString}
                                 </Text>
                                 <Text style={styles.dayText}>{item.day}</Text>
-                            </View>
+                            </ShadowedView>
                         </TouchableOpacity>
                     );
                 }}

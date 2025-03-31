@@ -15,7 +15,15 @@ export const styles = StyleSheet.create({
         borderRadius: 30,
         minWidth: 50,
         alignItems: 'center',
-        // elevation: 5,
+        backgroundColor: '#333',
+        borderWidth: 4,
+        borderColor: 'transparent',
+        shadowOpacity: 0.4,
+        shadowRadius: 12,
+        shadowOffset: {
+            width: 5,
+            height: 3,
+        },
     },
     selectedDay: {
         borderWidth: 4,
