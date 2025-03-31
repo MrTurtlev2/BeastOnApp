@@ -10,7 +10,6 @@ export default function CustomDrawer(props: any) {
         <DrawerContentScrollView
             {...props}
             contentContainerStyle={styles.container}>
-            {/* Nagłówek */}
             <View style={styles.header}>
                 <Image
                     source={{uri: 'https://via.placeholder.com/80'}}
@@ -18,11 +17,7 @@ export default function CustomDrawer(props: any) {
                 />
                 <Text style={styles.username}>Jan Kowalski</Text>
             </View>
-
-            {/* Lista opcji */}
             <DrawerItemList {...props} />
-
-            {/* Logout */}
             <TouchableOpacity style={styles.logoutButton}>
                 <Text style={styles.logoutText}>Wyloguj</Text>
             </TouchableOpacity>
