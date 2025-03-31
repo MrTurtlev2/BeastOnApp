@@ -15,6 +15,14 @@ export default function MainNavigator() {
                     headerShown: false,
                     drawerType: 'front',
                     drawerPosition: 'right',
+                    overlayColor: 'transparent',
+                    drawerStyle: {
+                        flex: 1,
+                        // width: '90%',
+                        width: 350,
+                        paddingRight: 20,
+                        backgroundColor: 'transparent',
+                    },
                 }}>
                 <Drawer.Screen name="Home" component={HomeScreen} />
                 {/*<Drawer.Screen name="Profile" component={ProfileScreen} />*/}
