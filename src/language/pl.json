@@ -1,0 +1,10 @@
+{
+  "test": "Test po polsku",
+  "mondayShort": "pon",
+  "tuesdayShort": "wt",
+  "wednesdayShort": "śr",
+  "thursdayShort": "czw",
+  "fridayShort": "pt",
+  "saturdayShort": "sob",
+  "sundayShort": "nd"
+}

@@ -1,8 +1,10 @@
 import React from 'react';
 import {Button, Text, View} from 'react-native';
-import Layout from '../common/layout/Layout.tsx';
+import Layout from '../../common/layout/Layout.tsx';
+import {useTranslation} from 'react-i18next';
 
 export default function HomeScreen({navigation}: any) {
+    const {t} = useTranslation();
     return (
         <Layout>
             <View
@@ -11,7 +13,7 @@ export default function HomeScreen({navigation}: any) {
                     justifyContent: 'center',
                     alignItems: 'center',
                 }}>
-                <Text>Strona Główna</Text>
+                <Text>{t('test')}</Text>
                 <Button
                     title="Otwórz menu"
                     onPress={() => navigation.openDrawer()}
