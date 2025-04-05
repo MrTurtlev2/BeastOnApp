@@ -7,18 +7,21 @@ import {style} from './Style.ts';
 
 type LayoutProps = {
     children?: React.ReactNode;
+    hasBurger?: boolean;
 };
 
-export default function Layout({children}: LayoutProps) {
+export default function Layout({children, hasBurger = true}: LayoutProps) {
     const navigation = useNavigation<DrawerNavigationProp<any>>();
 
     return (
         <View style={style.main}>
-            <TouchableOpacity
-                onPress={() => navigation.openDrawer()}
-                style={style.burgerBtn}>
-                <BurgerSvg />
-            </TouchableOpacity>
+            {hasBurger && (
+                <TouchableOpacity
+                    onPress={() => navigation.openDrawer()}
+                    style={style.burgerBtn}>
+                    <BurgerSvg />
+                </TouchableOpacity>
+            )}
             {children}
         </View>
     );

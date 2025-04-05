@@ -25,8 +25,6 @@ export default function MainNavigator() {
                     },
                 }}>
                 <Drawer.Screen name="Home" component={HomeScreen} />
-                {/*<Drawer.Screen name="Profile" component={ProfileScreen} />*/}
-                {/*<Drawer.Screen name="Settings" component={SettingsScreen} />*/}
             </Drawer.Navigator>
         </NavigationContainer>
     );
