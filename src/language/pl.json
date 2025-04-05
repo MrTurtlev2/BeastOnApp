@@ -6,5 +6,7 @@
   "thursdayShort": "czw",
   "fridayShort": "pt",
   "saturdayShort": "sob",
-  "sundayShort": "nd"
+  "sundayShort": "nd",
+  "email": "E-mail",
+  "password": "Hasło"
 }

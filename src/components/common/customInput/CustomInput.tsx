@@ -1,6 +1,7 @@
 import {KeyboardTypeOptions, TextInput, View} from 'react-native';
 import {styles} from './Style.ts';
 import {colors} from '../../../constants/theme.ts';
+import React from 'react';
 
 interface CustomInput {
     onChangeText: (value: string) => void;

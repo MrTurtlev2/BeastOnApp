@@ -3,7 +3,7 @@ import {Button, Text, View} from 'react-native';
 import Layout from '../../common/layout/Layout.tsx';
 import {useTranslation} from 'react-i18next';
 import CustomWeekPicker from './elements/CustomWeekPicker/CustomWeekPicker.tsx';
-import {handleLogin} from '../../../api/Auth.ts';
+import {handleLoginAsync} from '../../../api/Auth.ts';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../../../store';
 import {setUser} from '../../../store/userSlice.ts';
@@ -30,7 +30,7 @@ export default function HomeScreen({navigation}: any) {
                     title="Otwórz menu"
                     // onPress={() => navigation.openDrawer()}
                     onPress={() =>
-                        handleLogin().then(res => dispatch(setUser(res)))
+                        handleLoginAsync().then(res => dispatch(setUser(res)))
                     }
                 />
             </View>

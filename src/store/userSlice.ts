@@ -9,11 +9,11 @@ interface User {
 }
 
 interface UserState {
-    user: User | null;
+    userData: User | null;
 }
 
 const initialState: UserState = {
-    user: null,
+    userData: null,
 };
 
 const userSlice = createSlice({
@@ -22,10 +22,10 @@ const userSlice = createSlice({
     reducers: {
         setUser(state, action: PayloadAction<User>) {
             console.log(action.payload);
-            state.user = action.payload;
+            state.userData = action.payload;
         },
         clearUser(state) {
-            state.user = null;
+            state.userData = null;
         },
     },
 });

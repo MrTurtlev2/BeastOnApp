@@ -1,21 +1,19 @@
 import axios from 'axios';
 import {baseAppUrl} from './config.ts';
+import * as Keychain from 'react-native-keychain';
 
-export const handleLogin = async () => {
-    console.log('wchodze ');
+export const handleLoginAsync = async () => {
     try {
-        axios
-            .post(`${baseAppUrl}/api/auth/login`, {
-                customerName: 'Wera',
-                password: 'MarekMarek',
-            })
-            .then(({data}) => {
-                console.log(data);
-                return data;
-            })
-            .catch(err => {
-                console.log(err);
+        const response = await axios.post(`${baseAppUrl}/api/auth/login`, {
+            customerName: 'Wera',
+            password: 'MarekMarek',
+        });
+        if (response?.data) {
+            await Keychain.setGenericPassword('user', response.data.token, {
+                service: 'userToken',
             });
+            return response.data;
+        }
     } catch (err) {
         console.log(err);
     }
