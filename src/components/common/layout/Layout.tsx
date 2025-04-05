@@ -1,4 +1,4 @@
-import {Image, TouchableOpacity, View} from 'react-native';
+import {Image, StyleProp, TouchableOpacity, View} from 'react-native';
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
@@ -9,9 +9,10 @@ type LayoutProps = {
     children?: React.ReactNode;
     hasBurger?: boolean;
     bgImageType?: 'left-top' | 'right-center' | 'none';
+    customStyle: StyleProp<any>;
 };
 
-export default function Layout({children, hasBurger = true, bgImageType = 'left-top'}: LayoutProps) {
+export default function Layout({children, hasBurger = true, bgImageType = 'left-top', customStyle}: LayoutProps) {
     const navigation = useNavigation<DrawerNavigationProp<any>>();
 
     const handleBgImage = () => {
@@ -28,7 +29,7 @@ export default function Layout({children, hasBurger = true, bgImageType = 'left-
     };
 
     return (
-        <View style={style.main}>
+        <View style={[style.main, customStyle]}>
             {handleBgImage()}
             {hasBurger && (
                 <TouchableOpacity onPress={() => navigation.openDrawer()} style={style.burgerBtn}>

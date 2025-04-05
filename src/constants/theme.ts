@@ -10,4 +10,5 @@ export const fonts = {
     light: 'Lato-Light',
     regular: 'Lato-Regular',
     bold: 'Lato-Bold',
+    Marker: 'PermanentMarker-Regular',
 };

@@ -10,6 +10,7 @@ export const style = StyleSheet.create({
     main: {
         flex: 1,
         backgroundColor: colors.bgGrey,
+        alignItems: 'center',
     },
     bgImageLeftTop: {
         ...bgImageBase,

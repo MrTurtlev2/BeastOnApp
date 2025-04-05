@@ -7,6 +7,7 @@ import {useSelector} from 'react-redux';
 import {RootState} from '../../store';
 import LoginScreen from './loginScreen/LoginScreen.tsx';
 import {createStackNavigator} from '@react-navigation/stack';
+import ErrorScreen from './errorScreen/ErrorScreen.tsx';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -14,6 +15,7 @@ const Stack = createStackNavigator();
 const AuthNavigator = () => {
     return (
         <Stack.Navigator screenOptions={{headerShown: false}}>
+            <Stack.Screen name="ErrorScreen" component={ErrorScreen} />
             <Stack.Screen name="Login" component={LoginScreen} />
         </Stack.Navigator>
     );
@@ -42,13 +44,7 @@ const MainNavigator = () => {
 };
 
 export default function AppNavigator() {
-    const isUserLoggedIn = useSelector(
-        (state: RootState) => state.user.isLoggedIn,
-    );
+    const isUserLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
 
-    return (
-        <NavigationContainer>
-            {isUserLoggedIn ? <MainNavigator /> : <AuthNavigator />}
-        </NavigationContainer>
-    );
+    return <NavigationContainer>{isUserLoggedIn ? <MainNavigator /> : <AuthNavigator />}</NavigationContainer>;
 }

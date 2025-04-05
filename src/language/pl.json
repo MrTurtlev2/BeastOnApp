@@ -8,5 +8,6 @@
   "saturdayShort": "sob",
   "sundayShort": "nd",
   "email": "E-mail",
-  "password": "Hasło"
+  "password": "Hasło",
+  "baseErrorText": "Błąd? \nTo tylko chwilowa zadyszka.\nZłap oddech i \nspróbuj jeszcze raz.\n\nJeśli problem nie znika daj nam\nznać!"
 }
