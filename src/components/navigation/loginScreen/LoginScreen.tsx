@@ -43,7 +43,7 @@ export default function LoginScreen() {
     // };
 
     return (
-        <Layout hasBurger={false}>
+        <Layout hasBurger={false} bgImageType={'right-center'}>
             <View
                 style={{
                     flex: 1,
@@ -51,18 +51,10 @@ export default function LoginScreen() {
                     alignItems: 'center',
                 }}>
                 <Text>{t('test')}</Text>
-                <CustomInput
-                    value={userLogin}
-                    onChangeText={setUserLogin}
-                    placeholder={i18n.t('email')}
-                />
-                <CustomInput
-                    value={userPassword}
-                    onChangeText={setUserPassword}
-                    placeholder={i18n.t('password')}
-                />
+                <CustomInput value={userLogin} onChangeText={setUserLogin} placeholder={i18n.t('email')} />
+                <CustomInput value={userPassword} onChangeText={setUserPassword} placeholder={i18n.t('password')} />
                 <PowerButton onPress={onLogin} />
-                <PowerButton onPress={() => onLogout()} />
+                {/*<PowerButton onPress={() => onLogout()} />*/}
             </View>
         </Layout>
     );
