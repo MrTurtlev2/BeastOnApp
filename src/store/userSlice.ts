@@ -10,10 +10,12 @@ interface User {
 
 interface UserState {
     userData: User | null;
+    isLoggedIn: boolean;
 }
 
 const initialState: UserState = {
     userData: null,
+    isLoggedIn: false,
 };
 
 const userSlice = createSlice({
@@ -21,11 +23,12 @@ const userSlice = createSlice({
     initialState,
     reducers: {
         setUser(state, action: PayloadAction<User>) {
-            console.log(action.payload);
             state.userData = action.payload;
+            state.isLoggedIn = true;
         },
         clearUser(state) {
             state.userData = null;
+            state.isLoggedIn = false;
         },
     },
 });
