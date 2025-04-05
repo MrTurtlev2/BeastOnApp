@@ -17,6 +17,7 @@ export const style = StyleSheet.create({
         fontFamily: fonts.regular,
         textAlign: 'center',
         fontSize: 24,
+        marginBottom: 40,
     },
     bgImage: {
         width: 400,
@@ -24,5 +25,6 @@ export const style = StyleSheet.create({
         position: 'absolute',
         right: 0,
         bottom: 0,
+        zIndex: 0,
     },
 });
