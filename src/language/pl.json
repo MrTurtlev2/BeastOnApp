@@ -9,5 +9,6 @@
   "sundayShort": "nd",
   "email": "E-mail",
   "password": "Hasło",
-  "baseErrorText": "Błąd? \nTo tylko chwilowa zadyszka.\nZłap oddech i \nspróbuj jeszcze raz.\n\nJeśli problem nie znika daj nam\nznać!"
+  "baseErrorText": "Błąd? \nTo tylko chwilowa zadyszka.\nZłap oddech i \nspróbuj jeszcze raz.\n\nJeśli problem nie znika daj nam\nznać!",
+  "configureTodayTraining": "Skonfiguruj swój dzisiejszy\ntrening"
 }

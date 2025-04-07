@@ -9,7 +9,7 @@ type LayoutProps = {
     children?: React.ReactNode;
     hasBurger?: boolean;
     bgImageType?: 'left-top' | 'right-center' | 'none';
-    customStyle: StyleProp<any>;
+    customStyle?: StyleProp<any>;
 };
 
 export default function Layout({children, hasBurger = true, bgImageType = 'left-top', customStyle}: LayoutProps) {
