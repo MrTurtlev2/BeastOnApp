@@ -6,21 +6,21 @@ import CustomInput from '../../common/customInput/CustomInput.tsx';
 import i18n from '../../../language/i18n';
 import PowerButton from '../../common/powerButton/PowerButton.tsx';
 import {handleLoginAsync} from '../../../api/Auth.ts';
-import {useDispatch} from 'react-redux';
 import {setUser} from '../../../store/userSlice.ts';
+import {loadTrainingPlans} from '../../../store/trainingPlansSlice.ts';
+import {useAppDispatch} from '../../../store';
 
 export default function LoginScreen() {
     const {t} = useTranslation();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const [userLogin, setUserLogin] = useState<string>('');
     const [userPassword, setUserPassword] = useState<string>('');
-    // const user = useSelector((state: RootState) => state.user);
-    // console.log('user===================');
-    // console.log(user);
+
     const onLogin = async () => {
         handleLoginAsync(userLogin, userPassword).then(res => {
             console.log(res);
             dispatch(setUser(res.user));
+            dispatch(loadTrainingPlans());
         });
     };
 
