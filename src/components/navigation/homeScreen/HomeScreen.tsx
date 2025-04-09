@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, Text, View} from 'react-native';
+import {Animated, FlatList, Text, View} from 'react-native';
 import Layout from '../../common/layout/Layout.tsx';
 import {useTranslation} from 'react-i18next';
 import CustomWeekPicker from './elements/CustomWeekPicker/CustomWeekPicker.tsx';
@@ -10,33 +10,41 @@ import GraphSvg from '../../../assets/images/svg/buttons/GraphSvg';
 import {loadTrainingPlans} from '../../../store/trainingPlansSlice.ts';
 import ExerciseBar from './elements/ExerciseBar/ExerciseBar.tsx';
 
+const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
+
 export default function HomeScreen() {
     const {t} = useTranslation();
     const user = useAppSelector(state => state.user.userData);
     const {trainingPlans, loading} = useAppSelector(state => state.trainingPlans);
     const dispatch = useAppDispatch();
 
-    // console.log('user================');
-    // console.log(user);
+    const scrollY = new Animated.Value(0);
+    const headerHeight = 90;
+    const stickyThreshold = 160;
 
-    console.log('data =============');
-    console.log(loading, trainingPlans[0]);
     const fetchPlans = () => {
         dispatch(loadTrainingPlans());
     };
 
     const Header = () => (
-        <>
-            <View
-                style={{
-                    flex: 1,
-                    marginTop: '40%',
-                    alignItems: 'center',
-                    marginBottom: 50,
-                }}>
-                <CustomWeekPicker />
-            </View>
-        </>
+        <Animated.View
+            style={{
+                marginTop: '40%',
+                alignItems: 'center',
+                marginBottom: 50,
+                height: headerHeight,
+                transform: [
+                    {
+                        translateY: scrollY.interpolate({
+                            inputRange: [0, stickyThreshold],
+                            outputRange: [0, -stickyThreshold],
+                            extrapolate: 'clamp',
+                        }),
+                    },
+                ],
+            }}>
+            <CustomWeekPicker />
+        </Animated.View>
     );
 
     const EmptyListComponent = () => (
@@ -52,15 +60,16 @@ export default function HomeScreen() {
 
     return (
         <Layout>
-            <FlatList
+            <AnimatedFlatList
                 ListHeaderComponent={<Header />}
-                data={trainingPlans[0].exercises}
-                // data={[]}
-                renderItem={({item}) => <ExerciseBar exerciseName={item.exerciseName} onPress={() => null} />}
+                data={trainingPlans[0]?.exercises}
+                renderItem={({item}) => <ExerciseBar exerciseName={item?.exerciseName} onPress={() => null} />}
                 refreshing={loading}
                 onRefresh={fetchPlans}
                 ListEmptyComponent={<EmptyListComponent />}
                 showsVerticalScrollIndicator={false}
+                stickyHeaderIndices={[0]}
+                onScroll={Animated.event([{nativeEvent: {contentOffset: {y: scrollY}}}], {useNativeDriver: true})}
             />
         </Layout>
     );
