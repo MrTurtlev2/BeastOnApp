@@ -3,7 +3,9 @@ import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import BurgerSvg from '../../../assets/images/svg/BurgerSvg';
-import {style} from './Style.ts';
+import {style} from './Style';
+import TopLeftMainMonkey from '../../../assets/images/png/layout/top-left-main-monkey.png'
+import RightCenterMainMonkey from '../../../assets/images/png/layout/right-center-main-monkey.png'
 
 type LayoutProps = {
     children?: React.ReactNode;
@@ -18,12 +20,12 @@ export default function Layout({children, hasBurger = true, bgImageType = 'left-
     const handleBgImage = () => {
         if (bgImageType === 'none') return null;
         if (bgImageType === 'left-top')
-            return <Image style={style.bgImageLeftTop} source={require('../../../assets/images/png/layout/top-left-main-monkey.png')} />;
+            return <Image style={style.bgImageLeftTop} source={TopLeftMainMonkey} />;
         if (bgImageType === 'right-center')
             return (
                 <Image
                     style={style.bgImageRightCenter}
-                    source={require('../../../assets/images/png/layout/right-center-main-monkey.png')}
+                    source={RightCenterMainMonkey}
                 />
             );
     };
