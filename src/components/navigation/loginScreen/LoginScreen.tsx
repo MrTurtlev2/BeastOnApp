@@ -1,14 +1,14 @@
 import {useTranslation} from 'react-i18next';
-import Layout from '../../common/layout/Layout.tsx';
+import Layout from '../../common/layout/Layout';
 import {Text, View} from 'react-native';
-import React, {useState} from 'react';
-import CustomInput from '../../common/customInput/CustomInput.tsx';
-import i18n from '../../../language/i18n';
-import PowerButton from '../../common/powerButton/PowerButton.tsx';
-import {handleLoginAsync} from '../../../api/Auth.ts';
-import {setUser} from '../../../store/userSlice.ts';
-import {loadTrainingPlans} from '../../../store/trainingPlansSlice.ts';
+import CustomInput from '../../common/customInput/CustomInput';
+import i18n from '../../../language/i18n.js'
+import PowerButton from '../../common/powerButton/PowerButton';
+import {handleLoginAsync} from '../../../api/Auth';
+import {setUser} from '../../../store/userSlice';
+import {loadTrainingPlans} from '../../../store/trainingPlansSlice';
 import {useAppDispatch} from '../../../store';
+import {useState} from "react";
 
 export default function LoginScreen() {
     const {t} = useTranslation();

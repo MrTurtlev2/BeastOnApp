@@ -1,11 +1,10 @@
-import React from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
-import HomeScreen from './homeScreen/HomeScreen.tsx';
-import CustomDrawer from './CustomDrawer.tsx';
+import HomeScreen from './homeScreen/HomeScreen';
+import CustomDrawer from './CustomDrawer';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../store';
-import LoginScreen from './loginScreen/LoginScreen.tsx';
+import LoginScreen from './loginScreen/LoginScreen';
 import {createStackNavigator} from '@react-navigation/stack';
 
 const Drawer = createDrawerNavigator();
@@ -44,6 +43,5 @@ const MainNavigator = () => {
 
 export default function AppNavigator() {
     const isUserLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
-
     return <NavigationContainer>{isUserLoggedIn ? <MainNavigator /> : <AuthNavigator />}</NavigationContainer>;
 }

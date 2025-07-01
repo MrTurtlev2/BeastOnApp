@@ -1,6 +1,6 @@
 import axios from 'axios';
-import {baseAppUrl} from './config.ts';
-import * as Keychain from 'react-native-keychain';
+import {baseAppUrl} from './config';
+import * as SecureStore from 'expo-secure-store';
 
 export const handleLoginAsync = async (
     customerName: string,
@@ -12,12 +12,12 @@ export const handleLoginAsync = async (
             password,
         });
         if (response?.data) {
-            await Keychain.setGenericPassword('user', response.data.token, {
-                service: 'userToken',
-            });
+            await SecureStore.setItemAsync('userToken', response.data.token);
+
             return response.data;
         }
     } catch (err) {
         console.log(err);
     }
 };
+
