@@ -1,25 +1,16 @@
-import {KeyboardTypeOptions, TextInput, View} from 'react-native';
-import {styles} from './Style.ts';
-import {colors} from '../../../constants/theme.ts';
-import React from 'react';
+import {TextInput, View} from 'react-native';
+import {styles} from './Style';
+import {Colors} from '../../../constants/Colors';
+import CustomIcon from '../customIcon/CustomIcon';
+import {IconFontEnum, ICustomInput} from '../../../constants/interfaces';
 
-interface CustomInput {
-    onChangeText: (value: string) => void;
-    value: string;
-    keyboardType?: KeyboardTypeOptions;
-    placeholder?: string;
-}
-
-export default function CustomInput({
-    onChangeText,
-    value,
-    keyboardType = 'default',
-    placeholder,
-}: CustomInput) {
+export default function CustomInput({onChangeText, value, keyboardType = 'default', placeholder, iconName = 'person'}: ICustomInput) {
     return (
+        // @ts-ignore
         <View style={styles.wrapper}>
+            <CustomIcon name={iconName} font={IconFontEnum.Ionicons} size={24} color="#D04C63" style={styles.icon} />
             <TextInput
-                placeholderTextColor={colors.placeholderColor}
+                placeholderTextColor={Colors.placeholderColor}
                 placeholder={placeholder}
                 style={styles.input}
                 onChangeText={onChangeText}

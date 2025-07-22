@@ -1,7 +1,7 @@
 // trainingPlansSlice.ts
 
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {fetchTrainingPlansAsync} from '../api/TrainingShedule.ts';
+import {fetchTrainingPlansAsync} from '../api/TrainingShedule';
 
 export interface ExerciseDto {
     exerciseId: number;
@@ -31,8 +31,7 @@ const initialState: TrainingPlansState = {
 
 export const loadTrainingPlans = createAsyncThunk('trainingPlans/load', async (_, {rejectWithValue}) => {
     try {
-        const trainingPlans = await fetchTrainingPlansAsync();
-        return trainingPlans;
+        return await fetchTrainingPlansAsync();
     } catch (error: any) {
         return rejectWithValue(error.message || 'Błąd ładowania planów');
     }

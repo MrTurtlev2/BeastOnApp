@@ -1,5 +1,6 @@
 import {StyleSheet} from 'react-native';
-import {colors, fonts} from '../../../../../constants/theme';
+import {Colors} from '../../../../../constants/Colors';
+import {Fonts} from '../../../../../constants/Fonts';
 
 export const styles = StyleSheet.create({
     container: {
@@ -27,15 +28,15 @@ export const styles = StyleSheet.create({
     },
     selectedDay: {
         borderWidth: 4,
-        borderColor: `${colors.lightRed}`,
+        borderColor: `${Colors.lightRed}`,
     },
     dateText: {
         fontSize: 18,
-        fontFamily: `${fonts.bold}`,
-        color: `${colors.lightGrey}`,
+        fontFamily: `${Fonts.bold}`,
+        color: `${Colors.lightGrey}`,
     },
     dayText: {
         fontSize: 14,
-        color: `${colors.lightGrey}`,
+        color: `${Colors.lightGrey}`,
     },
 });

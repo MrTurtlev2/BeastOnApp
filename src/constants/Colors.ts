@@ -1,4 +1,4 @@
-export const colors = {
+export const Colors = {
     bgGrey: '#262626',
     placeholderColor: '#414141',
     lightGrey: '#8C8C8C',
@@ -6,10 +6,4 @@ export const colors = {
     lightRed: '#731A2B',
     pink: '#BF3B53',
     white: '#FFFFFF',
-};
-export const fonts = {
-    light: 'Lato-Light',
-    regular: 'Lato-Regular',
-    bold: 'Lato-Bold',
-    Marker: 'PermanentMarker-Regular',
 };

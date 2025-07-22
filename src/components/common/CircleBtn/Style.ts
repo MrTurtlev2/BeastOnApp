@@ -1,12 +1,12 @@
 import {StyleSheet} from 'react-native';
-import {colors} from '../../../constants/theme.ts';
+import {Colors} from '../../../constants/Colors';
 
 export const style = StyleSheet.create({
     main: {
         width: 80,
         height: 80,
         borderRadius: 80,
-        backgroundColor: colors.pink,
+        backgroundColor: Colors.pink,
         alignItems: 'center',
         justifyContent: 'center',
     },

@@ -1,22 +1,23 @@
 import {StyleSheet} from 'react-native';
-import {colors, fonts} from '../../../constants/theme';
+import {Colors} from '../../../constants/Colors';
+import {Fonts} from '../../../constants/Fonts';
 
 export const style = StyleSheet.create({
     welcomeText: {
         fontSize: 32,
-        fontFamily: `${fonts.bold}`,
-        color: colors.white,
+        fontFamily: `${Fonts.bold}`,
+        color: Colors.white,
         marginBottom: 25,
     },
     welcomeUserName: {
         fontSize: 32,
-        fontFamily: `${fonts.bold}`,
-        color: colors.pink,
+        fontFamily: `${Fonts.bold}`,
+        color: Colors.pink,
     },
     secondWelcomeText: {
         fontSize: 24,
-        fontFamily: `${fonts.regular}`,
-        color: colors.white,
+        fontFamily: `${Fonts.regular}`,
+        color: Colors.white,
         textAlign: 'center',
         marginBottom: 25,
     },

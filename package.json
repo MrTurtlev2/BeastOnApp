@@ -29,7 +29,8 @@
     "react-native-shadow-2": "^7.1.1",
     "react-native-svg": "15.11.2",
     "react-native-vector-icons": "^10.2.0",
-    "react-redux": "^9.2.0"
+    "react-redux": "^9.2.0",
+    "@expo/vector-icons": "^14.1.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.13",

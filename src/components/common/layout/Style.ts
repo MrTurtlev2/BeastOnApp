@@ -1,5 +1,5 @@
 import {ImageStyle, StyleSheet} from 'react-native';
-import {colors} from '../../../constants/theme.ts';
+import {Colors} from '../../../constants/Colors';
 
 const bgImageBase: ImageStyle = {
     opacity: 0.6,
@@ -9,7 +9,7 @@ const bgImageBase: ImageStyle = {
 export const style = StyleSheet.create({
     main: {
         flex: 1,
-        backgroundColor: colors.bgGrey,
+        backgroundColor: Colors.bgGrey,
         alignItems: 'center',
     },
     bgImageLeftTop: {
