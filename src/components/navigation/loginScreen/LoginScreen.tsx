@@ -9,6 +9,7 @@ import {setUser} from '../../../store/userSlice';
 import {loadTrainingPlans} from '../../../store/trainingPlansSlice';
 import {useAppDispatch} from '../../../store';
 import {useState} from 'react';
+import {IconFontEnum} from '../../../constants/interfaces';
 
 export default function LoginScreen() {
     const {t} = useTranslation();
@@ -32,9 +33,20 @@ export default function LoginScreen() {
                     justifyContent: 'center',
                     alignItems: 'center',
                 }}>
-                <CustomInput value={userLogin} onChangeText={setUserLogin} placeholder={i18n.t('email')} />
-                {/*// @ts-ignore*/}
-                <CustomInput value={userPassword} onChangeText={setUserPassword} placeholder={i18n.t('password')} iconName={'unlock'} />
+                <CustomInput
+                    value={userLogin}
+                    onChangeText={setUserLogin}
+                    placeholder={i18n.t('email')}
+                    iconName={'person-fill'}
+                    iconFont={IconFontEnum.Octicons}
+                />
+                <CustomInput
+                    value={userPassword}
+                    onChangeText={setUserPassword}
+                    placeholder={i18n.t('password')}
+                    iconName={'lock'}
+                    iconFont={IconFontEnum.MaterialIcons}
+                />
                 <PowerButton onPress={onLogin} />
             </View>
         </Layout>

@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native';
+import {Colors} from '../../../constants/Colors';
 
 export const styles = StyleSheet.create({
     wrapper: {
@@ -9,29 +10,21 @@ export const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingVertical: 12,
         marginVertical: 10,
-
-        boxShadow: [
-            {
-                color: '#2A2A2A',
-                // @ts-ignore
-                offset: {width: 6, height: 6},
-                radius: 10,
-                opacity: 1,
-            },
-            {
-                color: '#3A3A3A',
-                offset: {width: -6, height: -6},
-                radius: 10,
-                opacity: 1,
-            },
-        ],
+        boxShadow: ` 
+            inset 0 2px 4px rgba(0, 0, 0, 0.4),
+            inset 0 -3px 4px rgba(46, 46, 46, 1)
+        `,
     },
     icon: {
         marginRight: 12,
+        position: 'absolute',
+        top: -25,
+        left: 20,
     },
     input: {
         flex: 1,
         fontSize: 16,
-        color: '#E0E0E0',
+        color: Colors.pink,
+        paddingLeft: 50,
     },
 });

@@ -1,5 +1,6 @@
 import {StyleSheet} from 'react-native';
 import {Colors} from '../../../constants/Colors';
+import {Fonts} from '../../../constants/Fonts';
 
 export const styles = StyleSheet.create({
     wrapper: {
@@ -13,5 +14,6 @@ export const styles = StyleSheet.create({
     },
     btnText: {
         fontSize: 16,
+        fontFamily: Fonts.Marker,
     },
 });

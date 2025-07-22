@@ -1,10 +1,11 @@
 import {KeyboardTypeOptions, StyleProp, TextStyle} from 'react-native';
-import {Ionicons} from '@expo/vector-icons';
 
 export enum IconFontEnum {
     Feather = 'Feather',
     FontAwesome = 'FontAwesome',
     Ionicons = 'Ionicons',
+    MaterialIcons = 'MaterialIcons',
+    Octicons = 'Octicons',
 }
 
 export interface ICustomIcon {
@@ -20,5 +21,8 @@ export interface ICustomInput {
     value: string;
     keyboardType?: KeyboardTypeOptions;
     placeholder?: string;
-    iconName?: keyof typeof Ionicons.glyphMap;
+    iconName?: ICustomIcon['name'];
+    iconSize?: ICustomIcon['size'];
+    iconFont?: IconFontEnum;
+    iconColor?: ICustomIcon['color'];
 }

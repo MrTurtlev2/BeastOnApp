@@ -1,5 +1,5 @@
 import {Text, TouchableOpacity} from 'react-native';
-import {styles} from './Style.ts';
+import {styles} from './Style';
 
 interface PowerButton {
     onPress: () => void;

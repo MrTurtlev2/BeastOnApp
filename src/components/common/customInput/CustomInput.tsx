@@ -2,13 +2,22 @@ import {TextInput, View} from 'react-native';
 import {styles} from './Style';
 import {Colors} from '../../../constants/Colors';
 import CustomIcon from '../customIcon/CustomIcon';
-import {IconFontEnum, ICustomInput} from '../../../constants/interfaces';
+import {ICustomInput} from '../../../constants/interfaces';
 
-export default function CustomInput({onChangeText, value, keyboardType = 'default', placeholder, iconName = 'person'}: ICustomInput) {
+const CustomInput = ({
+    onChangeText,
+    value,
+    keyboardType = 'default',
+    placeholder,
+    iconName = 'person',
+    iconFont,
+    iconSize,
+    iconColor,
+}: ICustomInput) => {
     return (
         // @ts-ignore
         <View style={styles.wrapper}>
-            <CustomIcon name={iconName} font={IconFontEnum.Ionicons} size={24} color="#D04C63" style={styles.icon} />
+            <CustomIcon name={iconName} font={iconFont} size={iconSize || 50} color={iconColor || '#D04C63'} style={styles.icon} />
             <TextInput
                 placeholderTextColor={Colors.placeholderColor}
                 placeholder={placeholder}
@@ -19,4 +28,6 @@ export default function CustomInput({onChangeText, value, keyboardType = 'defaul
             />
         </View>
     );
-}
+};
+
+export default CustomInput;
