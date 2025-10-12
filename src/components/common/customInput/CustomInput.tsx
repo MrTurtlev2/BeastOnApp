@@ -15,7 +15,6 @@ const CustomInput = ({
     iconColor,
 }: ICustomInput) => {
     return (
-        // @ts-ignore
         <View style={styles.wrapper}>
             <CustomIcon name={iconName} font={iconFont} size={iconSize || 50} color={iconColor || '#D04C63'} style={styles.icon} />
             <TextInput

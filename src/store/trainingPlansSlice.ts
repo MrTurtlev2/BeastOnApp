@@ -2,28 +2,9 @@
 
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {fetchTrainingPlansAsync} from '../api/TrainingShedule';
+import {ITrainingPlansState} from '../constants/interfaces';
 
-export interface ExerciseDto {
-    exerciseId: number;
-    exerciseName: string;
-    weight: number;
-    repetitions: number;
-}
-
-export interface TrainingPlanDayDto {
-    dayOfWeek: string;
-    trainingPlanId: number;
-    trainingPlanName: string;
-    exercises: ExerciseDto[];
-}
-
-interface TrainingPlansState {
-    trainingPlans: TrainingPlanDayDto[];
-    loading: boolean;
-    error: string | null;
-}
-
-const initialState: TrainingPlansState = {
+const initialState: ITrainingPlansState = {
     trainingPlans: [],
     loading: false,
     error: null,

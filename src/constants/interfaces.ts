@@ -26,3 +26,23 @@ export interface ICustomInput {
     iconFont?: IconFontEnum;
     iconColor?: ICustomIcon['color'];
 }
+
+export interface IExercise {
+    exerciseId: number;
+    exerciseName: string;
+    weight: number;
+    repetitions: number;
+}
+
+export interface ITrainingPlanDay {
+    dayOfWeek: string;
+    trainingPlanId: number;
+    trainingPlanName: string;
+    exercises: IExercise[];
+}
+
+export interface ITrainingPlansState {
+    trainingPlans: ITrainingPlanDay[];
+    loading: boolean;
+    error: string | null;
+}

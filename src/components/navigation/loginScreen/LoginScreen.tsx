@@ -19,7 +19,6 @@ export default function LoginScreen() {
 
     const onLogin = async () => {
         handleLoginAsync(userLogin, userPassword).then(res => {
-            console.log(res);
             dispatch(setUser(res.user));
             dispatch(loadTrainingPlans());
         });
