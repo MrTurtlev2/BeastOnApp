@@ -46,3 +46,9 @@ export interface ITrainingPlansState {
     loading: boolean;
     error: string | null;
 }
+
+export interface IHomeEmptyListComponent {
+    customerName: string;
+    onCreatePlan: () => void;
+    onAssignPlan: () => void;
+}

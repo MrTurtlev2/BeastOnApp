@@ -65,7 +65,13 @@ export default function HomeScreen() {
                 renderItem={({item}) => <ExerciseBar exerciseName={item?.exerciseName} onPress={() => null} />}
                 refreshing={loading}
                 onRefresh={fetchPlans}
-                ListEmptyComponent={<HomeEmptyListComponent customerName={user?.customerName} onCreatePlan={() => fetchPlans()} />}
+                ListEmptyComponent={
+                    <HomeEmptyListComponent
+                        customerName={user?.customerName}
+                        onCreatePlan={() => fetchPlans()}
+                        onAssignPlan={() => fetchPlans()}
+                    />
+                }
                 showsVerticalScrollIndicator={false}
                 stickyHeaderIndices={[0]}
                 onScroll={Animated.event([{nativeEvent: {contentOffset: {y: scrollY}}}], {useNativeDriver: true})}
