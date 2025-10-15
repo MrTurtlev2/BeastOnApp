@@ -1,27 +1,30 @@
-import React from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
-import HomeScreen from './homeScreen/HomeScreen.tsx';
-import CustomDrawer from './CustomDrawer.tsx';
+import HomeScreen from './homeScreen/HomeScreen';
+import CustomDrawer from './CustomDrawer';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../store';
-import LoginScreen from './loginScreen/LoginScreen.tsx';
 import {createStackNavigator} from '@react-navigation/stack';
+import RegisterScreen from './registerScreen/RegisterScreen';
+import MotivationScreen from './motivationScreen/MotivationScreen';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 
 const AuthNavigator = () => {
     return (
+        // @ts-ignore
         <Stack.Navigator screenOptions={{headerShown: false}}>
-            {/*<Stack.Screen name="ErrorScreen" component={ErrorScreen} />*/}
-            <Stack.Screen name="Login" component={LoginScreen} />
+            {/*<Stack.Screen name="Login" component={LoginScreen} />*/}
+            <Stack.Screen name="Login" component={MotivationScreen} />
+            <Stack.Screen name="Register" component={RegisterScreen} />
         </Stack.Navigator>
     );
 };
 
 const MainNavigator = () => {
     return (
+        // @ts-ignore
         <Drawer.Navigator
             drawerContent={props => <CustomDrawer {...props} />}
             screenOptions={{
@@ -31,7 +34,6 @@ const MainNavigator = () => {
                 overlayColor: 'transparent',
                 drawerStyle: {
                     flex: 1,
-                    // width: '90%',
                     width: 350,
                     paddingRight: 20,
                     backgroundColor: 'transparent',
@@ -44,6 +46,5 @@ const MainNavigator = () => {
 
 export default function AppNavigator() {
     const isUserLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
-
     return <NavigationContainer>{isUserLoggedIn ? <MainNavigator /> : <AuthNavigator />}</NavigationContainer>;
 }

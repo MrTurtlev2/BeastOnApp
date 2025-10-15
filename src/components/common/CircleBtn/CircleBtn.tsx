@@ -1,6 +1,6 @@
-import {StyleProp, TouchableOpacity} from 'react-native';
-import {style} from './Style.ts';
-import {ShadowedView} from 'react-native-fast-shadow';
+import {StyleProp, TouchableOpacity, View} from 'react-native';
+import {style} from './Style';
+// import {ShadowedView} from 'react-native-fast-shadow';
 
 interface CircleBtn {
     customStyle?: StyleProp<any>;
@@ -10,10 +10,10 @@ interface CircleBtn {
 
 export default function CircleBtn({icon, customStyle, onPress}: CircleBtn) {
     return (
-        <ShadowedView style={style.btnShadow}>
+        <View style={style.btnShadow}>
             <TouchableOpacity onPress={onPress} style={[style.main, customStyle]}>
                 {icon}
             </TouchableOpacity>
-        </ShadowedView>
+        </View>
     );
 }

@@ -1,5 +1,5 @@
-import {ImageStyle, StyleSheet} from 'react-native';
-import {colors} from '../../../constants/theme.ts';
+import {Dimensions, ImageStyle, StyleSheet} from 'react-native';
+import {Colors} from '../../../constants/Colors';
 
 const bgImageBase: ImageStyle = {
     opacity: 0.6,
@@ -9,7 +9,7 @@ const bgImageBase: ImageStyle = {
 export const style = StyleSheet.create({
     main: {
         flex: 1,
-        backgroundColor: colors.bgGrey,
+        backgroundColor: Colors.bgGrey,
         alignItems: 'center',
     },
     bgImageLeftTop: {
@@ -24,6 +24,12 @@ export const style = StyleSheet.create({
         right: 0,
         width: 250,
         height: 450,
+        top: 80,
+    },
+    bgImageTopCenter: {
+        ...bgImageBase,
+        left: 0,
+        width: Dimensions.get('window').width,
         top: 80,
     },
     burgerBtn: {
