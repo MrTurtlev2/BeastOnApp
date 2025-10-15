@@ -1,4 +1,4 @@
-import {ImageStyle, StyleSheet} from 'react-native';
+import {Dimensions, ImageStyle, StyleSheet} from 'react-native';
 import {Colors} from '../../../constants/Colors';
 
 const bgImageBase: ImageStyle = {
@@ -24,6 +24,12 @@ export const style = StyleSheet.create({
         right: 0,
         width: 250,
         height: 450,
+        top: 80,
+    },
+    bgImageTopCenter: {
+        ...bgImageBase,
+        left: 0,
+        width: Dimensions.get('window').width,
         top: 80,
     },
     burgerBtn: {

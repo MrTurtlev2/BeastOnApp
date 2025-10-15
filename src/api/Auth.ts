@@ -1,11 +1,8 @@
-import axios from 'axios';
 import {baseAppUrl} from './config';
 import * as SecureStore from 'expo-secure-store';
+import axios from 'axios';
 
-export const handleLoginAsync = async (
-    customerName: string,
-    password: string,
-) => {
+export const handleLoginAsync = async (customerName: string, password: string) => {
     try {
         const response = await axios.post(`${baseAppUrl}/api/auth/login`, {
             customerName,
@@ -20,4 +17,3 @@ export const handleLoginAsync = async (
         console.log(err);
     }
 };
-

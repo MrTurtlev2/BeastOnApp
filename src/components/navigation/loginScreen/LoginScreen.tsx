@@ -2,7 +2,6 @@ import {useTranslation} from 'react-i18next';
 import Layout from '../../common/layout/Layout';
 import {View} from 'react-native';
 import CustomInput from '../../common/customInput/CustomInput';
-import i18n from '../../../language/i18n.js';
 import PowerButton from '../../common/powerButton/PowerButton';
 import {handleLoginAsync} from '../../../api/Auth';
 import {setUser} from '../../../store/userSlice';
@@ -19,7 +18,7 @@ export default function LoginScreen() {
 
     const onLogin = async () => {
         handleLoginAsync(userLogin, userPassword).then(res => {
-            dispatch(setUser(res.user));
+            dispatch(setUser(res?.user));
             dispatch(loadTrainingPlans());
         });
     };
@@ -35,14 +34,14 @@ export default function LoginScreen() {
                 <CustomInput
                     value={userLogin}
                     onChangeText={setUserLogin}
-                    placeholder={i18n.t('email')}
+                    placeholder={t('email')}
                     iconName={'person-fill'}
                     iconFont={IconFontEnum.Octicons}
                 />
                 <CustomInput
                     value={userPassword}
                     onChangeText={setUserPassword}
-                    placeholder={i18n.t('password')}
+                    placeholder={t('password')}
                     iconName={'lock'}
                     iconFont={IconFontEnum.MaterialIcons}
                 />
