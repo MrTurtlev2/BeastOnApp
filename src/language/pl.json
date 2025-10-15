@@ -12,5 +12,6 @@
   "baseErrorText": "Błąd? \nTo tylko chwilowa zadyszka.\nZłap oddech i \nspróbuj jeszcze raz.\n\nJeśli problem nie znika daj nam\nznać!",
   "configureTodayTraining": "Skonfiguruj swój dzisiejszy\ntrening",
   "or": "lub",
-  "pickFromExistingAlready": "wybierz już z istniejących"
+  "pickFromExistingAlready": "wybierz już z istniejących",
+  "motivationText": "Obudź bestię, podnieś więcej."
 }

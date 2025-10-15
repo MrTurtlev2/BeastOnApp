@@ -1,8 +1,8 @@
-import {Text, TouchableOpacity, View} from 'react-native';
+import {Pressable, Text, View} from 'react-native';
 import LottieView from 'lottie-react-native';
 import {styles} from './Style';
 import {useRef} from 'react';
-import {Fonts} from '../../../constants/Fonts';
+import {LinearGradient} from 'expo-linear-gradient';
 
 interface ILottiePowerButton {
     onPress: () => void;
@@ -26,9 +26,11 @@ const LottiePowerButton = ({onPress, style}: ILottiePowerButton) => {
                 loop={false}
                 source={require('../../../assets/lottie/power-effect.json')}
             />
-            <TouchableOpacity onPress={onButtonPress} style={styles.btn}>
-                <Text style={[styles.btnText, {fontFamily: Fonts.Marker}]}>ON</Text>
-            </TouchableOpacity>
+            <Pressable onPress={onButtonPress} style={styles.btn}>
+                <LinearGradient colors={['#282828', '#202020']} style={styles.btnGradient}>
+                    <Text style={styles.btnText}>ON</Text>
+                </LinearGradient>
+            </Pressable>
         </View>
     );
 };

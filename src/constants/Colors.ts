@@ -5,5 +5,6 @@ export const Colors = {
     darkRed: '#401619',
     lightRed: '#731A2B',
     pink: '#BF3B53',
+    dirtyWhite: '#F2F2F2',
     white: '#FFFFFF',
 };

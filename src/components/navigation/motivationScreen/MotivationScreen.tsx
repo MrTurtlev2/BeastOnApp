@@ -1,9 +1,10 @@
 import {useTranslation} from 'react-i18next';
 import Layout from '../../common/layout/Layout';
-import {Image, View} from 'react-native';
+import {Image, Text, View} from 'react-native';
 import {useAppDispatch} from '../../../store';
 import Logo from '../../../assets/images/png/common/logo.png';
 import LottiePowerButton from '../../common/lottiePowerButton/LottiePowerButton';
+import {styles} from './Style';
 
 const MotivationScreen = () => {
     const {t} = useTranslation();
@@ -18,14 +19,12 @@ const MotivationScreen = () => {
 
     return (
         <Layout hasBurger={false} bgImageType={'top-center'} customStyle={{paddingHorizontal: 20}}>
-            <View
-                style={{
-                    flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                }}>
+            <View style={styles.logoWrapper}>
                 <Image source={Logo} />
-                <LottiePowerButton onPress={onLogin} />
+            </View>
+            <View style={styles.bottom}>
+                <LottiePowerButton onPress={() => onLogin()} />
+                <Text style={styles.motivationText}>{t('motivationText')}</Text>
             </View>
         </Layout>
     );
