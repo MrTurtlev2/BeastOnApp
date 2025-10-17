@@ -5,9 +5,12 @@ import {useAppDispatch} from '../../../store';
 import Logo from '../../../assets/images/png/common/logo.png';
 import LottiePowerButton from '../../common/lottiePowerButton/LottiePowerButton';
 import {styles} from './Style';
+import {useNavigation} from '@react-navigation/native';
 
 const MotivationScreen = () => {
     const {t} = useTranslation();
+    const navigation = useNavigation();
+
     const dispatch = useAppDispatch();
 
     const onLogin = async () => {
@@ -23,7 +26,7 @@ const MotivationScreen = () => {
                 <Image source={Logo} />
             </View>
             <View style={styles.bottom}>
-                <LottiePowerButton onPress={() => onLogin()} />
+                <LottiePowerButton onPress={() => navigation.navigate('Home')} />
                 <Text style={styles.motivationText}>{t('motivationText')}</Text>
             </View>
         </Layout>

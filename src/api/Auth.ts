@@ -10,10 +10,10 @@ export const handleLoginAsync = async (customerName: string, password: string) =
         });
         if (response?.data) {
             await SecureStore.setItemAsync('userToken', response.data.token);
-
-            return response.data;
+            return response?.data;
         }
     } catch (err) {
-        console.log(err);
+        console.log(err.response.data);
+        return null;
     }
 };

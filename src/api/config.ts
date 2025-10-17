@@ -1,5 +1,6 @@
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
+import {navigationRef} from '../components/navigation/RootNavigation';
 
 export const baseAppUrl: string = 'http://192.168.0.16:8080';
 
@@ -21,6 +22,21 @@ api.interceptors.request.use(
         return config;
     },
     error => {
+        return Promise.reject(error);
+    },
+);
+
+axios.interceptors.response.use(
+    response => response,
+    error => {
+        const data = error?.response?.data || {message: 'Nieznany bląd', status: 500, type: 'SERVER_ERROR'};
+        const status = error?.response?.status;
+        if (navigationRef.isReady() && status === 500) {
+            navigationRef.navigate('ErrorScreen', data);
+        } else {
+            console.warn('Navigation not ready, cannot navigate to ErrorScreen yet.');
+        }
+
         return Promise.reject(error);
     },
 );
