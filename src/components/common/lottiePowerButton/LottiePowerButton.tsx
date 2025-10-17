@@ -15,7 +15,6 @@ const LottiePowerButton = ({onPress, style}: ILottiePowerButton) => {
     const onButtonPress = () => {
         animation.current.play();
         onPress();
-        console.log('test');
     };
 
     return (
@@ -27,9 +26,13 @@ const LottiePowerButton = ({onPress, style}: ILottiePowerButton) => {
                 source={require('../../../assets/lottie/power-effect.json')}
             />
             <Pressable onPress={onButtonPress} style={styles.btn}>
-                <LinearGradient colors={['#282828', '#202020']} style={styles.btnGradient}>
-                    <Text style={styles.btnText}>ON</Text>
-                </LinearGradient>
+                <View style={styles.btnBorder}>
+                    <LinearGradient colors={['#282828', '#202020']} style={styles.btnGradientOuter}>
+                        <LinearGradient colors={['#202020', '#282828']} style={styles.btnGradient}>
+                            <Text style={styles.btnText}>ON</Text>
+                        </LinearGradient>
+                    </LinearGradient>
+                </View>
             </Pressable>
         </View>
     );

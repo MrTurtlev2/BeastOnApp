@@ -1,15 +1,30 @@
-import {StyleSheet} from 'react-native';
+import {StyleSheet, ViewStyle} from 'react-native';
 import {Fonts} from '../../../constants/Fonts';
 import {Colors} from '../../../constants/Colors';
 
+const centerContent: ViewStyle = {
+    alignItems: 'center',
+    justifyContent: 'center',
+};
+
+const shadowStyle: ViewStyle = {
+    shadowOffset: {width: 0, height: 4},
+    shadowRadius: 5,
+    shadowColor: '#000000',
+    shadowOpacity: 0.35,
+};
+
+const boxShadow: ViewStyle = {
+    boxShadow: `${'rgba(0, 0, 0, 0.20)'} 0px 7px 8px` as any,
+};
+
 export const styles = StyleSheet.create({
     wrapper: {
+        ...centerContent,
         marginBottom: 10,
-        alignItems: 'center',
-        justifyContent: 'center',
         position: 'relative',
-        width: 100,
         height: 100,
+        width: 100,
     },
     lottieView: {
         width: 400,
@@ -21,30 +36,39 @@ export const styles = StyleSheet.create({
         top: -150,
     },
     btn: {
-        alignItems: 'center',
-        justifyContent: 'center',
+        ...centerContent,
+        position: 'absolute',
+        zIndex: 2,
+    },
+    btnBorder: {
+        ...centerContent,
+        ...boxShadow,
+        backgroundColor: '#3D3D3D',
+        height: 138,
+        width: 138,
+        borderRadius: 80,
+        borderWidth: 2,
+        borderColor: '#2B2B2B',
+    },
+    btnGradientOuter: {
+        ...centerContent,
+        ...shadowStyle,
+        ...boxShadow,
+        width: 108,
+        height: 108,
+        borderRadius: 60,
+        elevation: 4,
+    },
+    btnGradient: {
+        ...centerContent,
+        ...shadowStyle,
         width: 100,
         height: 100,
         borderRadius: 50,
-        position: 'absolute',
-        zIndex: 2,
-        overflow: 'hidden',
-    },
-    btnGradient: {
-        width: 100,
-        height: 100,
-        alignItems: 'center',
-        justifyContent: 'center',
-        elevation: 7,
-        shadowOffset: {width: 0, height: 4},
-        shadowRadius: 5,
-        shadowColor: '#000000',
-        shadowOpacity: 0.35,
-        boxShadow: `${'rgba(0, 0, 0, 0.35)'} 0px 4px 5px` as any,
     },
     btnText: {
         fontSize: 46,
-        fontFamily: `${Fonts.Marker}`,
+        fontFamily: Fonts.Marker,
         color: Colors.white,
     },
 });
