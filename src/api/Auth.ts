@@ -1,15 +1,15 @@
-import {baseAppUrl} from './config';
+import api, {baseAppUrl} from './config';
 import * as SecureStore from 'expo-secure-store';
-import axios from 'axios';
 
 export const handleLoginAsync = async (customerName: string, password: string) => {
     try {
-        const response = await axios.post(`${baseAppUrl}/api/auth/login`, {
+        const response = await api.post(`${baseAppUrl}/api/auth/login`, {
             customerName,
             password,
         });
         if (response?.data) {
-            await SecureStore.setItemAsync('userToken', response.data.token);
+            console.log(response.data);
+            await SecureStore.setItemAsync('refreshToken', response?.data?.refreshToken);
             return response?.data;
         }
     } catch (err) {

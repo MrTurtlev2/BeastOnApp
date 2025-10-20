@@ -1,7 +1,9 @@
 import axios from 'axios';
-import * as SecureStore from 'expo-secure-store';
 import {navigationRef} from '../components/navigation/RootNavigation';
 import {Toast} from 'toastify-react-native';
+import store from '../store';
+import * as SecureStore from 'expo-secure-store';
+import {clearUser, setAccessToken} from '../store/userSlice';
 
 export const baseAppUrl: string = 'http://192.168.0.16:8080';
 
@@ -9,36 +11,52 @@ const api = axios.create({
     baseURL: baseAppUrl,
 });
 
-api.interceptors.request.use(
-    async config => {
-        try {
-            const token = await SecureStore.getItemAsync('userToken');
-            if (token) {
-                config.headers.Authorization = `Bearer ${token}`;
-            }
-        } catch (error) {
-            console.warn('Błąd pobierania tokena z Keychain:', error);
-        }
+api.interceptors.request.use(config => {
+    const token = store.getState().user?.accessToken;
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+});
 
-        return config;
-    },
-    error => {
-        return Promise.reject(error);
-    },
-);
-
-axios.interceptors.response.use(
+api.interceptors.response.use(
     response => response,
-    error => {
-        const data = error?.response?.data || {message: 'Nieznany bląd', status: 500, type: 'SERVER_ERROR'};
+    async error => {
+        const originalReq = error.config;
         const status = error?.response?.status;
+        const data = error?.response?.data || {message: 'Nieznany błąd', status: 500, type: 'SERVER_ERROR'};
+
+        if (status === 401 && !originalReq._retry && !originalReq.url?.includes('/api/auth/login')) {
+            originalReq._retry = true;
+            const refreshToken = await SecureStore.getItemAsync('refreshToken');
+            if (refreshToken) {
+                try {
+                    const response = await axios.post(`${baseAppUrl}/api/auth/refresh-token`, {refreshToken});
+                    const newAccessToken = response?.data?.accessToken;
+                    store.dispatch(setAccessToken(newAccessToken));
+                    await SecureStore.setItemAsync('userToken', newAccessToken);
+
+                    originalReq.headers['Authorization'] = `Bearer ${newAccessToken}`;
+                    return axios(originalReq);
+                } catch {
+                    store.dispatch(clearUser());
+                    await SecureStore.deleteItemAsync('userToken');
+                    await SecureStore.deleteItemAsync('refreshToken');
+                    return Promise.reject(error);
+                }
+            }
+        }
+        console.log(data);
+        if (data?.message)
+            Toast.show({
+                type: 'error',
+                text1: data?.message,
+                useModal: false,
+            });
+
         if (navigationRef.isReady() && status === 500) {
+            // @ts-ignore
             navigationRef.navigate('ErrorScreen', data);
-        } else if (data?.message) {
-            console.log('TOAST');
-            Toast.error(data?.message);
-        } else {
-            console.warn('Navigation not ready, cannot navigate to ErrorScreen yet.');
         }
 
         return Promise.reject(error);
