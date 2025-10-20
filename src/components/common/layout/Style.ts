@@ -32,6 +32,11 @@ export const style = StyleSheet.create({
         width: Dimensions.get('window').width,
         top: 80,
     },
+    bgImageLeftBottom: {
+        ...bgImageBase,
+        left: 0,
+        bottom: 0,
+    },
     burgerBtn: {
         position: 'absolute',
         zIndex: 1,

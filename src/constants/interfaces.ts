@@ -1,4 +1,4 @@
-import {KeyboardTypeOptions, StyleProp, TextStyle} from 'react-native';
+import {KeyboardTypeOptions, StyleProp, TextInputProps, TextStyle, ViewStyle} from 'react-native';
 
 export enum IconFontEnum {
     Feather = 'Feather',
@@ -16,7 +16,7 @@ export interface ICustomIcon {
     style?: StyleProp<TextStyle>;
 }
 
-export interface ICustomInput {
+export interface ICustomInput extends TextInputProps {
     onChangeText: (value: string) => void;
     value: string;
     keyboardType?: KeyboardTypeOptions;
@@ -25,6 +25,7 @@ export interface ICustomInput {
     iconSize?: ICustomIcon['size'];
     iconFont?: IconFontEnum;
     iconColor?: ICustomIcon['color'];
+    containerStyle?: StyleProp<ViewStyle>;
 }
 
 export interface IExercise {
@@ -51,4 +52,13 @@ export interface IHomeEmptyListComponent {
     customerName: string;
     onCreatePlan: () => void;
     onAssignPlan: () => void;
+}
+
+export interface ILottiePowerButtonRef {
+    resetAnimation: () => void;
+}
+
+export interface ILottiePowerButton {
+    onPress: () => void;
+    style?: StyleProp<ViewStyle>;
 }

@@ -1,43 +1,53 @@
 import {useTranslation} from 'react-i18next';
 import Layout from '../../common/layout/Layout';
-import {View} from 'react-native';
+import {Image, View} from 'react-native';
 import CustomInput from '../../common/customInput/CustomInput';
-import PowerButton from '../../common/powerButton/PowerButton';
 import {handleLoginAsync} from '../../../api/Auth';
-import {setUser} from '../../../store/userSlice';
+import {setAccessToken, setUser} from '../../../store/userSlice';
 import {loadTrainingPlans} from '../../../store/trainingPlansSlice';
 import {useAppDispatch} from '../../../store';
-import {useState} from 'react';
-import {IconFontEnum} from '../../../constants/interfaces';
+import {useRef, useState} from 'react';
+import {IconFontEnum, ILottiePowerButtonRef} from '../../../constants/interfaces';
+import Logo from '../../../assets/images/png/common/logo.png';
+import LottiePowerButton from '../../common/lottiePowerButton/LottiePowerButton';
 
 export default function LoginScreen() {
     const {t} = useTranslation();
     const dispatch = useAppDispatch();
     const [userLogin, setUserLogin] = useState<string>('');
     const [userPassword, setUserPassword] = useState<string>('');
-
+    const powerBtnRef = useRef<ILottiePowerButtonRef>(null);
     const onLogin = async () => {
         handleLoginAsync(userLogin, userPassword).then(res => {
-            if (!res) return;
+            if (!res) {
+                powerBtnRef.current?.resetAnimation();
+                return;
+            }
             dispatch(setUser(res?.user));
+            dispatch(setAccessToken(res?.accessToken));
             dispatch(loadTrainingPlans());
         });
     };
 
     return (
-        <Layout hasBurger={false} bgImageType={'right-center'} customStyle={{paddingHorizontal: 20}}>
+        <Layout hasBurger={false} bgImageType={'left-bottom'} customStyle={{paddingHorizontal: 20}}>
             <View
                 style={{
+                    paddingTop: 50,
                     flex: 1,
-                    justifyContent: 'center',
                     alignItems: 'center',
                 }}>
+                <Image source={Logo} style={{height: 200}} />
                 <CustomInput
                     value={userLogin}
                     onChangeText={setUserLogin}
                     placeholder={t('email')}
                     iconName={'person-fill'}
                     iconFont={IconFontEnum.Octicons}
+                    containerStyle={{marginBottom: 30}}
+                    textContentType="username"
+                    autoComplete="username"
+                    keyboardType="email-address"
                 />
                 <CustomInput
                     value={userPassword}
@@ -45,8 +55,12 @@ export default function LoginScreen() {
                     placeholder={t('password')}
                     iconName={'lock'}
                     iconFont={IconFontEnum.MaterialIcons}
+                    containerStyle={{marginBottom: 80}}
+                    textContentType="password"
+                    autoComplete="password"
+                    secureTextEntry
                 />
-                <PowerButton onPress={onLogin} />
+                <LottiePowerButton onPress={onLogin} ref={powerBtnRef} />
             </View>
         </Layout>
     );

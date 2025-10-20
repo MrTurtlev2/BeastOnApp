@@ -1,28 +1,33 @@
 import {Animated, Pressable, Text, View} from 'react-native';
 import LottieView from 'lottie-react-native';
 import {styles} from './Style';
-import {useRef} from 'react';
+import {forwardRef, useImperativeHandle, useRef} from 'react';
 import {LinearGradient} from 'expo-linear-gradient';
 import {Colors} from '../../../constants/Colors';
+import {ILottiePowerButton, ILottiePowerButtonRef} from '../../../constants/interfaces';
 
-interface ILottiePowerButton {
-    onPress: () => void;
-    style?: any;
-}
-
-const LottiePowerButton = ({onPress, style}: ILottiePowerButton) => {
+const LottiePowerButton = forwardRef<ILottiePowerButtonRef, ILottiePowerButton>(({onPress, style}, ref) => {
     const animation = useRef<LottieView>(null);
     const borderColorAnim = useRef(new Animated.Value(0)).current;
 
     const onButtonPress = () => {
-        animation.current.play();
+        animation.current?.play();
         Animated.timing(borderColorAnim, {
             toValue: 1,
             duration: 400,
             useNativeDriver: false,
-        }).start();
-        onPress();
+        }).start(() => onPress());
     };
+
+    useImperativeHandle(ref, () => ({
+        resetAnimation: () => {
+            Animated.timing(borderColorAnim, {
+                toValue: 0,
+                duration: 400,
+                useNativeDriver: false,
+            }).start(() => animation.current?.reset());
+        },
+    }));
 
     const animatedBackgroundColor = borderColorAnim.interpolate({
         inputRange: [0, 1],
@@ -34,8 +39,10 @@ const LottiePowerButton = ({onPress, style}: ILottiePowerButton) => {
             <LottieView
                 ref={animation}
                 style={styles.lottieView}
-                loop={false}
                 source={require('../../../assets/lottie/power-effect.json')}
+                progress={0}
+                autoPlay={false}
+                loop={false}
             />
             <Pressable onPress={onButtonPress} style={styles.btn}>
                 <Animated.View style={[styles.btnBorder, {backgroundColor: animatedBackgroundColor}]}>
@@ -48,6 +55,6 @@ const LottiePowerButton = ({onPress, style}: ILottiePowerButton) => {
             </Pressable>
         </View>
     );
-};
+});
 
 export default LottiePowerButton;

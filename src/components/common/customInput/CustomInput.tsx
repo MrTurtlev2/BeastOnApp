@@ -13,9 +13,14 @@ const CustomInput = ({
     iconFont,
     iconSize,
     iconColor,
+    containerStyle,
+    secureTextEntry,
+    autoComplete = 'off',
+    textContentType,
+    importantForAutofill = 'no',
 }: ICustomInput) => {
     return (
-        <View style={styles.wrapper}>
+        <View style={[styles.wrapper, containerStyle]}>
             <CustomIcon name={iconName} font={iconFont} size={iconSize || 50} color={iconColor || '#D04C63'} style={styles.icon} />
             <TextInput
                 placeholderTextColor={Colors.placeholderColor}
@@ -24,6 +29,10 @@ const CustomInput = ({
                 onChangeText={onChangeText}
                 value={value}
                 keyboardType={keyboardType}
+                importantForAutofill={importantForAutofill}
+                textContentType={textContentType}
+                autoComplete={autoComplete}
+                secureTextEntry={secureTextEntry}
             />
         </View>
     );

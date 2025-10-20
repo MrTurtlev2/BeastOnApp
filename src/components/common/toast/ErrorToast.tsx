@@ -6,6 +6,7 @@ import {Fonts} from '../../../constants/Fonts';
 const ErrorToast = ({text1}) => {
     return (
         <View
+            pointerEvents="none"
             style={{
                 padding: 16,
                 width: '100%',

@@ -6,12 +6,13 @@ import {style} from './Style';
 import TopLeftMainMonkey from '../../../assets/images/png/layout/top-left-main-monkey.png';
 import RightCenterMainMonkey from '../../../assets/images/png/layout/right-center-main-monkey.png';
 import TopCenterMainMonkey from '../../../assets/images/png/layout/top-center-main-monkey.png';
+import LeftBottomMainMonkey from '../../../assets/images/png/layout/bottom-left-main-monkey.png';
 import {ReactNode} from 'react';
 
 type LayoutProps = {
     children?: ReactNode;
     hasBurger?: boolean;
-    bgImageType?: 'left-top' | 'right-center' | 'top-center' | 'none';
+    bgImageType?: 'left-top' | 'right-center' | 'top-center' | 'left-bottom' | 'none';
     customStyle?: StyleProp<any>;
 };
 
@@ -24,6 +25,8 @@ export default function Layout({children, hasBurger = true, bgImageType = 'left-
         if (bgImageType === 'right-center') return <Image style={style.bgImageRightCenter} source={RightCenterMainMonkey} />;
         if (bgImageType === 'top-center')
             return <Image style={style.bgImageTopCenter} source={TopCenterMainMonkey} resizeMode={'stretch'} />;
+        if (bgImageType === 'left-bottom')
+            return <Image style={style.bgImageLeftBottom} source={LeftBottomMainMonkey} resizeMode={'stretch'} />;
     };
 
     return (
