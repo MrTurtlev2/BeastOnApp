@@ -41,7 +41,7 @@ export const style = StyleSheet.create({
         position: 'absolute',
         zIndex: 1,
         right: 20,
-        top: 20,
+        top: 40,
         alignItems: 'center',
         justifyContent: 'center',
     },

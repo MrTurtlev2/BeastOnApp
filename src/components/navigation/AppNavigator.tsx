@@ -35,7 +35,7 @@ const MainNavigator = () => {
                 headerShown: false,
                 drawerType: 'front',
                 drawerPosition: 'right',
-                overlayColor: 'transparent',
+                overlayColor: '#313131C2',
                 drawerStyle: {
                     flex: 1,
                     width: 350,

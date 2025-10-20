@@ -35,7 +35,8 @@
     "react-native-svg": "15.11.2",
     "react-native-vector-icons": "^10.2.0",
     "react-redux": "^9.2.0",
-    "toastify-react-native": "^7.2.3"
+    "toastify-react-native": "^7.2.3",
+    "expo-blur": "~14.1.5"
   },
   "devDependencies": {
     "@types/jest": "^29.5.13",

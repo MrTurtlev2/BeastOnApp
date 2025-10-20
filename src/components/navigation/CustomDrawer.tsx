@@ -1,49 +1,54 @@
-import React from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {DrawerItemList} from '@react-navigation/drawer';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DrawShapeSvg from '../../assets/images/svg/DrawerShapeSvg';
+import BurgerSvg from '../../assets/images/svg/BurgerSvg';
+import {Fonts} from '../../constants/Fonts';
+import {Colors} from '../../constants/Colors';
 
 export default function CustomDrawer(props: any) {
+    const {navigation} = props;
     return (
         <View style={{flex: 1}}>
             <DrawShapeSvg />
-            {/*<DrawerContentScrollView*/}
-            {/*    {...props}*/}
-            {/*    contentContainerStyle={styles.container}>*/}
+            <TouchableOpacity onPress={() => navigation.closeDrawer()} style={styles.burgerBtn}>
+                <BurgerSvg />
+            </TouchableOpacity>
             <View style={styles.container}>
-                <View style={styles.header}>
-                    <Image
-                        source={{uri: 'https://via.placeholder.com/80'}}
-                        style={styles.avatar}
-                    />
-                    <Text style={styles.username}>Jan Kowalski</Text>
-                </View>
-                <DrawerItemList {...props} />
-                <TouchableOpacity style={styles.logoutButton}>
-                    <Text style={styles.logoutText}>Wyloguj</Text>
-                </TouchableOpacity>
+                <Text style={styles.itemText}>Ustawienia</Text>
+                <View style={styles.separator} />
+                <Text style={styles.itemText}>Moje konto</Text>
+                <View style={styles.separator} />
+                <Text style={styles.itemText}>Moje konto</Text>
+                <View style={styles.separator} />
+                <Text style={styles.itemText}>Moje konto</Text>
             </View>
-            {/*</DrawerContentScrollView>*/}
         </View>
     );
 }
 
 const styles = StyleSheet.create({
+    burgerBtn: {
+        position: 'absolute',
+        zIndex: 1,
+        right: 0,
+        top: 40,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     container: {
         flex: 1,
         position: 'absolute',
         top: 150,
         right: 0,
-        backgroundColor: 'red',
     },
-    header: {alignItems: 'center', padding: 20, backgroundColor: '#6200ea'},
-    avatar: {width: 80, height: 80, borderRadius: 40, marginBottom: 10},
-    username: {color: 'white', fontSize: 18, fontWeight: 'bold'},
-    logoutButton: {
-        marginTop: 20,
-        padding: 15,
-        alignItems: 'center',
-        backgroundColor: '#d32f2f',
+    itemText: {
+        fontFamily: Fonts.regular,
+        color: Colors.white,
+        fontSize: 20,
     },
-    logoutText: {color: 'white', fontSize: 16, fontWeight: 'bold'},
+    separator: {
+        height: 1,
+        width: 150,
+        backgroundColor: '#4E4E4E',
+        marginVertical: 30,
+    },
 });
