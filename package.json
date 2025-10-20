@@ -10,6 +10,7 @@
     "ios": "expo run:ios"
   },
   "dependencies": {
+    "@expo/vector-icons": "^14.1.0",
     "@react-navigation/drawer": "^7.2.1",
     "@react-navigation/native": "^7.0.17",
     "@react-navigation/stack": "^7.2.9",
@@ -17,9 +18,11 @@
     "axios": "1.12.0",
     "date-fns": "^4.1.0",
     "expo": "^53.0.15",
+    "expo-linear-gradient": "~14.1.5",
     "expo-secure-store": "~14.2.3",
     "expo-splash-screen": "^0.30.9",
     "i18next": "^24.2.3",
+    "lottie-react-native": "7.3.4",
     "react": "19.0.0",
     "react-i18next": "^15.4.1",
     "react-native": "0.79.4",
@@ -32,9 +35,7 @@
     "react-native-svg": "15.11.2",
     "react-native-vector-icons": "^10.2.0",
     "react-redux": "^9.2.0",
-    "@expo/vector-icons": "^14.1.0",
-    "lottie-react-native": "7.3.4",
-    "expo-linear-gradient": "~14.1.5"
+    "toastify-react-native": "^7.2.3"
   },
   "devDependencies": {
     "@types/jest": "^29.5.13",

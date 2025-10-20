@@ -1,6 +1,7 @@
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import {navigationRef} from '../components/navigation/RootNavigation';
+import {Toast} from 'toastify-react-native';
 
 export const baseAppUrl: string = 'http://192.168.0.16:8080';
 
@@ -33,6 +34,9 @@ axios.interceptors.response.use(
         const status = error?.response?.status;
         if (navigationRef.isReady() && status === 500) {
             navigationRef.navigate('ErrorScreen', data);
+        } else if (data?.message) {
+            console.log('TOAST');
+            Toast.error(data?.message);
         } else {
             console.warn('Navigation not ready, cannot navigate to ErrorScreen yet.');
         }

@@ -7,8 +7,15 @@ import * as SplashScreen from 'expo-splash-screen';
 import {useFonts} from 'expo-font';
 import {Fonts} from './src/constants/Fonts';
 import {useEffect} from 'react';
+import ToastManager from 'toastify-react-native';
+import ErrorToast from './src/components/common/toast/ErrorToast';
 
 SplashScreen.preventAutoHideAsync();
+
+const toastConfig = {
+    error: props => <ErrorToast {...props} />,
+};
+
 export default function App() {
     const [fontsLoaded] = useFonts({
         [Fonts.light]: require('./src/assets/fonts/Lato-Light.ttf'),
@@ -25,6 +32,7 @@ export default function App() {
         <GestureHandlerRootView style={{flex: 1}}>
             <Provider store={store}>
                 <MainNavigator />
+                <ToastManager config={toastConfig} />
             </Provider>
         </GestureHandlerRootView>
     );
