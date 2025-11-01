@@ -1,4 +1,4 @@
-import api from './config.ts';
+import api from './config';
 
 export const fetchTrainingPlansAsync = async () => {
     try {
