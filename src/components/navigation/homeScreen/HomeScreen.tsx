@@ -10,8 +10,10 @@ import {addDays, format, isToday, startOfWeek} from 'date-fns';
 import {enUS, pl} from 'date-fns/locale';
 import {IExercise} from '../../../constants/interfaces';
 import HomeEmptyListComponent from './elements/HomeEmptyListComponent/HomeEmptyListComponent';
+import {useNavigation} from '@react-navigation/native';
 
 export default function HomeScreen() {
+    const navigation = useNavigation();
     const user = useAppSelector(state => state?.user?.userData);
     const {trainingPlans, loading} = useAppSelector(state => state?.trainingPlans);
     const dispatch = useAppDispatch();
@@ -58,7 +60,7 @@ export default function HomeScreen() {
     );
 
     return (
-        <Layout>
+        <Layout hasBurger>
             <Animated.FlatList<IExercise>
                 ListHeaderComponent={<Header />}
                 data={trainingPlans[selectedDay]?.exercises ?? []}
@@ -68,7 +70,7 @@ export default function HomeScreen() {
                 ListEmptyComponent={
                     <HomeEmptyListComponent
                         customerName={user?.customerName}
-                        onCreatePlan={() => fetchPlans()}
+                        onCreatePlan={() => navigation.navigate('AddPlanScreen')}
                         onAssignPlan={() => fetchPlans()}
                     />
                 }

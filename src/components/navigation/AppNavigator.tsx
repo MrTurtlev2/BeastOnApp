@@ -1,3 +1,4 @@
+import React from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -11,6 +12,8 @@ import MotivationScreen from './motivationScreen/MotivationScreen';
 import LoginScreen from './loginScreen/LoginScreen';
 import ErrorScreen from './errorScreen/ErrorScreen';
 import {navigationRef} from './RootNavigation';
+import {Colors} from '../../constants/Colors';
+import AddPlanScreen from './addPlanScreen/AddPlanScreen';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -18,7 +21,6 @@ const RootStack = createStackNavigator();
 
 const AuthNavigator = () => {
     return (
-        // @ts-ignore
         <Stack.Navigator screenOptions={{headerShown: false}}>
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Register" component={RegisterScreen} />
@@ -26,9 +28,25 @@ const AuthNavigator = () => {
     );
 };
 
+const HomeStack = createStackNavigator();
+
+const defaultTheme = {
+    colors: {
+        background: Colors.bgGrey,
+    },
+};
+
+const HomeStackNavigator = () => {
+    return (
+        <HomeStack.Navigator screenOptions={{headerShown: false}}>
+            <HomeStack.Screen name="HomeMain" component={HomeScreen} options={{headerShown: false}} />
+            <HomeStack.Screen name="AddPlanScreen" component={AddPlanScreen} />
+        </HomeStack.Navigator>
+    );
+};
+
 const MainNavigator = () => {
     return (
-        // @ts-ignore
         <Drawer.Navigator
             drawerContent={props => <CustomDrawer {...props} />}
             screenOptions={{
@@ -44,7 +62,7 @@ const MainNavigator = () => {
                 },
             }}>
             <Drawer.Screen name="MotivationScreen" component={MotivationScreen} />
-            <Drawer.Screen name="Home" component={HomeScreen} />
+            <Drawer.Screen name="Home" component={HomeStackNavigator} />
         </Drawer.Navigator>
     );
 };
@@ -53,7 +71,6 @@ const RootAppNavigator = () => {
     const isUserLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
 
     return (
-        // @ts-ignore
         <RootStack.Navigator screenOptions={{headerShown: false}}>
             <RootStack.Screen name="AppRoot">{() => (isUserLoggedIn ? <MainNavigator /> : <AuthNavigator />)}</RootStack.Screen>
             <RootStack.Screen name="ErrorScreen" component={ErrorScreen} />
@@ -63,8 +80,7 @@ const RootAppNavigator = () => {
 
 export default function AppNavigator() {
     return (
-        // @ts-ignore
-        <NavigationContainer ref={navigationRef}>
+        <NavigationContainer ref={navigationRef} theme={defaultTheme}>
             <RootAppNavigator />
         </NavigationContainer>
     );

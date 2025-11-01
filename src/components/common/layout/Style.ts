@@ -1,9 +1,16 @@
-import {Dimensions, ImageStyle, StyleSheet} from 'react-native';
+import {Dimensions, ImageStyle, StyleSheet, ViewStyle} from 'react-native';
 import {Colors} from '../../../constants/Colors';
 
 const bgImageBase: ImageStyle = {
     opacity: 0.6,
     position: 'absolute',
+};
+
+const absoluteBtnBase: ViewStyle = {
+    position: 'absolute',
+    zIndex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
 };
 
 export const style = StyleSheet.create({
@@ -38,11 +45,13 @@ export const style = StyleSheet.create({
         bottom: 0,
     },
     burgerBtn: {
-        position: 'absolute',
-        zIndex: 1,
+        ...absoluteBtnBase,
         right: 20,
         top: 40,
-        alignItems: 'center',
-        justifyContent: 'center',
+    },
+    backArrowBtn: {
+        ...absoluteBtnBase,
+        left: 20,
+        top: 40,
     },
 });
