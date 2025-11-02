@@ -28,14 +28,17 @@ export interface ICustomInput extends TextInputProps {
     containerStyle?: StyleProp<ViewStyle>;
 }
 
-export interface IExercise {
-    exerciseId: number;
-    exerciseName: string;
+export type IExerciseSet = {
     weight: number;
     repetitions: number;
-}
+};
 
-export interface ITrainingPlanDay {
+export type IExercise = {
+    name: string;
+    sets: IExerciseSet[];
+};
+
+export interface ITrainingPlan {
     dayOfWeek: string;
     trainingPlanId: number;
     trainingPlanName: string;
@@ -43,7 +46,7 @@ export interface ITrainingPlanDay {
 }
 
 export interface ITrainingPlansState {
-    trainingPlans: ITrainingPlanDay[];
+    trainingPlans: ITrainingPlan[];
     loading: boolean;
     error: string | null;
 }
