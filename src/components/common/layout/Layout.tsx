@@ -17,9 +17,17 @@ type LayoutProps = {
     hasBackArrow?: boolean;
     bgImageType?: 'left-top' | 'right-center' | 'top-center' | 'left-bottom' | 'none';
     customStyle?: StyleProp<any>;
+    onGoBack?: () => void;
 };
 
-export default function Layout({children, hasBurger = false, hasBackArrow = false, bgImageType = 'left-top', customStyle}: LayoutProps) {
+export default function Layout({
+    children,
+    hasBurger = false,
+    hasBackArrow = false,
+    bgImageType = 'left-top',
+    customStyle,
+    onGoBack,
+}: LayoutProps) {
     const navigation = useNavigation<DrawerNavigationProp<any>>();
 
     const handleBgImage = () => {
@@ -32,6 +40,12 @@ export default function Layout({children, hasBurger = false, hasBackArrow = fals
             return <Image style={style.bgImageLeftBottom} source={LeftBottomMainMonkey} resizeMode={'stretch'} />;
     };
 
+    const handleBackArrow = () => {
+        if (onGoBack) return onGoBack();
+        if (navigation.canGoBack()) return navigation.goBack();
+        return null;
+    };
+
     return (
         <View style={[style.main, customStyle]}>
             {handleBgImage()}
@@ -41,7 +55,7 @@ export default function Layout({children, hasBurger = false, hasBackArrow = fals
                 </TouchableOpacity>
             )}
             {hasBackArrow && (
-                <TouchableOpacity onPress={() => (navigation.canGoBack() ? navigation.goBack() : null)} style={style.backArrowBtn}>
+                <TouchableOpacity onPress={handleBackArrow} style={style.backArrowBtn}>
                     <BackArrowSvg />
                 </TouchableOpacity>
             )}

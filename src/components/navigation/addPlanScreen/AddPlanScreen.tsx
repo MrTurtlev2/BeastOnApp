@@ -10,7 +10,7 @@ import {IExercise} from '../../../constants/interfaces';
 const AddPlanScreen = () => {
     const {t} = useTranslation();
     const pagerRef = useRef<PagerView>(null);
- 
+
     const [planName, setPlanName] = useState<string>('');
     const [exercises, setExercises] = useState<IExercise[]>([]);
     const [currentExercise, setCurrentExercise] = useState<IExercise | null>(null);
@@ -25,8 +25,12 @@ const AddPlanScreen = () => {
         pagerRef.current?.setPage(0);
     };
 
+    const onGoBack = () => {
+        console.log(pagerRef.current);
+    };
+
     const handleSaveExercise = (exercise: IExercise) => {
-        if (!exercise.name.trim()) {
+        if (!exercise?.name?.trim()) {
             goToOverview();
             return;
         }
@@ -45,7 +49,7 @@ const AddPlanScreen = () => {
     };
 
     return (
-        <Layout hasBackArrow bgImageType={'right-center'} customStyle={{flex: 1, paddingTop: 80}}>
+        <Layout hasBackArrow bgImageType={'right-center'} customStyle={{flex: 1, paddingTop: 80}} onGoBack={onGoBack}>
             {/*@ts-ignore*/}
             <PagerView ref={pagerRef} style={{flex: 1, height: '100%', width: '100%'}} initialPage={0} scrollEnabled={false}>
                 <View key="1" style={{flex: 1}}>

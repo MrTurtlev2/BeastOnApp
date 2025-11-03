@@ -1,6 +1,7 @@
 import {StyleSheet} from 'react-native';
 import {Colors} from '../../../../../constants/Colors';
 import {Fonts} from '../../../../../constants/Fonts';
+import {simpleShadow} from '../../../../../constants/GlobalStyles';
 
 export const styles = StyleSheet.create({
     container: {
@@ -25,6 +26,7 @@ export const styles = StyleSheet.create({
             width: 5,
             height: 3,
         },
+        ...simpleShadow,
     },
     selectedDay: {
         borderWidth: 4,

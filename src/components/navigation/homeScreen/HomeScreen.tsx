@@ -64,7 +64,9 @@ export default function HomeScreen() {
             <Animated.FlatList<IExercise>
                 ListHeaderComponent={<Header />}
                 data={trainingPlans[selectedDay]?.exercises ?? []}
-                renderItem={({item}) => <ExerciseBar exerciseName={item?.exerciseName} onPress={() => null} />}
+                renderItem={({item}) => (
+                    <ExerciseBar exerciseName={item?.exerciseName} onPress={() => null} containerStyle={{marginHorizontal: 25}} />
+                )}
                 refreshing={loading}
                 onRefresh={fetchPlans}
                 ListEmptyComponent={
