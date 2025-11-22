@@ -7,14 +7,16 @@ import ToastManager from 'toastify-react-native';
 
 import store from './src/store';
 import MainNavigator from './src/components/navigation/AppNavigator';
-import ErrorToast from './src/components/common/toast/ErrorToast';
+import CustomToast from './src/components/common/toast/CustomToast';
 import {Fonts} from './src/constants/Fonts';
 import {handleAutoLogin} from './src/api/Auth';
 
 SplashScreen.preventAutoHideAsync();
 
 const toastConfig = {
-    error: props => <ErrorToast {...props} />,
+    error: props => <CustomToast {...props} type="error" />,
+    success: props => <CustomToast {...props} type="success" />,
+    info: props => <CustomToast {...props} type="info" />,
 };
 
 export default function App() {

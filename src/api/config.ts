@@ -51,7 +51,7 @@ api.interceptors.response.use(
             Toast.show({
                 type: 'error',
                 text1: data?.message,
-                useModal: false,
+                // useModal: false,
             });
 
         if (navigationRef.isReady() && status === 500) {

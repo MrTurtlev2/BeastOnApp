@@ -6,6 +6,7 @@ import {IExercise, IExerciseSet} from '../../../../constants/interfaces';
 import {style} from '../Style';
 import CircleBtn from '../../../common/CircleBtn/CircleBtn';
 import {Colors} from '../../../../constants/Colors';
+import {Toast} from 'toastify-react-native';
 
 type Props = {
     existingExercise: IExercise | null;
@@ -45,7 +46,16 @@ const ExerciseEditorPage = ({existingExercise, onSave, onCancel}: Props) => {
     };
 
     const handleSave = () => {
-        if (!exerciseName.trim()) return;
+        const isSetsValid = sets.every(set => typeof set?.repetitions === 'number' && typeof set?.weight === 'number');
+        const isExerciseNameValid = exerciseName && exerciseName.trim() !== '';
+        if (!isSetsValid || !isExerciseNameValid) {
+            Toast.show({
+                type: 'error',
+                text1: !isSetsValid ? t('emptySeries') : t('emptyExerciseName'),
+                // useModal: false,
+            });
+            return;
+        }
         onSave({name: exerciseName, sets});
     };
 

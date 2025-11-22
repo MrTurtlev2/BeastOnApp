@@ -17,5 +17,7 @@
   "planName": "nazwa planu",
   "exerciseName": "nazwa ćwiczenia",
   "weight": "ciężar w kg",
-  "repetitions": "powtórzenia"
+  "repetitions": "powtórzenia",
+  "emptyExerciseName": "uzupełnij nazwę ćwiczenia",
+  "emptySeries": "uzupełnij wartość serii"
 }
