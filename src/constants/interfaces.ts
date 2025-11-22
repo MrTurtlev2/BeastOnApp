@@ -66,3 +66,13 @@ export interface ILottiePowerButton {
     onPress: () => void;
     style?: StyleProp<ViewStyle>;
 }
+
+export interface ICircleBtn {
+    customStyle?: StyleProp<any>;
+    icon?: any;
+    text?: string;
+    onPress: () => void;
+    isLoading?: boolean;
+    textColor?: string;
+    bgColor?: string;
+}

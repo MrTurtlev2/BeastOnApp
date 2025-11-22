@@ -1,8 +1,11 @@
-import {useState} from 'react';
-import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
+import {useRef, useState} from 'react';
+import {FlatList, Text, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import CustomInput from '../../../common/customInput/CustomInput';
 import {IExercise, IExerciseSet} from '../../../../constants/interfaces';
+import {style} from '../Style';
+import CircleBtn from '../../../common/CircleBtn/CircleBtn';
+import {Colors} from '../../../../constants/Colors';
 
 type Props = {
     existingExercise: IExercise | null;
@@ -16,7 +19,22 @@ const ExerciseEditorPage = ({existingExercise, onSave, onCancel}: Props) => {
     const [exerciseName, setExerciseName] = useState(existingExercise?.name ?? '');
     const [sets, setSets] = useState<IExerciseSet[]>(existingExercise?.sets ?? []);
 
-    const addSet = () => setSets(prev => [...prev, {weight: '', repetitions: ''}]);
+    const flatListRef = useRef<FlatList>(null);
+
+    const addSet = () => {
+        setSets(prev => {
+            const updated = [...prev, {weight: '', repetitions: ''}];
+
+            setTimeout(() => {
+                flatListRef.current?.scrollToIndex({
+                    index: updated?.length - 1,
+                    animated: true,
+                });
+            }, 100);
+
+            return updated;
+        });
+    };
 
     const updateSet = (index: number, field: keyof IExerciseSet, value: string) => {
         setSets(prev => {
@@ -31,49 +49,63 @@ const ExerciseEditorPage = ({existingExercise, onSave, onCancel}: Props) => {
         onSave({name: exerciseName, sets});
     };
 
-    return (
-        <ScrollView style={{flex: 1, paddingHorizontal: 20}} showsVerticalScrollIndicator={false}>
+    const renderSet = ({item, index}: {item: IExerciseSet; index: number}) => (
+        <View style={{flexDirection: 'row', marginBottom: 10, alignItems: 'center'}}>
             <CustomInput
-                value={exerciseName}
-                onChangeText={setExerciseName}
-                placeholder={t('exerciseName')}
-                containerStyle={{marginBottom: 20}}
+                value={String(item.weight)}
+                onChangeText={text => updateSet(index, 'weight', text)}
+                placeholder={t('weight')}
+                containerStyle={{flex: 1}}
+                keyboardType="numeric"
+                size={'small'}
             />
+            <Text style={style.seriesSeparator}>X</Text>
+            <CustomInput
+                value={String(item.repetitions)}
+                onChangeText={text => updateSet(index, 'repetitions', text)}
+                placeholder={t('repetitions')}
+                containerStyle={{flex: 1}}
+                keyboardType="numeric"
+                size={'small'}
+            />
+        </View>
+    );
 
-            {sets?.map((set, index) => (
-                <View key={index} style={{flexDirection: 'row', marginBottom: 10}}>
+    const ListFooterComponent = () => (
+        <View style={{alignItems: 'center'}}>
+            <CircleBtn onPress={addSet} text={'+'} />
+        </View>
+    );
+
+    return (
+        <View style={{flex: 1}}>
+            <FlatList
+                ref={flatListRef}
+                data={sets}
+                keyExtractor={(_, index) => index?.toString()}
+                renderItem={renderSet}
+                contentContainerStyle={{paddingHorizontal: 20, paddingBottom: 20}}
+                ListHeaderComponent={
                     <CustomInput
-                        value={String(set.weight)}
-                        onChangeText={text => updateSet(index, 'weight', text)}
-                        placeholder={t('weight')}
-                        containerStyle={{flex: 1}}
-                        keyboardType="numeric"
-                        size={'small'}
+                        value={exerciseName}
+                        onChangeText={setExerciseName}
+                        placeholder={t('exerciseName')}
+                        containerStyle={{marginBottom: 10}}
                     />
-                    <Text style={{color: '#00aaff', fontWeight: 'bold'}}>X</Text>
-                    <CustomInput
-                        value={String(set.repetitions)}
-                        onChangeText={text => updateSet(index, 'repetitions', text)}
-                        placeholder={t('repetitions')}
-                        containerStyle={{flex: 1}}
-                        keyboardType="numeric"
-                        size={'small'}
-                    />
-                </View>
-            ))}
-
-            <TouchableOpacity onPress={addSet} style={{marginTop: 10}}>
-                <Text style={{color: '#00aaff', fontWeight: 'bold'}}>+ {t('addSet') ?? 'Dodaj serię'}</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={handleSave} style={{marginTop: 30}}>
-                <Text style={{color: 'green', fontWeight: 'bold'}}>{t('saveExercise') ?? 'Zapisz ćwiczenie'}</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={onCancel} style={{marginTop: 10}}>
-                <Text style={{color: 'red'}}>{t('cancel') ?? 'Anuluj'}</Text>
-            </TouchableOpacity>
-        </ScrollView>
+                }
+                ListFooterComponent={ListFooterComponent}
+            />
+            <View
+                style={{
+                    paddingHorizontal: 20,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    paddingBottom: 30,
+                }}>
+                <CircleBtn onPress={onCancel} text={'X'} textColor={Colors.pink} bgColor={Colors.lightGrey} />
+                <CircleBtn onPress={handleSave} text={'OK'} />
+            </View>
+        </View>
     );
 };
 
