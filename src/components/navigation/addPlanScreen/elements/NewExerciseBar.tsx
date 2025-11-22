@@ -27,7 +27,6 @@ const style = StyleSheet.create({
         borderRadius: 24,
         backgroundColor: Colors.bgGrey,
         paddingVertical: 30,
-        paddingHorizontal: 15,
         marginBottom: 30,
         overflow: 'hidden',
         ...barShadow,

@@ -4,6 +4,11 @@ import CustomInput from '../../../common/customInput/CustomInput';
 import {IExercise} from '../../../../constants/interfaces';
 import NewExerciseBar from '../elements/NewExerciseBar';
 import PlanOverviewFooter from '../elements/PlanOverviewFooter';
+import {addPlanAsync} from '../../../../api/trainingPlanService';
+import {useState} from 'react';
+import {useNavigation} from '@react-navigation/native';
+import {loadTrainingPlans} from '../../../../store/trainingPlansSlice';
+import {useAppDispatch} from '../../../../store';
 
 type Props = {
     planName: string;
@@ -13,17 +18,24 @@ type Props = {
     onEditExercise: (exercise: IExercise) => void;
 };
 
-const PlanOverviewPage = ({planName, setPlanName, exercises, onAddExercise, onEditExercise}: Props) => {
+const PlanOverviewPage = ({exercises, onAddExercise, onEditExercise, selectedDay}: Props) => {
     const {t} = useTranslation();
+    const dispatch = useAppDispatch();
+    const navigation = useNavigation();
+    const [planName, setPlanName] = useState<string>('');
+    const [isPlanLoading, setPlanLoading] = useState<boolean>(false);
+
+    const onSavePlan = async () => {
+        setPlanLoading(true);
+        await addPlanAsync({name: planName, exercises, daysOfWeek: [selectedDay]});
+        dispatch(loadTrainingPlans());
+        navigation.goBack();
+        setPlanLoading(false);
+    };
 
     return (
-        <View style={{flex: 1}}>
-            <CustomInput
-                value={planName}
-                onChangeText={setPlanName}
-                placeholder={t('planName')}
-                containerStyle={{marginBottom: 20, marginHorizontal: 20}}
-            />
+        <View style={{flex: 1, paddingHorizontal: 20}}>
+            <CustomInput value={planName} onChangeText={setPlanName} placeholder={t('planName')} containerStyle={{marginBottom: 20}} />
 
             <FlatList
                 data={exercises}
@@ -35,7 +47,9 @@ const PlanOverviewPage = ({planName, setPlanName, exercises, onAddExercise, onEd
                 showsVerticalScrollIndicator={false}
                 ListHeaderComponent={<View style={{height: 5}} />}
                 contentContainerStyle={{paddingHorizontal: 20}}
-                ListFooterComponent={<PlanOverviewFooter onAddExercise={onAddExercise} onSavePlan={undefined} />}
+                ListFooterComponent={
+                    <PlanOverviewFooter onAddExercise={onAddExercise} onSavePlan={onSavePlan} isPlanLoading={isPlanLoading} />
+                }
             />
         </View>
     );

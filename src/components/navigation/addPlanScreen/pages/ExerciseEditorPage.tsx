@@ -16,7 +16,7 @@ const ExerciseEditorPage = ({existingExercise, onSave, onCancel}: Props) => {
     const [exerciseName, setExerciseName] = useState(existingExercise?.name ?? '');
     const [sets, setSets] = useState<IExerciseSet[]>(existingExercise?.sets ?? []);
 
-    const addSet = () => setSets(prev => [...prev, {weight: 0, repetitions: 0}]);
+    const addSet = () => setSets(prev => [...prev, {weight: '', repetitions: ''}]);
 
     const updateSet = (index: number, field: keyof IExerciseSet, value: string) => {
         setSets(prev => {
@@ -41,20 +41,23 @@ const ExerciseEditorPage = ({existingExercise, onSave, onCancel}: Props) => {
             />
 
             {sets?.map((set, index) => (
-                <View key={index} style={{flexDirection: 'row', gap: 10, marginBottom: 10}}>
+                <View key={index} style={{flexDirection: 'row', marginBottom: 10}}>
                     <CustomInput
                         value={String(set.weight)}
                         onChangeText={text => updateSet(index, 'weight', text)}
                         placeholder={t('weight')}
                         containerStyle={{flex: 1}}
                         keyboardType="numeric"
+                        size={'small'}
                     />
+                    <Text style={{color: '#00aaff', fontWeight: 'bold'}}>X</Text>
                     <CustomInput
                         value={String(set.repetitions)}
                         onChangeText={text => updateSet(index, 'repetitions', text)}
                         placeholder={t('repetitions')}
                         containerStyle={{flex: 1}}
                         keyboardType="numeric"
+                        size={'small'}
                     />
                 </View>
             ))}

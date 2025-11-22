@@ -6,12 +6,14 @@ import {View} from 'react-native';
 import PlanOverviewPage from './pages/PlanOverviewPage';
 import ExerciseEditorPage from './pages/ExerciseEditorPage';
 import {IExercise} from '../../../constants/interfaces';
+import {useRoute} from '@react-navigation/core';
 
 const AddPlanScreen = () => {
     const {t} = useTranslation();
+    const route = useRoute();
+    const {selectedDay} = route?.params || {};
     const pagerRef = useRef<PagerView>(null);
 
-    const [planName, setPlanName] = useState<string>('');
     const [exercises, setExercises] = useState<IExercise[]>([]);
     const [currentExercise, setCurrentExercise] = useState<IExercise | null>(null);
 
@@ -54,8 +56,7 @@ const AddPlanScreen = () => {
             <PagerView ref={pagerRef} style={{flex: 1, height: '100%', width: '100%'}} initialPage={0} scrollEnabled={false}>
                 <View key="1" style={{flex: 1}}>
                     <PlanOverviewPage
-                        planName={planName}
-                        setPlanName={setPlanName}
+                        selectedDay={selectedDay}
                         exercises={exercises}
                         onAddExercise={() => goToEditor()}
                         onEditExercise={exercise => goToEditor(exercise)}

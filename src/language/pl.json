@@ -14,5 +14,8 @@
   "or": "lub",
   "pickFromExistingAlready": "wybierz już z istniejących",
   "motivationText": "Obudź bestię, podnieś więcej.",
-  "planName": "nazwa planu"
+  "planName": "nazwa planu",
+  "exerciseName": "nazwa ćwiczenia",
+  "weight": "ciężar w kg",
+  "repetitions": "powtórzenia"
 }

@@ -1,5 +1,5 @@
 import {TextInput, View} from 'react-native';
-import {styles} from './Style';
+import {Styles} from './Style';
 import {Colors} from '../../../constants/Colors';
 import CustomIcon from '../customIcon/CustomIcon';
 import {ICustomInput} from '../../../constants/interfaces';
@@ -18,7 +18,10 @@ const CustomInput = ({
     autoComplete = 'off',
     textContentType,
     importantForAutofill = 'no',
+    size = 'default',
 }: ICustomInput) => {
+    const styles = Styles(size);
+
     return (
         <View style={[styles.wrapper, containerStyle]}>
             <CustomIcon name={iconName} font={iconFont} size={iconSize || 50} color={iconColor || '#D04C63'} style={styles.icon} />

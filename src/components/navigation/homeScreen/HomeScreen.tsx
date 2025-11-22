@@ -72,8 +72,8 @@ export default function HomeScreen() {
                 ListEmptyComponent={
                     <HomeEmptyListComponent
                         customerName={user?.customerName}
-                        onCreatePlan={() => navigation.navigate('AddPlanScreen')}
-                        onAssignPlan={() => fetchPlans()}
+                        onCreatePlan={() => navigation.navigate('AddPlanScreen', {selectedDay: selectedDay + 1})}
+                        onAssignPlan={() => navigation.navigate('AddPlanScreen', {selectedDay: selectedDay + 1})}
                     />
                 }
                 showsVerticalScrollIndicator={false}

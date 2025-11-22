@@ -26,6 +26,7 @@ export interface ICustomInput extends TextInputProps {
     iconFont?: IconFontEnum;
     iconColor?: ICustomIcon['color'];
     containerStyle?: StyleProp<ViewStyle>;
+    size?: 'small' | 'default';
 }
 
 export type IExerciseSet = {

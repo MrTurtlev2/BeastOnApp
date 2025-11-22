@@ -3,7 +3,7 @@ import {Fonts} from '../../../../constants/Fonts';
 import CircleBtn from '../../../common/CircleBtn/CircleBtn';
 import {View} from 'react-native';
 
-const PlanOverviewFooter = ({onAddExercise, onSavePlan}) => {
+const PlanOverviewFooter = ({onAddExercise, onSavePlan, isPlanLoading}) => {
     return (
         <View style={{alignItems: 'center', paddingBottom: 40}}>
             <NewExerciseBar
@@ -16,7 +16,7 @@ const PlanOverviewFooter = ({onAddExercise, onSavePlan}) => {
                     fontFamily: Fonts.Marker,
                 }}
             />
-            <CircleBtn onPress={onSavePlan} text={'OK'} />
+            <CircleBtn onPress={onSavePlan} text={'OK'} isLoading={isPlanLoading} />
         </View>
     );
 };
