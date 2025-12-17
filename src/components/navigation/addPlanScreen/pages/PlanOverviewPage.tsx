@@ -16,6 +16,7 @@ type Props = {
     exercises: IExercise[];
     onAddExercise: () => void;
     onEditExercise: (exercise: IExercise) => void;
+    selectedDay: number;
 };
 
 const PlanOverviewPage = ({exercises, onAddExercise, onEditExercise, selectedDay}: Props) => {

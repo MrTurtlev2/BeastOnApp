@@ -35,8 +35,6 @@ const ExerciseEditorPage = ({existingExercise, onSave, onCancel}: Props) => {
               }))
             : [],
     );
-    console.log(sets);
-
     const addSet = () => {
         setSets(prev => {
             const updated = [
@@ -78,7 +76,7 @@ const ExerciseEditorPage = ({existingExercise, onSave, onCancel}: Props) => {
         }
         onSave({
             name: exerciseName,
-            sets: sets.map(set => ({
+            sets: sets?.map(set => ({
                 weight: Number(set.weight),
                 repetitions: Number(set.repetitions),
             })),
