@@ -1,5 +1,5 @@
 import {useRef, useState} from 'react';
-import {FlatList, Text, View} from 'react-native';
+import {FlatList, Text, TouchableOpacity, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import CustomInput from '../../../common/customInput/CustomInput';
 import {IExercise, IExerciseSet} from '../../../../constants/interfaces';
@@ -7,6 +7,7 @@ import {style} from '../Style';
 import CircleBtn from '../../../common/CircleBtn/CircleBtn';
 import {Colors} from '../../../../constants/Colors';
 import {Toast} from 'toastify-react-native';
+import Octicons from '@expo/vector-icons/Octicons';
 
 type Props = {
     existingExercise: IExercise | null;
@@ -37,6 +38,10 @@ const ExerciseEditorPage = ({existingExercise, onSave, onCancel}: Props) => {
         });
     };
 
+    const removeSet = (index: number) => {
+        setSets(prev => prev.filter((_, i) => i !== index));
+    };
+
     const updateSet = (index: number, field: keyof IExerciseSet, value: string) => {
         setSets(prev => {
             const updated = [...prev];
@@ -52,7 +57,7 @@ const ExerciseEditorPage = ({existingExercise, onSave, onCancel}: Props) => {
             Toast.show({
                 type: 'error',
                 text1: !isSetsValid ? t('emptySeries') : t('emptyExerciseName'),
-                // useModal: false,
+                useModal: false,
             });
             return;
         }
@@ -60,7 +65,7 @@ const ExerciseEditorPage = ({existingExercise, onSave, onCancel}: Props) => {
     };
 
     const renderSet = ({item, index}: {item: IExerciseSet; index: number}) => (
-        <View style={{flexDirection: 'row', marginBottom: 10, alignItems: 'center'}}>
+        <View style={{flexDirection: 'row', marginBottom: 10, alignItems: 'center', marginRight: 10}}>
             <CustomInput
                 value={String(item.weight)}
                 onChangeText={text => updateSet(index, 'weight', text)}
@@ -78,6 +83,9 @@ const ExerciseEditorPage = ({existingExercise, onSave, onCancel}: Props) => {
                 keyboardType="numeric"
                 size={'small'}
             />
+            <TouchableOpacity style={style.editorDeleteBtn} onPress={() => removeSet(index)}>
+                <Octicons name="trash" size={30} color={Colors.lightRed} />
+            </TouchableOpacity>
         </View>
     );
 
@@ -95,12 +103,13 @@ const ExerciseEditorPage = ({existingExercise, onSave, onCancel}: Props) => {
                 keyExtractor={(_, index) => index?.toString()}
                 renderItem={renderSet}
                 contentContainerStyle={{paddingHorizontal: 20, paddingBottom: 20}}
+                showsVerticalScrollIndicator={false}
                 ListHeaderComponent={
                     <CustomInput
                         value={exerciseName}
                         onChangeText={setExerciseName}
                         placeholder={t('exerciseName')}
-                        containerStyle={{marginBottom: 10}}
+                        containerStyle={{marginBottom: 30}}
                     />
                 }
                 ListFooterComponent={ListFooterComponent}

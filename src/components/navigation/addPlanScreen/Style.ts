@@ -13,4 +13,17 @@ export const style = StyleSheet.create({
         zIndex: 1,
         marginBottom: 5,
     },
+    editorDeleteBtn: {
+        backgroundColor: Colors.lightGrey,
+        padding: 10,
+        borderRadius: 50,
+        height: 50,
+        width: 50,
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'absolute',
+        right: -25,
+        top: -20,
+        zIndex: 1,
+    },
 });
