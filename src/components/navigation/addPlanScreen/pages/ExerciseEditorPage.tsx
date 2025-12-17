@@ -2,57 +2,72 @@ import {useRef, useState} from 'react';
 import {FlatList, Text, TouchableOpacity, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import CustomInput from '../../../common/customInput/CustomInput';
-import {IExercise, IExerciseSet} from '../../../../constants/interfaces';
+import {IExercise} from '../../../../constants/interfaces';
 import {style} from '../Style';
 import CircleBtn from '../../../common/CircleBtn/CircleBtn';
 import {Colors} from '../../../../constants/Colors';
 import {Toast} from 'toastify-react-native';
 import Octicons from '@expo/vector-icons/Octicons';
+import {nanoid} from 'nanoid/non-secure';
+import Animated, {LinearTransition, SlideInRight, SlideOutRight} from 'react-native-reanimated';
 
 type Props = {
     existingExercise: IExercise | null;
     onSave: (exercise: IExercise) => void;
     onCancel: () => void;
 };
+type ExerciseSetUI = {
+    uiId: string;
+    weight: string;
+    repetitions: string;
+};
 
 const ExerciseEditorPage = ({existingExercise, onSave, onCancel}: Props) => {
     const {t} = useTranslation();
-
-    const [exerciseName, setExerciseName] = useState(existingExercise?.name ?? '');
-    const [sets, setSets] = useState<IExerciseSet[]>(existingExercise?.sets ?? []);
-
     const flatListRef = useRef<FlatList>(null);
+    const [exerciseName, setExerciseName] = useState(existingExercise?.name ?? '');
+    const [sets, setSets] = useState<ExerciseSetUI[]>(
+        existingExercise?.sets
+            ? existingExercise.sets.map(set => ({
+                  uiId: nanoid(),
+                  weight: String(set.weight),
+                  repetitions: String(set.repetitions),
+              }))
+            : [],
+    );
+    console.log(sets);
 
     const addSet = () => {
         setSets(prev => {
-            const updated = [...prev, {weight: '', repetitions: ''}];
-
+            const updated = [
+                ...prev,
+                {
+                    uiId: nanoid(),
+                    weight: '',
+                    repetitions: '',
+                },
+            ];
             setTimeout(() => {
                 flatListRef.current?.scrollToIndex({
-                    index: updated?.length - 1,
+                    index: updated.length - 1,
                     animated: true,
                 });
             }, 100);
-
             return updated;
         });
     };
 
-    const removeSet = (index: number) => {
-        setSets(prev => prev.filter((_, i) => i !== index));
+    const removeSet = (uiId: string) => {
+        setSets(prev => prev?.filter(set => set?.uiId !== uiId));
     };
 
-    const updateSet = (index: number, field: keyof IExerciseSet, value: string) => {
-        setSets(prev => {
-            const updated = [...prev];
-            updated[index][field] = Number(value);
-            return updated;
-        });
+    const updateSet = (uiId: string, field: 'weight' | 'repetitions', value: string) => {
+        setSets(prev => prev?.map(set => (set?.uiId === uiId ? {...set, [field]: value} : set)));
     };
 
     const handleSave = () => {
-        const isSetsValid = sets.every(set => typeof set?.repetitions === 'number' && typeof set?.weight === 'number');
-        const isExerciseNameValid = exerciseName && exerciseName.trim() !== '';
+        const isExerciseNameValid = exerciseName.trim() !== '';
+        const isSetsValid = sets.every(set => set.weight !== '' && set.repetitions !== '');
         if (!isSetsValid || !isExerciseNameValid) {
             Toast.show({
                 type: 'error',
@@ -61,38 +76,51 @@ const ExerciseEditorPage = ({existingExercise, onSave, onCancel}: Props) => {
             });
             return;
         }
-        onSave({name: exerciseName, sets});
+        onSave({
+            name: exerciseName,
+            sets: sets.map(set => ({
+                weight: Number(set.weight),
+                repetitions: Number(set.repetitions),
+            })),
+        });
     };
 
-    const renderSet = ({item, index}: {item: IExerciseSet; index: number}) => (
-        <View style={{flexDirection: 'row', marginBottom: 10, alignItems: 'center', marginRight: 10}}>
+    const renderSet = ({item}: {item: ExerciseSetUI}) => (
+        <Animated.View
+            entering={SlideInRight.duration(200)}
+            exiting={SlideOutRight.duration(200)}
+            layout={LinearTransition.springify()}
+            style={style.renderSetMain}>
             <CustomInput
-                value={String(item.weight)}
-                onChangeText={text => updateSet(index, 'weight', text)}
+                value={item.weight}
+                onChangeText={text => updateSet(item.uiId, 'weight', text)}
                 placeholder={t('weight')}
                 containerStyle={{flex: 1}}
                 keyboardType="numeric"
-                size={'small'}
+                size="small"
             />
+
             <Text style={style.seriesSeparator}>X</Text>
+
             <CustomInput
-                value={String(item.repetitions)}
-                onChangeText={text => updateSet(index, 'repetitions', text)}
+                value={item.repetitions}
+                onChangeText={text => updateSet(item.uiId, 'repetitions', text)}
                 placeholder={t('repetitions')}
                 containerStyle={{flex: 1}}
                 keyboardType="numeric"
-                size={'small'}
+                size="small"
             />
-            <TouchableOpacity style={style.editorDeleteBtn} onPress={() => removeSet(index)}>
+
+            <TouchableOpacity style={style.editorDeleteBtn} onPress={() => removeSet(item.uiId)}>
                 <Octicons name="trash" size={30} color={Colors.lightRed} />
             </TouchableOpacity>
-        </View>
+        </Animated.View>
     );
 
     const ListFooterComponent = () => (
-        <View style={{alignItems: 'center'}}>
+        <Animated.View layout={LinearTransition.springify().damping(15).stiffness(100)} style={{alignItems: 'center'}}>
             <CircleBtn onPress={addSet} text={'+'} />
-        </View>
+        </Animated.View>
     );
 
     return (
@@ -100,7 +128,7 @@ const ExerciseEditorPage = ({existingExercise, onSave, onCancel}: Props) => {
             <FlatList
                 ref={flatListRef}
                 data={sets}
-                keyExtractor={(_, index) => index?.toString()}
+                keyExtractor={item => item?.uiId}
                 renderItem={renderSet}
                 contentContainerStyle={{paddingHorizontal: 20, paddingBottom: 20}}
                 showsVerticalScrollIndicator={false}
@@ -114,13 +142,8 @@ const ExerciseEditorPage = ({existingExercise, onSave, onCancel}: Props) => {
                 }
                 ListFooterComponent={ListFooterComponent}
             />
-            <View
-                style={{
-                    paddingHorizontal: 20,
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    paddingBottom: 30,
-                }}>
+
+            <View style={style.editorButtons}>
                 <CircleBtn onPress={onCancel} text={'X'} textColor={Colors.pink} bgColor={Colors.lightGrey} />
                 <CircleBtn onPress={handleSave} text={'OK'} />
             </View>

@@ -26,4 +26,16 @@ export const style = StyleSheet.create({
         top: -20,
         zIndex: 1,
     },
+    renderSetMain: {
+        flexDirection: 'row',
+        marginBottom: 10,
+        alignItems: 'center',
+        marginRight: 15,
+    },
+    editorButtons: {
+        paddingHorizontal: 20,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingBottom: 30,
+    },
 });
