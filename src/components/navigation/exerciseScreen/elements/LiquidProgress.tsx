@@ -7,6 +7,7 @@ const AnimatedPath = Animated.createAnimatedComponent(Path);
 
 const LiquidProgress = ({percent = 40, size = 250}) => {
     const translateX = useSharedValue(0);
+    const translateX2 = useSharedValue(-size);
     const liquidLevel = useSharedValue(size);
 
     useEffect(() => {
@@ -18,7 +19,7 @@ const LiquidProgress = ({percent = 40, size = 250}) => {
             -1,
             false,
         );
-
+        translateX2.value = withRepeat(withTiming(0, {duration: 3500, easing: Easing.linear}), -1, false);
         liquidLevel.value = withTiming(size * (1 - percent / 100), {
             duration: 1000,
             easing: Easing.out(Easing.quad),
@@ -41,13 +42,15 @@ const LiquidProgress = ({percent = 40, size = 250}) => {
     `;
         return {d};
     });
-    const bgAnimatedProps = useAnimatedProps(() => {
+    const backgroundWaveProps = useAnimatedProps(() => {
         const h = 10;
-        const y = liquidLevel.value + 5;
-        const offset = -size / 2.5;
-        const x = translateX.value + offset;
+        const y = liquidLevel.value - 2;
+        const x = translateX2.value;
+        const startX = x - size;
         const d = `
-      M ${x} ${y} 
+      M ${startX} ${y} 
+      q ${size / 4} ${-h} ${size / 2} 0 
+      t ${size / 2} 0
       q ${size / 4} ${-h} ${size / 2} 0 
       t ${size / 2} 0
       q ${size / 4} ${-h} ${size / 2} 0 
@@ -55,7 +58,7 @@ const LiquidProgress = ({percent = 40, size = 250}) => {
       q ${size / 4} ${-h} ${size / 2} 0 
       t ${size / 2} 0
       v ${size} 
-      h ${-size * 3} 
+      h ${-size * 4} 
       Z
     `;
         return {d};
@@ -73,20 +76,8 @@ const LiquidProgress = ({percent = 40, size = 250}) => {
                             <Circle cx={size / 2} cy={size / 2} r={size / 2} fill="white" />
                         </Mask>
                     </Defs>
-
                     <Rect width="100%" height="100%" fill="#1a1a1a" mask="url(#mask)" />
-
-                    {/* Druga fala (tło) dla efektu głębi - opcjonalnie */}
-                    <AnimatedPath
-                        // animatedProps={animatedProps}
-                        animatedProps={bgAnimatedProps}
-                        fill="#A3243D"
-                        opacity={0.4}
-                        // transform={`translate(${-size / 2.5}, 5)`}
-                        mask="url(#mask)"
-                    />
-
-                    {/* Główna fala */}
+                    <AnimatedPath animatedProps={backgroundWaveProps} fill="#A3243D" opacity={0.4} mask="url(#mask)" />
                     <AnimatedPath animatedProps={animatedProps} fill="#A3243D" mask="url(#mask)" />
                 </Svg>
 
@@ -108,7 +99,6 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
         borderWidth: 1,
         borderColor: 'rgba(255,255,255,0.1)',
-        // Efekt "wgłębienia" kuli
         shadowColor: '#000',
         shadowOffset: {width: 0, height: 15},
         shadowOpacity: 0.6,
