@@ -1,4 +1,3 @@
-import React from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -15,6 +14,7 @@ import {navigationRef} from './RootNavigation';
 import {Colors} from '../../constants/Colors';
 import AddPlanScreen from './addPlanScreen/AddPlanScreen';
 import CustomModalScreen from './customModalScreen/CustomModalScreen';
+import ExerciseScreen from './exerciseScreen/ExerciseScreen';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -42,6 +42,7 @@ const HomeStackNavigator = () => {
         <HomeStack.Navigator screenOptions={{headerShown: false}}>
             <HomeStack.Screen name="HomeMain" component={HomeScreen} options={{headerShown: false}} />
             <HomeStack.Screen name="AddPlanScreen" component={AddPlanScreen} />
+            <HomeStack.Screen name="ExerciseScreen" component={ExerciseScreen} />
         </HomeStack.Navigator>
     );
 };

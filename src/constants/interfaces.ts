@@ -1,4 +1,6 @@
 import {KeyboardTypeOptions, StyleProp, TextInputProps, TextStyle, ViewStyle} from 'react-native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp} from '@react-navigation/core';
 
 export enum IconFontEnum {
     Feather = 'Feather',
@@ -35,7 +37,7 @@ export type IExerciseSet = {
 };
 
 export type IExercise = {
-    name: string;
+    exerciseName: string;
     sets: IExerciseSet[];
 };
 
@@ -76,3 +78,24 @@ export interface ICircleBtn {
     textColor?: string;
     bgColor?: string;
 }
+
+export type INavigationProps = {
+    Login: undefined;
+    Register: undefined;
+    HomeMain: undefined;
+    AddPlanScreen: {
+        selectedDay: number;
+    };
+    ExerciseScreen: {
+        exercise: IExercise;
+    };
+
+    MotivationScreen: undefined;
+    ErrorScreen: undefined;
+    CustomModalScreen: undefined;
+};
+
+export type IScreenProps<T extends keyof INavigationProps> = {
+    navigation: StackNavigationProp<INavigationProps, T>;
+    route: RouteProp<INavigationProps, T>;
+};

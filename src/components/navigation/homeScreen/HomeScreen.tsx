@@ -8,12 +8,15 @@ import ExerciseBar from './elements/ExerciseBar/ExerciseBar';
 import {useState} from 'react';
 import {addDays, format, isToday, startOfWeek} from 'date-fns';
 import {enUS, pl} from 'date-fns/locale';
-import {IExercise} from '../../../constants/interfaces';
+import {IExercise, INavigationProps} from '../../../constants/interfaces';
 import HomeEmptyListComponent from './elements/HomeEmptyListComponent/HomeEmptyListComponent';
 import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+
+type HomeStackNavProp = StackNavigationProp<INavigationProps, 'ExerciseScreen'>;
 
 export default function HomeScreen() {
-    const navigation = useNavigation();
+    const navigation = useNavigation<HomeStackNavProp>();
     const user = useAppSelector(state => state?.user?.userData);
     const {trainingPlans, loading} = useAppSelector(state => state?.trainingPlans);
     const dispatch = useAppDispatch();
@@ -58,14 +61,17 @@ export default function HomeScreen() {
             <CustomWeekPicker weekDays={weekDays} selectedDay={selectedDay} setSelectedDay={setSelectedDay} />
         </Animated.View>
     );
-
     return (
         <Layout hasBurger>
             <Animated.FlatList<IExercise>
                 ListHeaderComponent={<Header />}
                 data={trainingPlans[selectedDay]?.exercises ?? []}
-                renderItem={({item}) => (
-                    <ExerciseBar exerciseName={item?.exerciseName} onPress={() => null} containerStyle={{marginHorizontal: 25}} />
+                renderItem={({item}: {item: IExercise}) => (
+                    <ExerciseBar
+                        exerciseName={item?.exerciseName}
+                        onPress={() => navigation.push('ExerciseScreen', {exercise: item})}
+                        containerStyle={{marginHorizontal: 25}}
+                    />
                 )}
                 refreshing={loading}
                 onRefresh={fetchPlans}
