@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     },
     percentText: {
         color: 'white',
-        fontSize: 56,
+        fontSize: 46,
         fontWeight: '200',
         letterSpacing: -2,
     },
