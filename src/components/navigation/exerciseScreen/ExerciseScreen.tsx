@@ -20,6 +20,7 @@ const ExerciseScreen = ({route}: any) => {
 
     const progressAnim = useRef(new Animated.Value(0)).current;
     const timerRef = useRef<number | null>(null);
+    const progressPercent = ((currentIdx + 1) / exercise?.sets?.length) * 100 || 0;
 
     const startBreak = () => {
         if (isBreakActive || currentIdx >= exercise.sets.length - 1) return;
@@ -64,7 +65,7 @@ const ExerciseScreen = ({route}: any) => {
 
     return (
         <Layout hasBackArrow bgImageType="right-center" customStyle={{flex: 1, paddingTop: 80}}>
-            <LiquidProgress percent={20} size={160} />
+            <LiquidProgress percent={progressPercent} size={160} />
 
             <View style={{position: 'relative'}}>
                 <Text style={styles.exerciseName}>{exercise.exerciseName}</Text>

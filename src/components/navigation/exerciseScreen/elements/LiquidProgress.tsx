@@ -11,17 +11,14 @@ const LiquidProgress = ({percent = 40, size = 250}) => {
     const liquidLevel = useSharedValue(size);
 
     useEffect(() => {
-        translateX.value = withRepeat(
-            withTiming(-size, {
-                duration: 3000,
-                easing: Easing.linear,
-            }),
-            -1,
-            false,
-        );
+        translateX.value = withRepeat(withTiming(-size, {duration: 3000, easing: Easing.linear}), -1, false);
+
         translateX2.value = withRepeat(withTiming(0, {duration: 3500, easing: Easing.linear}), -1, false);
+    }, []);
+
+    useEffect(() => {
         liquidLevel.value = withTiming(size * (1 - percent / 100), {
-            duration: 1000,
+            duration: 800,
             easing: Easing.out(Easing.quad),
         });
     }, [percent, size]);
