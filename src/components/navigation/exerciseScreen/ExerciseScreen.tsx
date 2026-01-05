@@ -1,9 +1,13 @@
 import {useRef, useState} from 'react';
-import {Animated, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
+import {Animated, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Layout from '../../common/layout/Layout';
 import TimelineItem from './elements/TimelineItem';
 import {Ionicons} from '@expo/vector-icons';
 import LiquidProgress from './elements/LiquidProgress';
+import {Fonts} from '../../../constants/Fonts';
+import {Colors} from '../../../constants/Colors';
+import ClawMarksSvg from '../../../assets/images/svg/common/ClawMarksSvg';
+import ExerciseBottomManager from './elements/ExerciseBottomManager';
 
 const ExerciseScreen = ({route}: any) => {
     const {exercise} = route.params;
@@ -30,6 +34,11 @@ const ExerciseScreen = ({route}: any) => {
     return (
         <Layout hasBackArrow bgImageType={'right-center'} customStyle={{flex: 1, paddingTop: 80, width: '100%'}}>
             <LiquidProgress percent={20} size={160} />
+            <View style={{position: 'relative'}}>
+                <Text style={styles.exerciseName}>{exercise.exerciseName}</Text>
+                <ClawMarksSvg />
+                {/*<Image source={ClawMarksPNG} />*/}
+            </View>
             <FlatList
                 showsVerticalScrollIndicator={false}
                 data={exercise.sets}
@@ -55,12 +64,18 @@ const ExerciseScreen = ({route}: any) => {
                     />
                 )}
             />
+            <ExerciseBottomManager />
         </Layout>
     );
 };
 
 const styles = StyleSheet.create({
     listPadding: {paddingVertical: 30, paddingHorizontal: 15},
+    exerciseName: {
+        fontFamily: Fonts.light,
+        fontSize: 23,
+        color: Colors.white,
+    },
 });
 
 export default ExerciseScreen;

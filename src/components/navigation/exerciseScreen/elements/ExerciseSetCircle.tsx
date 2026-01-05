@@ -52,7 +52,6 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontFamily: Fonts.regular,
         lineHeight: 27,
-        // backgroundColor: 'red',
     },
     seriesSeparator: {
         color: Colors.lightGrey,

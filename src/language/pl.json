@@ -19,5 +19,6 @@
   "weight": "ciężar w kg",
   "repetitions": "powtórzenia",
   "emptyExerciseName": "uzupełnij nazwę ćwiczenia",
-  "emptySeries": "uzupełnij wartość serii"
+  "emptySeries": "uzupełnij wartość serii",
+  "brake": "przerwa"
 }
