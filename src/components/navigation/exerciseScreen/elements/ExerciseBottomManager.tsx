@@ -10,8 +10,15 @@ import {useTranslation} from 'react-i18next';
 const {width} = Dimensions.get('window');
 const SvgHeight = 150;
 
-const ExerciseBottomManager = () => {
+type Props = {
+    isBreakActive: boolean;
+    secondsLeft: number;
+    onStartBreak: () => void;
+};
+
+const ExerciseBottomManager = ({isBreakActive, secondsLeft, onStartBreak}: Props) => {
     const {t} = useTranslation();
+
     return (
         <View style={styles.container}>
             <View style={styles.svgWrapper}>
@@ -21,6 +28,7 @@ const ExerciseBottomManager = () => {
                             <FeGaussianBlur in="SourceGraphic" stdDeviation="10" />
                         </Filter>
                     </Defs>
+
                     <Path
                         d={`M0 ${SvgHeight} L${width} ${SvgHeight} L${width} 60 C${width * 0.75} 20, ${width * 0.25} 20, 0 60 Z`}
                         fill="black"
@@ -28,6 +36,7 @@ const ExerciseBottomManager = () => {
                         filter="url(#softShadow)"
                         transform="translate(0, -4)"
                     />
+
                     <Path
                         d={`M0 ${SvgHeight} L${width} ${SvgHeight} L${width} 60 C${width * 0.75} 20, ${width * 0.25} 20, 0 60 Z`}
                         fill={Colors.darkRed}
@@ -38,19 +47,23 @@ const ExerciseBottomManager = () => {
             <View style={styles.content}>
                 <View style={styles.header}>
                     <MaterialCommunityIcons name="clock-time-four-outline" size={40} color={Colors.lightRed} />
-                    <Text style={styles.headerText}>{t('brake')}</Text>
+                    <Text style={styles.headerText}>{t('break')}</Text>
                 </View>
 
                 <View style={styles.controls}>
-                    <TouchableOpacity>
-                        <FontAwesome6 name="pause" size={35} color={Colors.white} style={styles.icon} />
-                    </TouchableOpacity>
+                    {!isBreakActive ? (
+                        <TouchableOpacity onPress={onStartBreak}>
+                            <Text style={styles.startText}>{t('start_break')}</Text>
+                        </TouchableOpacity>
+                    ) : (
+                        <>
+                            <FontAwesome6 name="pause" size={30} color={Colors.white} />
 
-                    <Text style={styles.timerText}>00:24</Text>
+                            <Text style={styles.timerText}>00:{secondsLeft.toString().padStart(2, '0')}</Text>
 
-                    <TouchableOpacity>
-                        <Ionicons name="play" size={35} color="white" style={styles.icon} />
-                    </TouchableOpacity>
+                            <Ionicons name="play" size={30} color={Colors.white} />
+                        </>
+                    )}
                 </View>
             </View>
         </View>
@@ -68,13 +81,7 @@ const styles = StyleSheet.create({
     },
     svgWrapper: {
         ...StyleSheet.absoluteFillObject,
-
         height: SvgHeight,
-    },
-    icon: {
-        textShadowColor: 'rgba(0, 0, 0, 0.6)',
-        textShadowOffset: {width: 0, height: 5},
-        textShadowRadius: 8,
     },
     content: {
         flex: 1,
@@ -88,23 +95,26 @@ const styles = StyleSheet.create({
     },
     headerText: {
         color: Colors.white,
-        opacity: 0.29,
+        opacity: 0.3,
         fontSize: 18,
         marginLeft: 6,
         fontFamily: Fonts.regular,
-        marginBottom: 4,
     },
     controls: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
         width: '75%',
+        marginTop: 10,
     },
     timerText: {
         color: Colors.white,
         fontSize: 36,
         fontFamily: Fonts.regular,
-        marginBottom: 4,
-        marginRight: -10,
+    },
+    startText: {
+        color: Colors.white,
+        fontSize: 22,
+        fontFamily: Fonts.regular,
     },
 });

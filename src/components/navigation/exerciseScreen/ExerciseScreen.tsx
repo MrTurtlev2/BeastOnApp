@@ -1,4 +1,4 @@
-import {useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {Animated, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Layout from '../../common/layout/Layout';
 import TimelineItem from './elements/TimelineItem';
@@ -9,36 +9,71 @@ import {Colors} from '../../../constants/Colors';
 import ClawMarksSvg from '../../../assets/images/svg/common/ClawMarksSvg';
 import ExerciseBottomManager from './elements/ExerciseBottomManager';
 
+const BREAK_DURATION = 30;
+
 const ExerciseScreen = ({route}: any) => {
     const {exercise} = route.params;
+
     const [currentIdx, setCurrentIdx] = useState(0);
     const [isMoving, setIsMoving] = useState(false);
+    const [isBreakActive, setIsBreakActive] = useState(false);
+    const [secondsLeft, setSecondsLeft] = useState(BREAK_DURATION);
+
     const progressAnim = useRef(new Animated.Value(0)).current;
+    const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-    const handleNextStep = () => {
-        if (currentIdx >= exercise.sets.length - 1) return;
+    const startBreak = () => {
+        if (isBreakActive || currentIdx >= exercise.sets.length - 1) return;
 
+        setIsBreakActive(true);
         setIsMoving(true);
+        setSecondsLeft(BREAK_DURATION);
+
         Animated.timing(progressAnim, {
             toValue: 1,
-            duration: 2000,
+            duration: BREAK_DURATION * 1000,
             useNativeDriver: false,
         }).start(({finished}) => {
             if (finished) {
-                setIsMoving(false);
-                setCurrentIdx(prev => prev + 1);
-                progressAnim.setValue(0);
+                finishBreak();
             }
         });
+
+        timerRef.current = setInterval(() => {
+            setSecondsLeft(prev => {
+                if (prev <= 1) {
+                    timerRef.current && clearInterval(timerRef.current);
+                    return 0;
+                }
+                return prev - 1;
+            });
+        }, 1000);
     };
+
+    const finishBreak = () => {
+        timerRef.current && clearInterval(timerRef.current);
+
+        setIsBreakActive(false);
+        setIsMoving(false);
+        setCurrentIdx(prev => prev + 1);
+        progressAnim.setValue(0);
+    };
+
+    useEffect(() => {
+        return () => {
+            timerRef.current && clearInterval(timerRef.current);
+        };
+    }, []);
+
     return (
-        <Layout hasBackArrow bgImageType={'right-center'} customStyle={{flex: 1, paddingTop: 80, width: '100%'}}>
+        <Layout hasBackArrow bgImageType="right-center" customStyle={{flex: 1, paddingTop: 80}}>
             <LiquidProgress percent={20} size={160} />
+
             <View style={{position: 'relative'}}>
                 <Text style={styles.exerciseName}>{exercise.exerciseName}</Text>
                 <ClawMarksSvg />
-                {/*<Image source={ClawMarksPNG} />*/}
             </View>
+
             <FlatList
                 showsVerticalScrollIndicator={false}
                 data={exercise.sets}
@@ -54,23 +89,28 @@ const ExerciseScreen = ({route}: any) => {
                         progressAnim={progressAnim}
                         renderAction={
                             index === currentIdx && !isMoving ? (
-                                <TouchableOpacity onPress={handleNextStep}>
-                                    <Ionicons name="time-outline" size={36} color="#E94560" />
+                                <TouchableOpacity onPress={startBreak}>
+                                    <Ionicons name="time-outline" size={36} color={Colors.lightRed} />
                                 </TouchableOpacity>
                             ) : index === currentIdx && isMoving ? (
-                                <Ionicons name="ellipsis-horizontal" size={30} color="#E94560" />
+                                <Ionicons name="ellipsis-horizontal" size={30} color={Colors.lightRed} />
                             ) : null
                         }
                     />
                 )}
             />
-            <ExerciseBottomManager />
+
+            <ExerciseBottomManager isBreakActive={isBreakActive} secondsLeft={secondsLeft} onStartBreak={startBreak} />
         </Layout>
     );
 };
 
 const styles = StyleSheet.create({
-    listPadding: {paddingVertical: 30, paddingHorizontal: 15},
+    listPadding: {
+        paddingTop: 30,
+        paddingBottom: 150,
+        paddingHorizontal: 15,
+    },
     exerciseName: {
         fontFamily: Fonts.light,
         fontSize: 23,
