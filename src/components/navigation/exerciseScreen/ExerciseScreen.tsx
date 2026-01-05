@@ -15,18 +15,16 @@ const ExerciseScreen = ({route}: any) => {
     const {exercise} = route.params;
 
     const [currentIdx, setCurrentIdx] = useState(0);
-    const [isMoving, setIsMoving] = useState(false);
     const [isBreakActive, setIsBreakActive] = useState(false);
     const [secondsLeft, setSecondsLeft] = useState(BREAK_DURATION);
 
     const progressAnim = useRef(new Animated.Value(0)).current;
-    const timerRef = useRef<NodeJS.Timeout | null>(null);
+    const timerRef = useRef<number | null>(null);
 
     const startBreak = () => {
         if (isBreakActive || currentIdx >= exercise.sets.length - 1) return;
 
         setIsBreakActive(true);
-        setIsMoving(true);
         setSecondsLeft(BREAK_DURATION);
 
         Animated.timing(progressAnim, {
@@ -54,7 +52,6 @@ const ExerciseScreen = ({route}: any) => {
         timerRef.current && clearInterval(timerRef.current);
 
         setIsBreakActive(false);
-        setIsMoving(false);
         setCurrentIdx(prev => prev + 1);
         progressAnim.setValue(0);
     };
@@ -88,11 +85,11 @@ const ExerciseScreen = ({route}: any) => {
                         isLast={index === exercise.sets.length - 1}
                         progressAnim={progressAnim}
                         renderAction={
-                            index === currentIdx && !isMoving ? (
+                            index === currentIdx && !isBreakActive ? (
                                 <TouchableOpacity onPress={startBreak}>
                                     <Ionicons name="time-outline" size={36} color={Colors.lightRed} />
                                 </TouchableOpacity>
-                            ) : index === currentIdx && isMoving ? (
+                            ) : index === currentIdx && isBreakActive ? (
                                 <Ionicons name="ellipsis-horizontal" size={30} color={Colors.lightRed} />
                             ) : null
                         }

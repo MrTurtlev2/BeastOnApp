@@ -58,9 +58,7 @@ const ExerciseBottomManager = ({isBreakActive, secondsLeft, onStartBreak}: Props
                     ) : (
                         <>
                             <FontAwesome6 name="pause" size={30} color={Colors.white} />
-
                             <Text style={styles.timerText}>00:{secondsLeft.toString().padStart(2, '0')}</Text>
-
                             <Ionicons name="play" size={30} color={Colors.white} />
                         </>
                     )}

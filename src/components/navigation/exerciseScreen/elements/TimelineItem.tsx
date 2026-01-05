@@ -13,6 +13,8 @@ interface TimelineItemProps {
     renderAction: ReactNode;
 }
 
+const dotSize = 14;
+
 const TimelineItem = ({set, index, isActive, isCompleted, isLast, progressAnim, renderAction}: TimelineItemProps) => {
     const isLeft = index % 2 === 0;
 
@@ -54,11 +56,25 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     axisContainer: {width: 70, alignItems: 'center', position: 'relative'},
-    dot: {width: 14, height: 14, borderRadius: 7, backgroundColor: '#333', zIndex: 3, marginTop: 45},
-    activeDot: {backgroundColor: '#E94560'},
-    lineBase: {position: 'absolute', top: 60, bottom: -60, width: 2, backgroundColor: '#333', zIndex: 1},
-    lineFill: {width: '100%', backgroundColor: '#E94560'},
-    actionSlot: {position: 'absolute', top: 34, zIndex: 4, backgroundColor: Colors.bgGrey, borderRadius: 50},
+    dot: {
+        width: dotSize,
+        height: dotSize,
+        borderRadius: 7,
+        backgroundColor: Colors.lightGrey,
+        zIndex: 3,
+        marginTop: 45 + dotSize,
+    },
+    activeDot: {backgroundColor: Colors.pink},
+    lineBase: {
+        position: 'absolute',
+        top: 60 + dotSize - 1, // UI (1px) render correction
+        bottom: -60 + 1, // UI (1px) render correction
+        width: 2,
+        backgroundColor: Colors.lightGrey,
+        zIndex: 1,
+    },
+    lineFill: {width: '100%', backgroundColor: Colors.pink},
+    actionSlot: {position: 'absolute', top: 45, zIndex: 4, backgroundColor: Colors.bgGrey, borderRadius: 50},
 });
 
 export default TimelineItem;
