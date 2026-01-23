@@ -20,5 +20,7 @@
   "repetitions": "powtórzenia",
   "emptyExerciseName": "uzupełnij nazwę ćwiczenia",
   "emptySeries": "uzupełnij wartość serii",
-  "brake": "przerwa"
+  "break": "przerwa",
+  "startBreak": "rozpocznij przerwę",
+  "doExercise": "ćwicz"
 }

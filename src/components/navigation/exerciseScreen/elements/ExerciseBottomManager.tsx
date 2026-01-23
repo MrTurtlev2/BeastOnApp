@@ -8,7 +8,7 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import {useTranslation} from 'react-i18next';
 
 const {width} = Dimensions.get('window');
-const SvgHeight = 150;
+const SvgHeight = 160;
 
 type Props = {
     isBreakActive: boolean;
@@ -47,14 +47,16 @@ const ExerciseBottomManager = ({isBreakActive, secondsLeft, onStartBreak}: Props
             <View style={styles.content}>
                 <View style={styles.header}>
                     <MaterialCommunityIcons name="clock-time-four-outline" size={40} color={Colors.lightRed} />
-                    <Text style={styles.headerText}>{t('break')}</Text>
+                    <Text style={styles.headerText}>{isBreakActive ? t('break') : t('doExercise')}</Text>
                 </View>
 
                 <View style={styles.controls}>
                     {!isBreakActive ? (
-                        <TouchableOpacity onPress={onStartBreak}>
-                            <Text style={styles.startText}>{t('start_break')}</Text>
-                        </TouchableOpacity>
+                        <View style={{flex: 1}}>
+                            <TouchableOpacity onPress={onStartBreak} style={{alignItems: 'center'}}>
+                                <Text style={[styles.timerText, {fontSize: 30, lineHeight: 33}]}>{t('startBreak')}</Text>
+                            </TouchableOpacity>
+                        </View>
                     ) : (
                         <>
                             <FontAwesome6 name="pause" size={30} color={Colors.white} />

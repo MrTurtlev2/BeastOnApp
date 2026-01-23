@@ -1,6 +1,6 @@
 import {useTranslation} from 'react-i18next';
 import Layout from '../../common/layout/Layout';
-import {Image, View} from 'react-native';
+import {View} from 'react-native';
 import CustomInput from '../../common/customInput/CustomInput';
 import {handleLoginAsync} from '../../../api/Auth';
 import {setAccessToken, setUser} from '../../../store/userSlice';
@@ -8,8 +8,8 @@ import {loadTrainingPlans} from '../../../store/trainingPlansSlice';
 import {useAppDispatch} from '../../../store';
 import {useRef, useState} from 'react';
 import {IconFontEnum, ILottiePowerButtonRef} from '../../../constants/interfaces';
-import Logo from '../../../assets/images/png/common/logo.png';
 import LottiePowerButton from '../../common/lottiePowerButton/LottiePowerButton';
+import ClawTitle from '../../common/clawTitle/ClawTitle';
 
 export default function LoginScreen() {
     const {t} = useTranslation();
@@ -37,7 +37,7 @@ export default function LoginScreen() {
                     flex: 1,
                     alignItems: 'center',
                 }}>
-                <Image source={Logo} style={{height: 200}} />
+                <ClawTitle text={'BeastMode'} type={'heading'} style={{height: 200}} />
                 <CustomInput
                     value={userLogin}
                     onChangeText={setUserLogin}
