@@ -1,4 +1,4 @@
-package com.anonymous.BeastOnApp
+package com.beaston.app
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build
