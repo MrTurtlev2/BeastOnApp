@@ -1,12 +1,12 @@
 import {useTranslation} from 'react-i18next';
 import Layout from '../../common/layout/Layout';
-import {View} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
 import CustomInput from '../../common/customInput/CustomInput';
-import {handleLoginAsync} from '../../../api/Auth';
+import {configureGoogleSignIn, handleGoogleLogin, handleLoginAsync} from '../../../api/Auth';
 import {setAccessToken, setUser} from '../../../store/userSlice';
 import {loadTrainingPlans} from '../../../store/trainingPlansSlice';
 import {useAppDispatch} from '../../../store';
-import {useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {IconFontEnum, ILottiePowerButtonRef} from '../../../constants/interfaces';
 import LottiePowerButton from '../../common/lottiePowerButton/LottiePowerButton';
 import ClawTitle from '../../common/clawTitle/ClawTitle';
@@ -17,17 +17,32 @@ export default function LoginScreen() {
     const [userLogin, setUserLogin] = useState<string>('');
     const [userPassword, setUserPassword] = useState<string>('');
     const powerBtnRef = useRef<ILottiePowerButtonRef>(null);
+
+    const setUserData = res => {
+        dispatch(setUser(res?.user));
+        dispatch(setAccessToken(res?.accessToken));
+        dispatch(loadTrainingPlans());
+    };
+
     const onLogin = async () => {
         handleLoginAsync(userLogin, userPassword).then(res => {
             if (!res) {
                 powerBtnRef.current?.resetAnimation();
                 return;
             }
-            dispatch(setUser(res?.user));
-            dispatch(setAccessToken(res?.accessToken));
-            dispatch(loadTrainingPlans());
+            setUserData(res);
         });
     };
+    const onGoogleLogin = async () => {
+        handleGoogleLogin().then(res => {
+            if (!res) return;
+            setUserData(res);
+        });
+    };
+
+    useEffect(() => {
+        configureGoogleSignIn();
+    }, []);
 
     return (
         <Layout hasBurger={false} bgImageType={'left-bottom'} customStyle={{paddingHorizontal: 20}}>
@@ -61,6 +76,9 @@ export default function LoginScreen() {
                     secureTextEntry
                 />
                 <LottiePowerButton onPress={onLogin} ref={powerBtnRef} />
+                <TouchableOpacity style={{marginTop: 150}} onPress={onGoogleLogin}>
+                    <Text>Google</Text>
+                </TouchableOpacity>
             </View>
         </Layout>
     );
