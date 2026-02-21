@@ -6,10 +6,10 @@ import store from '../store';
 import {loadTrainingPlans} from '../store/trainingPlansSlice';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
-export const handleLoginAsync = async (customerName: string, password: string) => {
+export const handleLoginAsync = async (email: string, password: string) => {
     try {
         const response = await api.post(`${baseAppUrl}/api/auth/login`, {
-            customerName,
+            email,
             password,
         });
         if (response?.data) {

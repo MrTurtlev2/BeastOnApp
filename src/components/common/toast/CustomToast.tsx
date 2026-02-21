@@ -27,7 +27,7 @@ const CustomToast = ({type = 'info', text1}: ICustomToast) => {
                 </View>
                 <View style={customToastStyles.textContainer}>
                     <Text style={customToastStyles.title}>{title || 'Brak wiadomości.'}</Text>
-                    <Text style={customToastStyles.message}>{text1 || 'Brak wiadomości. Sprawdź konfigurację.'}</Text>
+                    <Text style={customToastStyles.message}>{text1?.replace(/;/g, '\n') || 'Brak wiadomości. Sprawdź konfigurację.'}</Text>
                 </View>
             </View>
         </LinearGradient>

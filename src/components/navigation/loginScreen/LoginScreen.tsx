@@ -3,13 +3,14 @@ import Layout from '../../common/layout/Layout';
 import {Text, TouchableOpacity, View} from 'react-native';
 import CustomInput from '../../common/customInput/CustomInput';
 import {configureGoogleSignIn, handleGoogleLogin, handleLoginAsync} from '../../../api/Auth';
-import {setAccessToken, setUser} from '../../../store/userSlice';
+import {setUser} from '../../../store/userSlice';
 import {loadTrainingPlans} from '../../../store/trainingPlansSlice';
 import {useAppDispatch} from '../../../store';
 import {useEffect, useRef, useState} from 'react';
 import {IconFontEnum, ILottiePowerButtonRef} from '../../../constants/interfaces';
 import LottiePowerButton from '../../common/lottiePowerButton/LottiePowerButton';
 import ClawTitle from '../../common/clawTitle/ClawTitle';
+import {IUserLoginState} from '../../../interfaces/userInterface';
 
 export default function LoginScreen() {
     const {t} = useTranslation();
@@ -18,9 +19,8 @@ export default function LoginScreen() {
     const [userPassword, setUserPassword] = useState<string>('');
     const powerBtnRef = useRef<ILottiePowerButtonRef>(null);
 
-    const setUserData = res => {
-        dispatch(setUser(res?.user));
-        dispatch(setAccessToken(res?.accessToken));
+    const setUserData = (res: IUserLoginState) => {
+        dispatch(setUser(res));
         dispatch(loadTrainingPlans());
     };
 
