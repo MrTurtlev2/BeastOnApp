@@ -1,6 +1,7 @@
 import {KeyboardTypeOptions, StyleProp, TextInputProps, TextStyle, ViewStyle} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/core';
+import {useNavigation as useNativeNavigation} from '@react-navigation/native';
 
 export enum IconFontEnum {
     Feather = 'Feather',
@@ -77,6 +78,7 @@ export interface ICircleBtn {
     isLoading?: boolean;
     textColor?: string;
     bgColor?: string;
+    size?: number;
 }
 
 export type INavigationProps = {
@@ -98,4 +100,7 @@ export type INavigationProps = {
 export type IScreenProps<T extends keyof INavigationProps> = {
     navigation: StackNavigationProp<INavigationProps, T>;
     route: RouteProp<INavigationProps, T>;
+};
+export const useAppNavigation = <T extends keyof INavigationProps>() => {
+    return useNativeNavigation<StackNavigationProp<INavigationProps, T>>();
 };

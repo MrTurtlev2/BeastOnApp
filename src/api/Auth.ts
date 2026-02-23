@@ -22,6 +22,23 @@ export const handleLoginAsync = async (email: string, password: string) => {
         return null;
     }
 };
+export const handleRegisterAsync = async (customerName: string, email: string, password: string) => {
+    try {
+        const response = await api.post(`${baseAppUrl}/api/auth/register`, {
+            customerName,
+            email,
+            password,
+        });
+        if (response?.data) {
+            console.log(response.data);
+            await SecureStore.setItemAsync('refreshToken', response?.data?.refreshToken);
+            return response?.data;
+        }
+    } catch (err) {
+        console.log(err.response.data);
+        return null;
+    }
+};
 
 export const handleAutoLogin = async () => {
     try {
@@ -68,7 +85,7 @@ export const handleGoogleLogin = async () => {
         await GoogleSignin.hasPlayServices();
         const response = await GoogleSignin.signIn(); // idToken, scopes, user:{email, familyName, givenName, id, name, photo}
         const idToken = response?.data?.idToken || response.idToken;
-        console.log(idToken);
+        console.log(response);
         if (!idToken) {
             throw new Error('Nie udało się pobrać idTokena z Google');
         }

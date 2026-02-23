@@ -10,7 +10,7 @@ export const Styles = (size: 'small' | 'default' = 'default') => {
             backgroundColor: '#1E1E1E',
             borderRadius: 30,
             paddingHorizontal: size === 'small' ? 10 : 20,
-            paddingVertical: 12,
+            paddingVertical: 8,
             marginVertical: 10,
             boxShadow: ` 
             inset 0 2px 4px rgba(0, 0, 0, 0.4),
@@ -20,7 +20,7 @@ export const Styles = (size: 'small' | 'default' = 'default') => {
         icon: {
             marginRight: 12,
             position: 'absolute',
-            top: -25,
+            top: -15,
             left: 20,
         },
         input: {

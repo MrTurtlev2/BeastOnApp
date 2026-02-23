@@ -5,17 +5,11 @@ import {simpleShadow} from '../../../constants/GlobalStyles';
 
 export const style = StyleSheet.create({
     main: {
-        width: 100,
-        height: 100,
-        borderRadius: 100,
         backgroundColor: Colors.pink,
         alignItems: 'center',
         justifyContent: 'center',
     },
     btnShadow: {
-        width: 100,
-        height: 100,
-        borderRadius: 100,
         shadowOpacity: 0.8,
         shadowRadius: 6,
         shadowOffset: {

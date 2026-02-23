@@ -24,7 +24,7 @@ const CustomInput = ({
 
     return (
         <View style={[styles.wrapper, containerStyle]}>
-            <CustomIcon name={iconName} font={iconFont} size={iconSize || 50} color={iconColor || '#D04C63'} style={styles.icon} />
+            <CustomIcon name={iconName} font={iconFont} size={iconSize || 40} color={iconColor || '#D04C63'} style={styles.icon} />
             <TextInput
                 placeholderTextColor={Colors.placeholderColor}
                 placeholder={placeholder}

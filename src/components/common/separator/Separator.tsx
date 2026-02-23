@@ -1,9 +1,9 @@
-import {Text, View} from 'react-native';
+import {Text, View, ViewStyle} from 'react-native';
 import {styles} from './Style';
 
-const Separator = ({text}: {text: string}) => {
+const Separator = ({text, style}: {text: string; style?: ViewStyle}) => {
     return (
-        <View style={styles.separatorWrapper}>
+        <View style={[styles.separatorWrapper, style]}>
             <View style={styles.separatorLine} />
             <Text style={styles.separatorText}>{text}</Text>
             <View style={styles.separatorLine} />

@@ -7,4 +7,5 @@ export const Colors = {
     pink: '#BF3B53',
     dirtyWhite: '#F2F2F2',
     white: '#FFFFFF',
+    overlay: '#313131C2',
 };

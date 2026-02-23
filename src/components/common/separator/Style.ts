@@ -19,5 +19,6 @@ export const styles = StyleSheet.create({
         marginHorizontal: 20,
         fontSize: 20,
         marginBottom: 5,
+        lineHeight: 25,
     },
 });

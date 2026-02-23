@@ -22,5 +22,9 @@
   "emptySeries": "uzupełnij wartość serii",
   "break": "przerwa",
   "startBreak": "rozpocznij przerwę",
-  "doExercise": "ćwicz"
+  "doExercise": "ćwicz",
+  "loginBy": "zaloguj się przez",
+  "registerBy": "zarejestruj się przez",
+  "register": "zarejestruj się",
+  "userName": "nazwa użytkownika"
 }

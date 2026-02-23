@@ -1,19 +1,25 @@
 import {useTranslation} from 'react-i18next';
 import Layout from '../../common/layout/Layout';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {View} from 'react-native';
 import CustomInput from '../../common/customInput/CustomInput';
 import {configureGoogleSignIn, handleGoogleLogin, handleLoginAsync} from '../../../api/Auth';
 import {setUser} from '../../../store/userSlice';
 import {loadTrainingPlans} from '../../../store/trainingPlansSlice';
 import {useAppDispatch} from '../../../store';
 import {useEffect, useRef, useState} from 'react';
-import {IconFontEnum, ILottiePowerButtonRef} from '../../../constants/interfaces';
+import {IconFontEnum, ILottiePowerButtonRef, useAppNavigation} from '../../../constants/interfaces';
 import LottiePowerButton from '../../common/lottiePowerButton/LottiePowerButton';
 import ClawTitle from '../../common/clawTitle/ClawTitle';
 import {IUserLoginState} from '../../../interfaces/userInterface';
+import Separator from '../../common/separator/Separator';
+import CustomButton from '../../common/cuctomBtn/CustomButton';
+import CircleBtn from '../../common/CircleBtn/CircleBtn';
+import GoogleSvg from '../../../assets/images/svg/buttons/GoogleSvg';
+import {Colors} from '../../../constants/Colors';
 
 export default function LoginScreen() {
     const {t} = useTranslation();
+    const navigation = useAppNavigation<'Login'>();
     const dispatch = useAppDispatch();
     const [userLogin, setUserLogin] = useState<string>('');
     const [userPassword, setUserPassword] = useState<string>('');
@@ -57,8 +63,8 @@ export default function LoginScreen() {
                     value={userLogin}
                     onChangeText={setUserLogin}
                     placeholder={t('email')}
-                    iconName={'person-fill'}
-                    iconFont={IconFontEnum.Octicons}
+                    iconName={'email'}
+                    iconFont={IconFontEnum.MaterialIcons}
                     containerStyle={{marginBottom: 30}}
                     textContentType="username"
                     autoComplete="username"
@@ -70,15 +76,21 @@ export default function LoginScreen() {
                     placeholder={t('password')}
                     iconName={'lock'}
                     iconFont={IconFontEnum.MaterialIcons}
-                    containerStyle={{marginBottom: 80}}
+                    containerStyle={{marginBottom: 60}}
                     textContentType="password"
                     autoComplete="password"
                     secureTextEntry
                 />
                 <LottiePowerButton onPress={onLogin} ref={powerBtnRef} />
-                <TouchableOpacity style={{marginTop: 150}} onPress={onGoogleLogin}>
-                    <Text>Google</Text>
-                </TouchableOpacity>
+                <Separator text={t('loginBy')} style={{paddingHorizontal: 40, marginBottom: 30, marginTop: 40}} />
+                <CircleBtn onPress={onGoogleLogin} icon={<GoogleSvg />} size={80} bgColor={Colors.overlay} />
+
+                <CustomButton
+                    text={t('register')}
+                    onPress={() => navigation.navigate('Register')}
+                    type={'secondary'}
+                    style={{marginTop: 40}}
+                />
             </View>
         </Layout>
     );
