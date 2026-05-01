@@ -6,17 +6,16 @@
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "beastonapp",
-    "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.beaston.app"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true,
       "package": "com.beaston.app"
     },
     "plugins": [
@@ -31,9 +30,6 @@
       ],
       "expo-secure-store",
       "@react-native-google-signin/google-signin"
-    ],
-    "experiments": {
-      "typedRoutes": true
-    }
+    ]
   }
 }

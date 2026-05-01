@@ -9,7 +9,6 @@ import RightCenterMainMonkey from '../../../assets/images/png/layout/right-cente
 import TopCenterMainMonkey from '../../../assets/images/png/layout/top-center-main-monkey.png';
 import LeftBottomMainMonkey from '../../../assets/images/png/layout/bottom-left-main-monkey.png';
 import {ReactNode} from 'react';
-import React = require('react');
 
 type LayoutProps = {
     children?: ReactNode;
