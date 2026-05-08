@@ -9,6 +9,7 @@ export enum IconFontEnum {
     Ionicons = 'Ionicons',
     MaterialIcons = 'MaterialIcons',
     Octicons = 'Octicons',
+    Entypo = 'Entypo',
 }
 
 export interface ICustomIcon {

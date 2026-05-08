@@ -22,10 +22,9 @@ export const handleLoginAsync = async (email: string, password: string) => {
         return null;
     }
 };
-export const handleRegisterAsync = async (customerName: string, email: string, password: string) => {
+export const handleRegisterAsync = async (email: string, password: string) => {
     try {
         const response = await api.post(`${baseAppUrl}/api/auth/register`, {
-            customerName,
             email,
             password,
         });
@@ -75,7 +74,7 @@ export const handleAutoLogin = async () => {
 export const configureGoogleSignIn = () => {
     GoogleSignin.configure({
         webClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID,
-        offlineAccess: true, // jeśli chcesz refresh token
+        offlineAccess: true,
         forceCodeForRefreshToken: false,
     });
 };

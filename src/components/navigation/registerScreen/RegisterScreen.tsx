@@ -8,20 +8,21 @@ import {loadTrainingPlans} from '../../../store/trainingPlansSlice';
 import {configureGoogleSignIn, handleGoogleLogin, handleRegisterAsync} from '../../../api/Auth';
 import Layout from '../../common/layout/Layout';
 import {View} from 'react-native';
-import ClawTitle from '../../common/clawTitle/ClawTitle';
 import CustomInput from '../../common/customInput/CustomInput';
 import LottiePowerButton from '../../common/lottiePowerButton/LottiePowerButton';
 import Separator from '../../common/separator/Separator';
 import GoogleSvg from '../../../assets/images/svg/buttons/GoogleSvg';
 import CircleBtn from '../../common/CircleBtn/CircleBtn';
 import {Colors} from '../../../constants/Colors';
+import {styles} from './Style';
+import ClawTitle from '../../common/clawTitle/ClawTitle';
 
 const RegisterScreen = () => {
     const {t} = useTranslation();
     const dispatch = useAppDispatch();
-    const [userLogin, setUserLogin] = useState<string>('');
     const [userEmail, setUserEmail] = useState<string>('');
     const [userPassword, setUserPassword] = useState<string>('');
+    const [userRepeatedPassword, setUserRepeatedPassword] = useState<string>('');
     const powerBtnRef = useRef<ILottiePowerButtonRef>(null);
 
     const setUserData = (res: IUserLoginState) => {
@@ -30,7 +31,7 @@ const RegisterScreen = () => {
     };
 
     const onRegister = async () => {
-        handleRegisterAsync(userLogin, userEmail, userPassword).then(res => {
+        handleRegisterAsync(userEmail, userPassword).then(res => {
             if (!res) {
                 powerBtnRef.current?.resetAnimation();
                 return;
@@ -38,6 +39,7 @@ const RegisterScreen = () => {
             setUserData(res);
         });
     };
+
     const onGoogleLogin = async () => {
         handleGoogleLogin().then(res => {
             if (!res) return;
@@ -50,35 +52,20 @@ const RegisterScreen = () => {
     }, []);
 
     return (
-        <Layout hasBackArrow={true} bgImageType={'left-bottom'} customStyle={{paddingHorizontal: 20}}>
-            <View
-                style={{
-                    paddingTop: 50,
-                    flex: 1,
-                    alignItems: 'center',
-                }}>
+        <Layout hasBackArrow={true} bgImageType={'left-bottom'} horizontalSpace>
+            <View style={styles.header}>
                 <ClawTitle text={'BeastMode'} type={'heading'} style={{height: 200}} />
-                <CustomInput
-                    value={userLogin}
-                    onChangeText={setUserLogin}
-                    placeholder={t('userName')}
-                    iconName={'person-fill'}
-                    iconFont={IconFontEnum.Octicons}
-                    containerStyle={{marginBottom: 30}}
-                    textContentType="username"
-                    autoComplete="username"
-                    keyboardType="email-address"
-                />
                 <CustomInput
                     value={userEmail}
                     onChangeText={setUserEmail}
                     placeholder={t('email')}
                     iconName={'email'}
                     iconFont={IconFontEnum.MaterialIcons}
-                    containerStyle={{marginBottom: 30}}
+                    containerStyle={styles.emailInput}
                     textContentType="username"
                     autoComplete="username"
                     keyboardType="email-address"
+                    importantForAutofill={'yes'}
                 />
                 <CustomInput
                     value={userPassword}
@@ -86,13 +73,26 @@ const RegisterScreen = () => {
                     placeholder={t('password')}
                     iconName={'lock'}
                     iconFont={IconFontEnum.MaterialIcons}
-                    containerStyle={{marginBottom: 60}}
+                    containerStyle={styles.passwordInput}
                     textContentType="password"
                     autoComplete="password"
                     secureTextEntry
+                    importantForAutofill={'yes'}
+                />
+                <CustomInput
+                    value={userRepeatedPassword}
+                    onChangeText={setUserRepeatedPassword}
+                    placeholder={t('repeatPassword')}
+                    iconName={'lock'}
+                    iconFont={IconFontEnum.MaterialIcons}
+                    containerStyle={styles.repeatPasswordInput}
+                    textContentType="password"
+                    autoComplete="password"
+                    secureTextEntry
+                    importantForAutofill={'yes'}
                 />
                 <LottiePowerButton onPress={onRegister} ref={powerBtnRef} />
-                <Separator text={t('registerBy')} style={{paddingHorizontal: 60, marginBottom: 30, marginTop: 40}} />
+                <Separator text={t('registerBy')} />
                 <CircleBtn onPress={onGoogleLogin} icon={<GoogleSvg />} size={80} bgColor={Colors.overlay} />
             </View>
         </Layout>

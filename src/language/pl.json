@@ -26,5 +26,6 @@
   "loginBy": "zaloguj się przez",
   "registerBy": "zarejestruj się przez",
   "register": "zarejestruj się",
-  "userName": "nazwa użytkownika"
+  "userName": "nazwa użytkownika",
+  "repeatPassword": "Powtórz hasło"
 }

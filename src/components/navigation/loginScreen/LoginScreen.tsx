@@ -51,7 +51,7 @@ export default function LoginScreen() {
     }, []);
 
     return (
-        <Layout hasBurger={false} bgImageType={'left-bottom'} customStyle={{paddingHorizontal: 20}}>
+        <Layout hasBurger={false} bgImageType={'left-bottom'} horizontalSpace>
             <View
                 style={{
                     paddingTop: 50,
@@ -69,6 +69,7 @@ export default function LoginScreen() {
                     textContentType="username"
                     autoComplete="username"
                     keyboardType="email-address"
+                    importantForAutofill={'yes'}
                 />
                 <CustomInput
                     value={userPassword}
@@ -80,9 +81,10 @@ export default function LoginScreen() {
                     textContentType="password"
                     autoComplete="password"
                     secureTextEntry
+                    importantForAutofill={'yes'}
                 />
                 <LottiePowerButton onPress={onLogin} ref={powerBtnRef} />
-                <Separator text={t('loginBy')} style={{paddingHorizontal: 40, marginBottom: 30, marginTop: 40}} />
+                <Separator text={t('loginBy')} />
                 <CircleBtn onPress={onGoogleLogin} icon={<GoogleSvg />} size={80} bgColor={Colors.overlay} />
 
                 <CustomButton

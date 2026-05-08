@@ -1,4 +1,4 @@
-import {Feather, FontAwesome, Ionicons, MaterialIcons, Octicons} from '@expo/vector-icons';
+import {Entypo, Feather, FontAwesome, Ionicons, MaterialIcons, Octicons} from '@expo/vector-icons';
 import {Colors} from '../../../constants/Colors';
 import {IconFontEnum, ICustomIcon} from '../../../constants/interfaces';
 
@@ -12,6 +12,7 @@ const CustomIcon = ({name, font, color, size, style}: ICustomIcon) => {
         if (font === IconFontEnum.Ionicons) return <Ionicons name={name} size={defaultSize} color={defaultColor} style={style} />;
         if (font === IconFontEnum.MaterialIcons) return <MaterialIcons name={name} size={defaultSize} color={defaultColor} style={style} />;
         if (font === IconFontEnum.Octicons) return <Octicons name={name} size={defaultSize} color={defaultColor} style={style} />;
+        if (font === IconFontEnum.Entypo) return <Entypo name={name} size={defaultSize} color={defaultColor} style={style} />;
     };
 
     return pickFont();

@@ -12,7 +12,6 @@ const absoluteBtnBase: ViewStyle = {
     alignItems: 'center',
     justifyContent: 'center',
 };
-
 export const style = StyleSheet.create({
     main: {
         flex: 1,
@@ -47,11 +46,9 @@ export const style = StyleSheet.create({
     burgerBtn: {
         ...absoluteBtnBase,
         right: 20,
-        top: 40,
     },
     backArrowBtn: {
         ...absoluteBtnBase,
         left: 20,
-        top: 40,
     },
 });

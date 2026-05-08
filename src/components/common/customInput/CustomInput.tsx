@@ -1,8 +1,9 @@
-import {TextInput, View} from 'react-native';
+import {Pressable, TextInput, View} from 'react-native';
 import {Styles} from './Style';
 import {Colors} from '../../../constants/Colors';
 import CustomIcon from '../customIcon/CustomIcon';
-import {ICustomInput} from '../../../constants/interfaces';
+import {IconFontEnum, ICustomInput} from '../../../constants/interfaces';
+import {useState} from 'react';
 
 const CustomInput = ({
     onChangeText,
@@ -14,13 +15,18 @@ const CustomInput = ({
     iconSize,
     iconColor,
     containerStyle,
-    secureTextEntry,
+    secureTextEntry = false,
     autoComplete = 'off',
     textContentType,
     importantForAutofill = 'no',
     size = 'default',
 }: ICustomInput) => {
     const styles = Styles(size);
+    const [isSecureTextEntry, setIsSecureTextEntry] = useState(secureTextEntry);
+
+    const changePasswordVisibility = (): void => {
+        setIsSecureTextEntry(prev => !prev);
+    };
 
     return (
         <View style={[styles.wrapper, containerStyle]}>
@@ -35,8 +41,13 @@ const CustomInput = ({
                 importantForAutofill={importantForAutofill}
                 textContentType={textContentType}
                 autoComplete={autoComplete}
-                secureTextEntry={secureTextEntry}
+                secureTextEntry={isSecureTextEntry}
             />
+            {secureTextEntry && (
+                <Pressable onPress={changePasswordVisibility} style={{zIndex: 2}}>
+                    <CustomIcon name={isSecureTextEntry ? 'eye' : 'eye-with-line'} font={IconFontEnum.Entypo} size={40} color={'#D04C63'} />
+                </Pressable>
+            )}
         </View>
     );
 };

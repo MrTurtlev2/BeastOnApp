@@ -7,6 +7,10 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginVertical: 30,
+
+        paddingHorizontal: 60,
+        marginBottom: 30,
+        marginTop: 40,
     },
     separatorLine: {
         height: 2,

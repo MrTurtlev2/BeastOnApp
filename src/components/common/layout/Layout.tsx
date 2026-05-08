@@ -9,6 +9,7 @@ import RightCenterMainMonkey from '../../../assets/images/png/layout/right-cente
 import TopCenterMainMonkey from '../../../assets/images/png/layout/top-center-main-monkey.png';
 import LeftBottomMainMonkey from '../../../assets/images/png/layout/bottom-left-main-monkey.png';
 import {ReactNode} from 'react';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 type LayoutProps = {
     children?: ReactNode;
@@ -17,6 +18,7 @@ type LayoutProps = {
     bgImageType?: 'left-top' | 'right-center' | 'top-center' | 'left-bottom' | 'none';
     customStyle?: StyleProp<any>;
     onGoBack?: () => void;
+    horizontalSpace?: boolean;
 };
 
 export default function Layout({
@@ -26,8 +28,11 @@ export default function Layout({
     bgImageType = 'left-top',
     customStyle,
     onGoBack,
+    horizontalSpace,
 }: LayoutProps) {
     const navigation = useNavigation<DrawerNavigationProp<any>>();
+    const insets = useSafeAreaInsets();
+    const navigationIconPosition = insets.top + 16;
 
     const handleBgImage = () => {
         if (bgImageType === 'none') return null;
@@ -44,17 +49,18 @@ export default function Layout({
         if (navigation.canGoBack()) return navigation.goBack();
         return null;
     };
+    const handleBurgerPress = () => navigation.openDrawer();
 
     return (
-        <View style={[style.main, customStyle]}>
+        <View style={[style.main, horizontalSpace && {paddingHorizontal: 20}, customStyle]}>
             {handleBgImage()}
             {hasBurger && (
-                <TouchableOpacity onPress={() => navigation.openDrawer()} style={style.burgerBtn}>
+                <TouchableOpacity onPress={handleBurgerPress} style={[style.burgerBtn, {top: navigationIconPosition}]}>
                     <BurgerSvg />
                 </TouchableOpacity>
             )}
             {hasBackArrow && (
-                <TouchableOpacity onPress={handleBackArrow} style={style.backArrowBtn}>
+                <TouchableOpacity onPress={handleBackArrow} style={[style.backArrowBtn, {top: navigationIconPosition}]}>
                     <BackArrowSvg />
                 </TouchableOpacity>
             )}
