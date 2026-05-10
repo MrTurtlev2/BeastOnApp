@@ -27,5 +27,11 @@
   "registerBy": "zarejestruj się przez",
   "register": "zarejestruj się",
   "userName": "nazwa użytkownika",
-  "repeatPassword": "Powtórz hasło"
+  "repeatPassword": "Powtórz hasło",
+  "emailValid": "e-mail poprawny",
+  "passwordMinLen": "hasło ma przynajmniej 8+ znaków",
+  "passwordHasNumber": "hasło posiada cyfrę",
+  "passwordHasSpecialLetter": "hasło posiada znak specjalny",
+  "passwordHasUppercase": "hasło posiada dużą literę",
+  "passwordsAreTheSame": "hasła są takie same"
 }
