@@ -10,6 +10,7 @@ import MainNavigator from './src/components/navigation/AppNavigator';
 import CustomToast from './src/components/common/toast/CustomToast';
 import {Fonts} from './src/constants/Fonts';
 import {handleAutoLogin} from './src/api/Auth';
+import {KeyboardProvider} from 'react-native-keyboard-controller';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -45,10 +46,12 @@ export default function App() {
 
     return (
         <GestureHandlerRootView style={{flex: 1}}>
-            <Provider store={store}>
-                <MainNavigator />
-                <ToastManager config={toastConfig} />
-            </Provider>
+            <KeyboardProvider>
+                <Provider store={store}>
+                    <MainNavigator />
+                    <ToastManager config={toastConfig} />
+                </Provider>
+            </KeyboardProvider>
         </GestureHandlerRootView>
     );
 }

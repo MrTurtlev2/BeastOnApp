@@ -7,7 +7,7 @@ import {setUser} from '../../../store/userSlice';
 import {loadTrainingPlans} from '../../../store/trainingPlansSlice';
 import {configureGoogleSignIn, handleGoogleLogin, handleRegisterAsync} from '../../../api/Auth';
 import Layout from '../../common/layout/Layout';
-import {ScrollView, View} from 'react-native';
+import {View} from 'react-native';
 import CustomInput from '../../common/customInput/CustomInput';
 import LottiePowerButton from '../../common/lottiePowerButton/LottiePowerButton';
 import Separator from '../../common/separator/Separator';
@@ -18,6 +18,7 @@ import {styles} from './Style';
 import ClawTitle from '../../common/clawTitle/ClawTitle';
 import {useRegistrationForm} from './hooks/useRegistrationForm';
 import RegisterFormValidator from './components/RegisterFormValidator';
+import LayoutScroll from '../../common/layoutScroll/LayoutScroll';
 
 const RegisterScreen = () => {
     const {t} = useTranslation();
@@ -56,9 +57,8 @@ const RegisterScreen = () => {
     }, []);
 
     return (
-        // <Layout hasBackArrow={true} bgImageType={'left-bottom'} horizontalSpace isScrollable>
         <Layout hasBackArrow={true} bgImageType={'left-bottom'}>
-            <ScrollView contentContainerStyle={{flex: 1}}>
+            <LayoutScroll>
                 <View style={styles.header}>
                     <ClawTitle text={'BeastMode'} type={'heading'} style={{height: 200}} />
                     <CustomInput
@@ -109,7 +109,7 @@ const RegisterScreen = () => {
                     <Separator text={t('registerBy')} />
                     <CircleBtn onPress={onGoogleLogin} icon={<GoogleSvg />} size={80} bgColor={Colors.overlay} />
                 </View>
-            </ScrollView>
+            </LayoutScroll>
         </Layout>
     );
 };
