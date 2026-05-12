@@ -5,13 +5,15 @@ import CustomWeekPicker from './elements/CustomWeekPicker/CustomWeekPicker';
 import {useAppDispatch, useAppSelector} from '../../../store';
 import {loadTrainingPlans} from '../../../store/trainingPlansSlice';
 import ExerciseBar from './elements/ExerciseBar/ExerciseBar';
-import {useState} from 'react';
+import {useRef, useState} from 'react';
 import {addDays, format, isToday, startOfWeek} from 'date-fns';
 import {enUS, pl} from 'date-fns/locale';
 import {IExercise, INavigationProps} from '../../../constants/interfaces';
 import HomeEmptyListComponent from './elements/HomeEmptyListComponent/HomeEmptyListComponent';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {BottomSheetModal} from '@gorhom/bottom-sheet';
+import TrainingSelectBottomSheet from './elements/TrainingSelectBottomSheet/TrainingSelectBottomSheet';
 
 type HomeStackNavProp = StackNavigationProp<INavigationProps, 'ExerciseScreen'>;
 
@@ -36,9 +38,14 @@ export default function HomeScreen() {
         };
     });
     const [selectedDay, setSelectedDay] = useState<number>(weekDays.findIndex(day => isToday(day.date)) || 0);
+    const bottomSheetRef = useRef<BottomSheetModal>(null);
 
     const fetchPlans = () => {
         dispatch(loadTrainingPlans());
+    };
+
+    const openSelectTrainingPanel = () => {
+        bottomSheetRef.current.present();
     };
 
     const Header = () => (
@@ -61,6 +68,7 @@ export default function HomeScreen() {
             <CustomWeekPicker weekDays={weekDays} selectedDay={selectedDay} setSelectedDay={setSelectedDay} />
         </Animated.View>
     );
+
     return (
         <Layout hasBurger>
             <Animated.FlatList<IExercise>
@@ -79,13 +87,14 @@ export default function HomeScreen() {
                     <HomeEmptyListComponent
                         customerName={user?.customerName}
                         onCreatePlan={() => navigation.navigate('AddPlanScreen', {selectedDay: selectedDay + 1})}
-                        onAssignPlan={() => navigation.navigate('AddPlanScreen', {selectedDay: selectedDay + 1})}
+                        onAssignPlan={openSelectTrainingPanel}
                     />
                 }
                 showsVerticalScrollIndicator={false}
                 stickyHeaderIndices={[0]}
                 onScroll={Animated.event([{nativeEvent: {contentOffset: {y: scrollY}}}], {useNativeDriver: true})}
             />
+            <TrainingSelectBottomSheet ref={bottomSheetRef} trainings={trainingPlans} onSelectTraining={() => null} />
         </Layout>
     );
 }

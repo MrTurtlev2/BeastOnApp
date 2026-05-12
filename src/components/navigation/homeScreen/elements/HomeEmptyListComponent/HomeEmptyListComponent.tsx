@@ -2,6 +2,7 @@ import {Text, View} from 'react-native';
 import {style} from './Style';
 import CircleBtn from '../../../../common/CircleBtn/CircleBtn';
 import GraphSvg from '../../../../../assets/images/svg/buttons/GraphSvg';
+import ListSvg from '../../../../../assets/images/svg/buttons/ListSvg';
 import {useTranslation} from 'react-i18next';
 import {IHomeEmptyListComponent} from '../../../../../constants/interfaces';
 import Separator from '../../../../common/separator/Separator';
@@ -17,7 +18,7 @@ const HomeEmptyListComponent = ({customerName, onCreatePlan, onAssignPlan}: IHom
             <CircleBtn icon={<GraphSvg />} onPress={onCreatePlan} />
             <Separator text={t('or')} />
             <Text style={style.secondWelcomeText}>{t('pickFromExistingAlready')}</Text>
-            <CircleBtn icon={<GraphSvg />} onPress={onAssignPlan} />
+            <CircleBtn icon={<ListSvg />} onPress={onAssignPlan} />
         </View>
     );
 };

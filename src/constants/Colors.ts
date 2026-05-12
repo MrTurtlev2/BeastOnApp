@@ -1,5 +1,7 @@
 export const Colors = {
+    darkGrey: '#1E1E1E',
     bgGrey: '#262626',
+    overlay: '#313131C2',
     placeholderColor: '#414141',
     lightGrey: '#8C8C8C',
     darkRed: '#401619',
@@ -7,5 +9,4 @@ export const Colors = {
     pink: '#BF3B53',
     dirtyWhite: '#F2F2F2',
     white: '#FFFFFF',
-    overlay: '#313131C2',
 };

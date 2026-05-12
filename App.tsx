@@ -11,6 +11,7 @@ import CustomToast from './src/components/common/toast/CustomToast';
 import {Fonts} from './src/constants/Fonts';
 import {handleAutoLogin} from './src/api/Auth';
 import {KeyboardProvider} from 'react-native-keyboard-controller';
+import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -47,10 +48,12 @@ export default function App() {
     return (
         <GestureHandlerRootView style={{flex: 1}}>
             <KeyboardProvider>
-                <Provider store={store}>
-                    <MainNavigator />
-                    <ToastManager config={toastConfig} />
-                </Provider>
+                <BottomSheetModalProvider>
+                    <Provider store={store}>
+                        <MainNavigator />
+                        <ToastManager config={toastConfig} />
+                    </Provider>
+                </BottomSheetModalProvider>
             </KeyboardProvider>
         </GestureHandlerRootView>
     );
