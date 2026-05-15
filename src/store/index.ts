@@ -1,4 +1,4 @@
-import {combineReducers, configureStore} from '@reduxjs/toolkit';
+import {Action, combineReducers, configureStore} from '@reduxjs/toolkit';
 import {persistReducer, persistStore} from 'redux-persist';
 import userReducer from './userSlice';
 import trainingPlansReducer from './trainingPlansSlice';
@@ -13,10 +13,17 @@ const persistConfig = {
     whitelist: ['user', 'trainingPlans'],
 };
 
-const rootReducer = combineReducers({
+const combinedReducer = combineReducers({
     user: userReducer,
     trainingPlans: trainingPlansReducer,
 });
+
+const rootReducer = (state, action: Action) => {
+    if (action.type === 'RESET') {
+        state = {};
+    }
+    return combinedReducer(state, action);
+};
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

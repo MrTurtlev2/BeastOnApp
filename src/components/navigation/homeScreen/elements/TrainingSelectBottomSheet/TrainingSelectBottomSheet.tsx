@@ -12,8 +12,6 @@ type TrainingSelectBottomSheetProps = {
 const TrainingSelectBottomSheet = forwardRef<BottomSheetModal, TrainingSelectBottomSheetProps>(({trainings, onSelectTraining}, ref) => {
     const snapPoints = useMemo(() => ['50%', '80%'], []);
 
-    console.log(trainings);
-
     const renderBackdrop = useCallback(
         (props: any) => <BottomSheetBackdrop {...props} disappearsOnIndex={-1} appearsOnIndex={0} opacity={0.5} />,
         [],
@@ -24,7 +22,7 @@ const TrainingSelectBottomSheet = forwardRef<BottomSheetModal, TrainingSelectBot
             return (
                 <View style={styles.trainingCard}>
                     <Text style={styles.trainingText} onPress={() => onSelectTraining(item)}>
-                        {item.trainingPlanName}
+                        {item.name}
                     </Text>
                 </View>
             );

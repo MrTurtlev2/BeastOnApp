@@ -46,7 +46,7 @@ export type IExercise = {
 export interface ITrainingPlan {
     dayOfWeek: string;
     trainingPlanId: number;
-    trainingPlanName: string;
+    name: string;
     exercises: IExercise[];
 }
 

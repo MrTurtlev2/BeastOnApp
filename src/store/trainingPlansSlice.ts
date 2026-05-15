@@ -1,8 +1,20 @@
-// trainingPlansSlice.ts
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {IExercise} from '../constants/interfaces';
 
-import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {fetchTrainingPlansAsync} from '../api/TrainingShedule';
-import {ITrainingPlansState} from '../constants/interfaces';
+export interface ITrainingPlan {
+    uuid: string;
+    name: string;
+    exercises: IExercise[];
+    dayOfWeek: number;
+    synced: boolean;
+    lastModified: number;
+}
+
+interface ITrainingPlansState {
+    trainingPlans: ITrainingPlan[];
+    loading: boolean;
+    error: string | null;
+}
 
 const initialState: ITrainingPlansState = {
     trainingPlans: [],
@@ -10,33 +22,24 @@ const initialState: ITrainingPlansState = {
     error: null,
 };
 
-export const loadTrainingPlans = createAsyncThunk('trainingPlans/load', async (_, {rejectWithValue}) => {
-    try {
-        return await fetchTrainingPlansAsync();
-    } catch (error: any) {
-        return rejectWithValue(error.message || 'Błąd ładowania planów');
-    }
-});
-
 const trainingPlansSlice = createSlice({
     name: 'trainingPlans',
     initialState,
-    reducers: {},
-    extraReducers: builder => {
-        builder
-            .addCase(loadTrainingPlans.pending, state => {
-                state.loading = true;
-                state.error = null;
-            })
-            .addCase(loadTrainingPlans.fulfilled, (state, action) => {
-                state.loading = false;
-                state.trainingPlans = action.payload;
-            })
-            .addCase(loadTrainingPlans.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.payload as string;
-            });
+    reducers: {
+        addTrainingPlan(state, action: PayloadAction<ITrainingPlan>) {
+            state.trainingPlans.push(action.payload);
+        },
+        markTrainingPlanSynced(state, action: PayloadAction<string>) {
+            const plan = state.trainingPlans.find(item => item.uuid === action.payload);
+            if (!plan) return;
+            plan.synced = true;
+        },
+        removeTrainingPlan(state, action: PayloadAction<string>) {
+            state.trainingPlans = state.trainingPlans.filter(item => item.uuid !== action.payload);
+        },
     },
 });
+
+export const {addTrainingPlan, markTrainingPlanSynced, removeTrainingPlan} = trainingPlansSlice.actions;
 
 export default trainingPlansSlice.reducer;

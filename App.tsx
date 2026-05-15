@@ -1,3 +1,5 @@
+import 'react-native-get-random-values';
+
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {Provider} from 'react-redux';
 import * as SplashScreen from 'expo-splash-screen';

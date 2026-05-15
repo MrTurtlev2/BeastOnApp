@@ -4,16 +4,15 @@ import BurgerSvg from '../../assets/images/svg/BurgerSvg';
 import {Fonts} from '../../constants/Fonts';
 import {Colors} from '../../constants/Colors';
 import * as SecureStore from 'expo-secure-store';
-import store from '../../store';
-import {clearUser} from '../../store/userSlice';
+import {useAppDispatch} from '../../store';
 
 export default function CustomDrawer(props: any) {
     const {navigation} = props;
-
+    const appDispatch = useAppDispatch();
     const logout = async () => {
         await SecureStore.deleteItemAsync('userToken');
         await SecureStore.deleteItemAsync('refreshToken');
-        store.dispatch(clearUser());
+        appDispatch({type: 'RESET'});
     };
 
     return (
@@ -29,7 +28,7 @@ export default function CustomDrawer(props: any) {
                 <View style={styles.separator} />
                 <Text style={styles.itemText}>Moje konto</Text>
                 <View style={styles.separator} />
-                <TouchableOpacity onPress={() => logout()}>
+                <TouchableOpacity onPress={logout}>
                     <Text style={styles.itemText}>wyloguj sie</Text>
                 </TouchableOpacity>
             </View>

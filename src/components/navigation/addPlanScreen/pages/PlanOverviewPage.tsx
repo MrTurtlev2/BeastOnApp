@@ -7,8 +7,9 @@ import PlanOverviewFooter from '../elements/PlanOverviewFooter';
 import {addPlanAsync} from '../../../../api/trainingPlanService';
 import {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {loadTrainingPlans} from '../../../../store/trainingPlansSlice';
 import {useAppDispatch} from '../../../../store';
+import {nanoid} from 'nanoid';
+import {addTrainingPlan, markTrainingPlanSynced} from '../../../../store/trainingPlansSlice';
 
 type Props = {
     planName: string;
@@ -28,10 +29,30 @@ const PlanOverviewPage = ({exercises, onAddExercise, onEditExercise, selectedDay
 
     const onSavePlan = async () => {
         setPlanLoading(true);
-        await addPlanAsync({name: planName, exercises, daysOfWeek: [selectedDay]});
-        dispatch(loadTrainingPlans());
+        const newPlan = {
+            uuid: nanoid(),
+            name: planName,
+            exercises,
+            dayOfWeek: selectedDay,
+            lastModified: Date.now(),
+            synced: false,
+        };
+        dispatch(addTrainingPlan(newPlan));
         navigation.goBack();
-        setPlanLoading(false);
+        try {
+            await addPlanAsync({
+                uuid: newPlan.uuid,
+                name: newPlan.name,
+                exercises: newPlan.exercises,
+                dayOfWeek: newPlan.dayOfWeek,
+                lastModified: newPlan.lastModified,
+            });
+            dispatch(markTrainingPlanSynced(newPlan.uuid));
+        } catch (err) {
+            console.log('Sync failed, will retry later');
+        } finally {
+            setPlanLoading(false);
+        }
     };
 
     return (
