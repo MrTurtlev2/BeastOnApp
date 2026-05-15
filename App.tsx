@@ -5,13 +5,14 @@ import {useFonts} from 'expo-font';
 import {useEffect} from 'react';
 import ToastManager from 'toastify-react-native';
 
-import store from './src/store';
+import store, {persistor} from './src/store';
 import MainNavigator from './src/components/navigation/AppNavigator';
 import CustomToast from './src/components/common/toast/CustomToast';
 import {Fonts} from './src/constants/Fonts';
 import {handleAutoLogin} from './src/api/Auth';
 import {KeyboardProvider} from 'react-native-keyboard-controller';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
+import {PersistGate} from 'redux-persist/integration/react';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -50,8 +51,10 @@ export default function App() {
             <KeyboardProvider>
                 <BottomSheetModalProvider>
                     <Provider store={store}>
-                        <MainNavigator />
-                        <ToastManager config={toastConfig} />
+                        <PersistGate loading={null} persistor={persistor}>
+                            <MainNavigator />
+                            <ToastManager config={toastConfig} />
+                        </PersistGate>
                     </Provider>
                 </BottomSheetModalProvider>
             </KeyboardProvider>
