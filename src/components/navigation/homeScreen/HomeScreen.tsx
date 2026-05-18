@@ -3,7 +3,6 @@ import Layout from '../../common/layout/Layout';
 import {useTranslation} from 'react-i18next';
 import CustomWeekPicker from './elements/CustomWeekPicker/CustomWeekPicker';
 import {useAppDispatch, useAppSelector} from '../../../store';
-import {loadTrainingPlans} from '../../../store/trainingPlansSlice';
 import ExerciseBar from './elements/ExerciseBar/ExerciseBar';
 import {useRef, useState} from 'react';
 import {addDays, format, isToday, startOfWeek} from 'date-fns';
@@ -41,7 +40,7 @@ export default function HomeScreen() {
     const bottomSheetRef = useRef<BottomSheetModal>(null);
 
     const fetchPlans = () => {
-        dispatch(loadTrainingPlans());
+        // dispatch(loadTrainingPlans());
     };
 
     const openSelectTrainingPanel = () => {

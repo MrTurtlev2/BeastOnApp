@@ -3,7 +3,6 @@ import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
 import {clearUser, setAccessToken, setUser} from '../store/userSlice';
 import store from '../store';
-import {loadTrainingPlans} from '../store/trainingPlansSlice';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
 export const handleLoginAsync = async (email: string, password: string) => {
@@ -55,7 +54,7 @@ export const handleAutoLogin = async () => {
             store.dispatch(setAccessToken(newAccessToken));
             if (userData) {
                 store.dispatch(setUser(userData));
-                store.dispatch(loadTrainingPlans());
+                // store.dispatch(loadTrainingPlans());
             }
             console.log('Auto-login udany');
             return true;

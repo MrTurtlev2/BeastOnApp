@@ -24,6 +24,7 @@ api.interceptors.response.use(
     response => response,
     async error => {
         const originalReq = error.config;
+        const isSyncQueue = originalReq?.isSyncQueue;
         const status = error?.response?.status;
         const data = error?.response?.data || {message: 'Nieznany błąd', status: 500, type: 'SERVER_ERROR'};
 
@@ -47,17 +48,19 @@ api.interceptors.response.use(
                 }
             }
         }
-        console.log(data);
-        if (data?.message)
-            Toast.show({
-                type: 'error',
-                text1: data?.message,
-                // useModal: false,
-            });
+        // console.log(data);
+        if (!isSyncQueue) {
+            if (data?.message)
+                Toast.show({
+                    type: 'error',
+                    text1: data?.message,
+                    // useModal: false,
+                });
 
-        if (navigationRef.isReady() && status === 500) {
-            // @ts-ignore
-            navigationRef.navigate('ErrorScreen', data);
+            if (navigationRef.isReady() && status === 500) {
+                // @ts-ignore
+                navigationRef.navigate('ErrorScreen', data);
+            }
         }
 
         return Promise.reject(error);

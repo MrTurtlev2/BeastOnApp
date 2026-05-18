@@ -4,12 +4,13 @@ import CustomInput from '../../../common/customInput/CustomInput';
 import {IExercise} from '../../../../constants/interfaces';
 import NewExerciseBar from '../elements/NewExerciseBar';
 import PlanOverviewFooter from '../elements/PlanOverviewFooter';
-import {addPlanAsync} from '../../../../api/trainingPlanService';
 import {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {useAppDispatch} from '../../../../store';
 import {nanoid} from 'nanoid';
-import {addTrainingPlan, markTrainingPlanSynced} from '../../../../store/trainingPlansSlice';
+import {addTrainingPlan} from '../../../../store/trainingPlansSlice';
+import {addToOutbox} from '../../../../store/outboxSlice';
+import {triggerSync} from '../../../../store/syncEngine';
 
 type Props = {
     planName: string;
@@ -38,21 +39,29 @@ const PlanOverviewPage = ({exercises, onAddExercise, onEditExercise, selectedDay
             synced: false,
         };
         dispatch(addTrainingPlan(newPlan));
+        dispatch(
+            addToOutbox({
+                url: '/api/training-plans/add-plan',
+                method: 'POST',
+                body: newPlan,
+            }),
+        );
         navigation.goBack();
-        try {
-            await addPlanAsync({
-                uuid: newPlan.uuid,
-                name: newPlan.name,
-                exercises: newPlan.exercises,
-                dayOfWeek: newPlan.dayOfWeek,
-                lastModified: newPlan.lastModified,
-            });
-            dispatch(markTrainingPlanSynced(newPlan.uuid));
-        } catch (err) {
-            console.log('Sync failed, will retry later');
-        } finally {
-            setPlanLoading(false);
-        }
+        triggerSync();
+        // try {
+        //     await addPlanAsync({
+        //         uuid: newPlan.uuid,
+        //         name: newPlan.name,
+        //         exercises: newPlan.exercises,
+        //         dayOfWeek: newPlan.dayOfWeek,
+        //         lastModified: newPlan.lastModified,
+        //     });
+        //     dispatch(markTrainingPlanSynced(newPlan.uuid));
+        // } catch (err) {
+        //     console.log('Sync failed, will retry later');
+        // } finally {
+        //     setPlanLoading(false);
+        // }
     };
 
     return (
