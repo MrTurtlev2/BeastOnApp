@@ -22,7 +22,7 @@ export const triggerSync = async (): Promise<boolean> => {
 
     isSyncing = true;
 
-    const sortedQueue = [...queue].sort((a, b) => a.timestamp - b.timestamp);
+    const sortedQueue = [...queue].sort((a, b) => a.timestamp - b.timestamp); // FIFO rule
 
     try {
         for (const item of sortedQueue) {

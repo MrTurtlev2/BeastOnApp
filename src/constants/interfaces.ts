@@ -39,15 +39,17 @@ export type IExerciseSet = {
 };
 
 export type IExercise = {
-    exerciseName: string;
+    name: string;
     sets: IExerciseSet[];
 };
 
 export interface ITrainingPlan {
-    dayOfWeek: string;
-    trainingPlanId: number;
+    uuid: string;
     name: string;
     exercises: IExercise[];
+    daysOfWeek: number[];
+    synced: boolean;
+    lastModified: number;
 }
 
 export interface ITrainingPlansState {

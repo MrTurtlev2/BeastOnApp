@@ -4,7 +4,7 @@ import {useTranslation} from 'react-i18next';
 import CustomWeekPicker from './elements/CustomWeekPicker/CustomWeekPicker';
 import {useAppDispatch, useAppSelector} from '../../../store';
 import ExerciseBar from './elements/ExerciseBar/ExerciseBar';
-import {useRef, useState} from 'react';
+import {useMemo, useRef, useState} from 'react';
 import {addDays, format, isToday, startOfWeek} from 'date-fns';
 import {enUS, pl} from 'date-fns/locale';
 import {IExercise, INavigationProps} from '../../../constants/interfaces';
@@ -39,8 +39,15 @@ export default function HomeScreen() {
     const [selectedDay, setSelectedDay] = useState<number>(weekDays.findIndex(day => isToday(day.date)) || 0);
     const bottomSheetRef = useRef<BottomSheetModal>(null);
 
-    const fetchPlans = () => {
-        // dispatch(loadTrainingPlans());
+    const planForToday = useMemo(() => {
+        return trainingPlans.filter(item => item.daysOfWeek.includes(selectedDay + 1))[0];
+    }, [selectedDay, trainingPlans]);
+
+    const navigateToExercise = item => {
+        navigation.push('ExerciseScreen', {exercise: item});
+    };
+    const onCreatePlan = () => {
+        navigation.navigate('AddPlanScreen', {selectedDay: selectedDay + 1});
     };
 
     const openSelectTrainingPanel = () => {
@@ -67,25 +74,22 @@ export default function HomeScreen() {
             <CustomWeekPicker weekDays={weekDays} selectedDay={selectedDay} setSelectedDay={setSelectedDay} />
         </Animated.View>
     );
-
     return (
         <Layout hasBurger>
-            <Animated.FlatList<IExercise>
+            <Animated.FlatList
                 ListHeaderComponent={<Header />}
-                data={trainingPlans[selectedDay]?.exercises ?? []}
+                data={planForToday?.exercises || []}
                 renderItem={({item}: {item: IExercise}) => (
                     <ExerciseBar
-                        exerciseName={item?.exerciseName}
-                        onPress={() => navigation.push('ExerciseScreen', {exercise: item})}
+                        exerciseName={item?.name}
+                        onPress={() => navigateToExercise(item)}
                         containerStyle={{marginHorizontal: 25}}
                     />
                 )}
-                refreshing={loading}
-                onRefresh={fetchPlans}
                 ListEmptyComponent={
                     <HomeEmptyListComponent
                         customerName={user?.customerName}
-                        onCreatePlan={() => navigation.navigate('AddPlanScreen', {selectedDay: selectedDay + 1})}
+                        onCreatePlan={onCreatePlan}
                         onAssignPlan={openSelectTrainingPanel}
                     />
                 }

@@ -34,7 +34,7 @@ const PlanOverviewPage = ({exercises, onAddExercise, onEditExercise, selectedDay
             uuid: nanoid(),
             name: planName,
             exercises,
-            dayOfWeek: selectedDay,
+            daysOfWeek: [selectedDay],
             lastModified: Date.now(),
             synced: false,
         };
