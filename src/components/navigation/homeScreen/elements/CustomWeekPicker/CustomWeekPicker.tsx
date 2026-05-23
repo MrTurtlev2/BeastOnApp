@@ -1,28 +1,25 @@
-import {FlatList, Text, TouchableOpacity, View} from 'react-native';
+import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import {styles} from './Style';
+import {memo} from 'react';
 
 const CustomWeekPicker = ({weekDays, selectedDay, setSelectedDay}) => {
     return (
         <View style={styles.container}>
-            <FlatList
-                data={weekDays}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                keyExtractor={item => item.date.toString()}
-                renderItem={({item, index}) => {
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{paddingHorizontal: 10}}>
+                {weekDays.map((item, index) => {
                     const isSelected = selectedDay === index;
                     return (
-                        <TouchableOpacity onPress={() => setSelectedDay(index)} style={styles.button}>
+                        <TouchableOpacity key={item.date.toISOString()} onPress={() => setSelectedDay(index)} style={styles.button}>
                             <View style={[styles.dayContainer, isSelected && styles.selectedDay]}>
                                 <Text style={styles.dateText}>{item?.dateString}</Text>
                                 <Text style={styles.dayText}>{item?.day}</Text>
                             </View>
                         </TouchableOpacity>
                     );
-                }}
-            />
+                })}
+            </ScrollView>
         </View>
     );
 };
 
-export default CustomWeekPicker;
+export default memo(CustomWeekPicker);

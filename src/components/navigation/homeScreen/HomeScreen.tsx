@@ -4,7 +4,7 @@ import {useTranslation} from 'react-i18next';
 import CustomWeekPicker from './elements/CustomWeekPicker/CustomWeekPicker';
 import {useAppDispatch, useAppSelector} from '../../../store';
 import ExerciseBar from './elements/ExerciseBar/ExerciseBar';
-import {useMemo, useRef, useState} from 'react';
+import {useCallback, useMemo, useRef, useState} from 'react';
 import {addDays, format, isToday, startOfWeek} from 'date-fns';
 import {enUS, pl} from 'date-fns/locale';
 import {IExercise, INavigationProps} from '../../../constants/interfaces';
@@ -16,45 +16,56 @@ import TrainingSelectBottomSheet from './elements/TrainingSelectBottomSheet/Trai
 
 type HomeStackNavProp = StackNavigationProp<INavigationProps, 'ExerciseScreen'>;
 
+const WEEK_DAYS = ['mondayShort', 'tuesdayShort', 'wednesdayShort', 'thursdayShort', 'fridayShort', 'saturdayShort', 'sundayShort'];
+
 export default function HomeScreen() {
     const navigation = useNavigation<HomeStackNavProp>();
     const user = useAppSelector(state => state?.user?.userData);
     const {trainingPlans, loading} = useAppSelector(state => state?.trainingPlans);
     const dispatch = useAppDispatch();
-    const scrollY = new Animated.Value(0);
+    const scrollY = useRef(new Animated.Value(0)).current;
     const headerHeight = 90;
     const stickyThreshold = 160;
     const {t, i18n} = useTranslation();
     const locale = i18n.language === 'pl' ? pl : enUS;
-    const today = new Date();
-    const weekStart = startOfWeek(today, {weekStartsOn: 1});
-    const weekDays = Array.from({length: 7}, (_, i) => {
-        const date = addDays(weekStart, i);
-        return {
-            date,
-            dateString: format(date, 'dd', {locale}),
-            day: t(['mondayShort', 'tuesdayShort', 'wednesdayShort', 'thursdayShort', 'fridayShort', 'saturdayShort', 'sundayShort'][i]),
-        };
-    });
-    const [selectedDay, setSelectedDay] = useState<number>(weekDays.findIndex(day => isToday(day.date)) || 0);
     const bottomSheetRef = useRef<BottomSheetModal>(null);
+    const today = useMemo(() => new Date(), []);
+    const weekStart = useMemo(() => startOfWeek(today, {weekStartsOn: 1}), [today]);
+
+    const weekDays = useMemo(() => {
+        return Array.from({length: 7}, (_, i) => {
+            const date = addDays(weekStart, i);
+            return {
+                date,
+                dateString: format(date, 'dd', {locale}),
+                day: t(WEEK_DAYS[i]),
+            };
+        });
+    }, [weekStart, locale, t]);
+
+    const [selectedDay, setSelectedDay] = useState<number>(weekDays.findIndex(day => isToday(day.date)) || 0);
 
     const planForToday = useMemo(() => {
-        return trainingPlans.filter(item => item.daysOfWeek.includes(selectedDay + 1))[0];
+        return trainingPlans.find(item => item.daysOfWeek.includes(selectedDay + 1));
     }, [selectedDay, trainingPlans]);
 
-    const navigateToExercise = item => {
+    const navigateToExercise = useCallback((item: IExercise) => {
         navigation.push('ExerciseScreen', {exercise: item});
-    };
-    const onCreatePlan = () => {
+    }, []);
+
+    const onCreatePlan = useCallback(() => {
         navigation.navigate('AddPlanScreen', {selectedDay: selectedDay + 1});
-    };
+    }, [selectedDay]);
 
-    const openSelectTrainingPanel = () => {
-        bottomSheetRef.current.present();
-    };
+    const openSelectTrainingPanel = useCallback(() => {
+        bottomSheetRef.current?.present();
+    }, []);
 
-    const Header = () => (
+    const onSelectDay = useCallback((index: number) => {
+        setSelectedDay(index);
+    }, []);
+
+    const headerElement = (
         <Animated.View
             style={{
                 marginTop: '40%',
@@ -71,21 +82,23 @@ export default function HomeScreen() {
                     },
                 ],
             }}>
-            <CustomWeekPicker weekDays={weekDays} selectedDay={selectedDay} setSelectedDay={setSelectedDay} />
+            <CustomWeekPicker weekDays={weekDays} selectedDay={selectedDay} setSelectedDay={onSelectDay} />
         </Animated.View>
     );
+
+    const renderExerciseItem = useCallback(
+        ({item}: {item: IExercise}) => (
+            <ExerciseBar exerciseName={item?.name} onPress={() => navigateToExercise(item)} containerStyle={{marginHorizontal: 25}} />
+        ),
+        [],
+    );
+
     return (
         <Layout hasBurger>
             <Animated.FlatList
-                ListHeaderComponent={<Header />}
+                ListHeaderComponent={headerElement}
                 data={planForToday?.exercises || []}
-                renderItem={({item}: {item: IExercise}) => (
-                    <ExerciseBar
-                        exerciseName={item?.name}
-                        onPress={() => navigateToExercise(item)}
-                        containerStyle={{marginHorizontal: 25}}
-                    />
-                )}
+                renderItem={renderExerciseItem}
                 ListEmptyComponent={
                     <HomeEmptyListComponent
                         customerName={user?.customerName}
