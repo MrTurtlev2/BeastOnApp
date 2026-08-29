@@ -30,6 +30,7 @@ export const triggerSync = async (): Promise<boolean> => {
                 url: item.url,
                 method: item.method,
                 data: item.body,
+                isSyncQueue: true,
             });
             store.dispatch(removeFromOutbox(item.id));
         }

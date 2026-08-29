@@ -13,6 +13,7 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import TrainingSelectBottomSheet from './elements/TrainingSelectBottomSheet/TrainingSelectBottomSheet';
+import SyncDebugModal from '../../debug/syncDebugModal/SyncDebugModal';
 
 type HomeStackNavProp = StackNavigationProp<INavigationProps, 'ExerciseScreen'>;
 
@@ -95,6 +96,8 @@ export default function HomeScreen() {
 
     return (
         <Layout hasBurger>
+            <SyncDebugModal />
+
             <Animated.FlatList
                 ListHeaderComponent={headerElement}
                 data={planForToday?.exercises || []}
