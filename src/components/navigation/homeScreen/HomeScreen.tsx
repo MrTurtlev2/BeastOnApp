@@ -113,7 +113,7 @@ export default function HomeScreen() {
                 stickyHeaderIndices={[0]}
                 onScroll={Animated.event([{nativeEvent: {contentOffset: {y: scrollY}}}], {useNativeDriver: true})}
             />
-            <TrainingSelectBottomSheet ref={bottomSheetRef} trainings={trainingPlans} onSelectTraining={() => null} />
+            <TrainingSelectBottomSheet ref={bottomSheetRef} trainings={trainingPlans} onSelectTraining={e => console.log(e)} />
         </Layout>
     );
 }

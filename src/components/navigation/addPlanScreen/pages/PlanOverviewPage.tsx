@@ -48,20 +48,6 @@ const PlanOverviewPage = ({exercises, onAddExercise, onEditExercise, selectedDay
         );
         navigation.goBack();
         triggerSync();
-        // try {
-        //     await addPlanAsync({
-        //         uuid: newPlan.uuid,
-        //         name: newPlan.name,
-        //         exercises: newPlan.exercises,
-        //         dayOfWeek: newPlan.dayOfWeek,
-        //         lastModified: newPlan.lastModified,
-        //     });
-        //     dispatch(markTrainingPlanSynced(newPlan.uuid));
-        // } catch (err) {
-        //     console.log('Sync failed, will retry later');
-        // } finally {
-        //     setPlanLoading(false);
-        // }
     };
 
     return (
