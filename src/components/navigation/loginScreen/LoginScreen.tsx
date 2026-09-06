@@ -7,7 +7,7 @@ import {setUser} from '../../../store/userSlice';
 import {loadTrainingPlans} from '../../../store/trainingPlansSlice';
 import {useAppDispatch} from '../../../store';
 import {useEffect, useRef, useState} from 'react';
-import {IconFontEnum, ILottiePowerButtonRef, useAppNavigation} from '../../../constants/interfaces';
+import {IconFontEnum, ILottiePowerButtonRef} from '../../../constants/interfaces';
 import LottiePowerButton from '../../common/lottiePowerButton/LottiePowerButton';
 import ClawTitle from '../../common/clawTitle/ClawTitle';
 import {IUserLoginState} from '../../../interfaces/userInterface';
@@ -16,6 +16,8 @@ import CustomButton from '../../common/cuctomBtn/CustomButton';
 import CircleBtn from '../../common/CircleBtn/CircleBtn';
 import GoogleSvg from '../../../assets/images/svg/buttons/GoogleSvg';
 import {Colors} from '../../../constants/Colors';
+import {useAppNavigation} from '../../../constants/NavigationInterface';
+import {style} from './Style';
 
 export default function LoginScreen() {
     const {t} = useTranslation();
@@ -52,12 +54,7 @@ export default function LoginScreen() {
 
     return (
         <Layout hasBurger={false} bgImageType={'left-bottom'} horizontalSpace>
-            <View
-                style={{
-                    paddingTop: 50,
-                    flex: 1,
-                    alignItems: 'center',
-                }}>
+            <View style={style.container}>
                 <ClawTitle text={'BeastMode'} type={'heading'} style={{height: 200}} />
                 <CustomInput
                     value={userLogin}
@@ -65,7 +62,7 @@ export default function LoginScreen() {
                     placeholder={t('email')}
                     iconName={'email'}
                     iconFont={IconFontEnum.MaterialIcons}
-                    containerStyle={{marginBottom: 30}}
+                    containerStyle={style.loginInput}
                     textContentType="username"
                     autoComplete="username"
                     keyboardType="email-address"
@@ -77,7 +74,7 @@ export default function LoginScreen() {
                     placeholder={t('password')}
                     iconName={'lock'}
                     iconFont={IconFontEnum.MaterialIcons}
-                    containerStyle={{marginBottom: 60}}
+                    containerStyle={style.passwordInput}
                     textContentType="password"
                     autoComplete="password"
                     secureTextEntry
@@ -91,7 +88,7 @@ export default function LoginScreen() {
                     text={t('register')}
                     onPress={() => navigation.navigate('Register')}
                     type={'secondary'}
-                    style={{marginTop: 40}}
+                    style={style.registerBtn}
                 />
             </View>
         </Layout>

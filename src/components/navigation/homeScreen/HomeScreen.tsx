@@ -7,23 +7,20 @@ import ExerciseBar from './elements/ExerciseBar/ExerciseBar';
 import {useCallback, useMemo, useRef, useState} from 'react';
 import {addDays, format, isToday, startOfWeek} from 'date-fns';
 import {enUS, pl} from 'date-fns/locale';
-import {IExercise, INavigationProps} from '../../../constants/interfaces';
+import {IExercise} from '../../../constants/interfaces';
 import HomeEmptyListComponent from './elements/HomeEmptyListComponent/HomeEmptyListComponent';
-import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import TrainingSelectBottomSheet from './elements/TrainingSelectBottomSheet/TrainingSelectBottomSheet';
 import SyncDebugModal from '../../debug/syncDebugModal/SyncDebugModal';
 import {removeTrainingPlan} from '../../../store/trainingPlansSlice';
 import {addToOutbox} from '../../../store/outboxSlice';
 import {triggerSync} from '../../../store/syncEngine';
-
-type HomeStackNavProp = StackNavigationProp<INavigationProps, 'ExerciseScreen'>;
+import {useAppNavigation} from '../../../constants/NavigationInterface';
 
 const WEEK_DAYS = ['mondayShort', 'tuesdayShort', 'wednesdayShort', 'thursdayShort', 'fridayShort', 'saturdayShort', 'sundayShort'];
 
 export default function HomeScreen() {
-    const navigation = useNavigation<HomeStackNavProp>();
+    const navigation = useAppNavigation<'HomeScreen'>();
     const user = useAppSelector(state => state?.user?.userData);
     const {trainingPlans, loading} = useAppSelector(state => state?.trainingPlans);
     const dispatch = useAppDispatch();

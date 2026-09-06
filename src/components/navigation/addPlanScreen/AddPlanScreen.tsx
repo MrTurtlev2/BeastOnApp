@@ -6,13 +6,13 @@ import PlanOverviewPage from './pages/PlanOverviewPage';
 import ExerciseEditorPage from './pages/ExerciseEditorPage';
 import {RouteProp, useRoute} from '@react-navigation/core';
 import {InitialPlan, PlanFormProvider} from '../../../context/PlanFormContext';
-import {RootStackParamList} from '../../../constants/RouteInterface';
+import {INavigationProps} from '../../../constants/NavigationInterface';
 
 const AddPlanScreen = () => {
-    const route = useRoute<RouteProp<RootStackParamList, 'AddPlanScreen'>>();
+    const route = useRoute<RouteProp<INavigationProps, 'AddPlanScreen'>>();
     const {selectedDay, existingPlan} = route?.params;
     const pagerRef = useRef<PagerView>(null);
- 
+
     const initialPlan: InitialPlan = {
         name: '',
         daysOfWeek: selectedDay ? [selectedDay] : [],
