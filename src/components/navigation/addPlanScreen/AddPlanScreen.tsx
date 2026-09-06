@@ -4,15 +4,15 @@ import {useRef} from 'react';
 import {View} from 'react-native';
 import PlanOverviewPage from './pages/PlanOverviewPage';
 import ExerciseEditorPage from './pages/ExerciseEditorPage';
-import {useRoute} from '@react-navigation/core';
+import {RouteProp, useRoute} from '@react-navigation/core';
 import {InitialPlan, PlanFormProvider} from '../../../context/PlanFormContext';
+import {RootStackParamList} from '../../../constants/RouteInterface';
 
 const AddPlanScreen = () => {
-    const route = useRoute();
-    const {selectedDay, existingPlan} = route?.params || {};
-
+    const route = useRoute<RouteProp<RootStackParamList, 'AddPlanScreen'>>();
+    const {selectedDay, existingPlan} = route?.params;
     const pagerRef = useRef<PagerView>(null);
-
+ 
     const initialPlan: InitialPlan = {
         name: '',
         daysOfWeek: selectedDay ? [selectedDay] : [],
@@ -24,7 +24,7 @@ const AddPlanScreen = () => {
                 {/*@ts-ignore*/}
                 <PagerView ref={pagerRef} style={{flex: 1}} initialPage={0} scrollEnabled={false}>
                     <View key="1" style={{flex: 1}}>
-                        <PlanOverviewPage />
+                        <PlanOverviewPage existingPlan={existingPlan} />
                     </View>
                     <View key="2" style={{flex: 1}}>
                         <ExerciseEditorPage />

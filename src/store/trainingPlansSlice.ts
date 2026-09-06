@@ -1,7 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {ITrainingPlan} from '../constants/interfaces';
 
-interface ReduxTrainingPlan extends ITrainingPlan {
+export interface ReduxTrainingPlan extends ITrainingPlan {
     synced: boolean;
 }
 

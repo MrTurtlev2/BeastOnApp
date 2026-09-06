@@ -14,6 +14,9 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import TrainingSelectBottomSheet from './elements/TrainingSelectBottomSheet/TrainingSelectBottomSheet';
 import SyncDebugModal from '../../debug/syncDebugModal/SyncDebugModal';
+import {removeTrainingPlan} from '../../../store/trainingPlansSlice';
+import {addToOutbox} from '../../../store/outboxSlice';
+import {triggerSync} from '../../../store/syncEngine';
 
 type HomeStackNavProp = StackNavigationProp<INavigationProps, 'ExerciseScreen'>;
 
@@ -61,7 +64,18 @@ export default function HomeScreen() {
 
     const onEditPlan = useCallback(() => {
         navigation.navigate('AddPlanScreen', {selectedDay: selectedDay + 1, existingPlan: planForToday});
-    }, [selectedDay]);
+    }, [planForToday]);
+
+    const onRemovePlan = () => {
+        dispatch(removeTrainingPlan(planForToday.uuid));
+        dispatch(
+            addToOutbox({
+                url: `/api/training-plans/remove-plan/${planForToday.uuid}`,
+                method: 'DELETE',
+            }),
+        );
+        triggerSync();
+    };
 
     const openSelectTrainingPanel = useCallback(() => {
         bottomSheetRef.current?.present();
@@ -90,7 +104,10 @@ export default function HomeScreen() {
             }}>
             <CustomWeekPicker weekDays={weekDays} selectedDay={selectedDay} setSelectedDay={onSelectDay} />
             <Pressable onPress={onEditPlan}>
-                <Text>tedt</Text>
+                <Text style={{color: 'white'}}>tedt</Text>
+            </Pressable>
+            <Pressable onPress={onRemovePlan}>
+                <Text style={{color: 'white'}}>remove plan</Text>
             </Pressable>
         </Animated.View>
     );

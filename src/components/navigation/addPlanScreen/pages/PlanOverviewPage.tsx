@@ -11,47 +11,49 @@ import {addTrainingPlan, updateTrainingPlan} from '../../../../store/trainingPla
 import {addToOutbox} from '../../../../store/outboxSlice';
 import {triggerSync} from '../../../../store/syncEngine';
 import {usePlanForm} from '../../../../context/PlanFormContext';
+import {ITrainingPlan} from '../../../../constants/interfaces';
 
-const PlanOverviewPage = () => {
+type PlanOverviewPageType = {
+    existingPlan?: ITrainingPlan;
+};
+
+const PlanOverviewPage = ({existingPlan}: PlanOverviewPageType) => {
     const {t} = useTranslation();
     const dispatch = useAppDispatch();
     const navigation = useNavigation();
     const {planName, setPlanName, daysOfWeek, exercises, goToEditor} = usePlanForm();
     const [isPlanLoading, setPlanLoading] = useState(false);
 
-    const planObject = {
+    const planObject: ITrainingPlan = {
         uuid: nanoid(),
         name: planName.trim(),
         exercises,
         daysOfWeek,
         lastModified: Date.now(),
-        synced: false,
     };
 
     const onSavePlan = async () => {
         setPlanLoading(true);
-        dispatch(addTrainingPlan({...planObject, synced: false}));
-        dispatch(
-            addToOutbox({
-                url: '/api/training-plans/add-plan',
-                method: 'POST',
-                body: planObject,
-            }),
-        );
-        navigation.goBack();
-        triggerSync();
-    };
-
-    const onUpdatePlan = async () => {
-        setPlanLoading(true);
-        dispatch(updateTrainingPlan({...planObject, synced: false}));
-        dispatch(
-            addToOutbox({
-                url: `/api/training-plans/update-plan/${planObject.uuid}`,
-                method: 'PUT',
-                body: planObject,
-            }),
-        );
+        if (existingPlan) {
+            const updatedPlan = {...planObject, uuid: existingPlan.uuid};
+            dispatch(updateTrainingPlan({...updatedPlan, synced: false}));
+            dispatch(
+                addToOutbox({
+                    url: `/api/training-plans/update-plan/${updatedPlan.uuid}`,
+                    method: 'PUT',
+                    body: updatedPlan,
+                }),
+            );
+        } else {
+            dispatch(addTrainingPlan({...planObject, synced: false}));
+            dispatch(
+                addToOutbox({
+                    url: '/api/training-plans/add-plan',
+                    method: 'POST',
+                    body: planObject,
+                }),
+            );
+        }
         navigation.goBack();
         triggerSync();
     };
