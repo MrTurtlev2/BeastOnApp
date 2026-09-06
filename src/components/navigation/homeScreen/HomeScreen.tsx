@@ -12,7 +12,7 @@ import HomeEmptyListComponent from './elements/HomeEmptyListComponent/HomeEmptyL
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import TrainingSelectBottomSheet from './elements/TrainingSelectBottomSheet/TrainingSelectBottomSheet';
 import SyncDebugModal from '../../debug/syncDebugModal/SyncDebugModal';
-import {removeTrainingPlan} from '../../../store/trainingPlansSlice';
+import {assignTrainingPlanToAnotherDay, removeTrainingPlan} from '../../../store/trainingPlansSlice';
 import {addToOutbox} from '../../../store/outboxSlice';
 import {triggerSync} from '../../../store/syncEngine';
 import {useAppNavigation} from '../../../constants/NavigationInterface';
@@ -49,7 +49,6 @@ export default function HomeScreen() {
     const planForToday = useMemo(() => {
         return trainingPlans.find(item => item.daysOfWeek.includes(selectedDay + 1));
     }, [selectedDay, trainingPlans]);
-    console.log(trainingPlans);
 
     const navigateToExercise = useCallback((item: IExercise) => {
         navigation.push('ExerciseScreen', {exercise: item});
@@ -74,8 +73,21 @@ export default function HomeScreen() {
         triggerSync();
     };
 
+    const assignPlanToThisDay = (uuid: string) => {
+        dispatch(assignTrainingPlanToAnotherDay({uuid, dayToAssign: selectedDay + 1}));
+        dispatch(
+            addToOutbox({
+                url: `/api/training-plans/assign-plan-to-day`,
+                method: 'POST',
+                body: {uuid, day: selectedDay + 1},
+            }),
+        );
+        triggerSync();
+        bottomSheetRef.current?.close();
+    };
+
     const openSelectTrainingPanel = useCallback(() => {
-        bottomSheetRef.current?.present();
+        bottomSheetRef.current?.expand();
     }, []);
 
     const onSelectDay = useCallback((index: number) => {
@@ -134,7 +146,7 @@ export default function HomeScreen() {
                 stickyHeaderIndices={[0]}
                 onScroll={Animated.event([{nativeEvent: {contentOffset: {y: scrollY}}}], {useNativeDriver: true})}
             />
-            <TrainingSelectBottomSheet ref={bottomSheetRef} trainings={trainingPlans} onSelectTraining={e => console.log(e)} />
+            <TrainingSelectBottomSheet ref={bottomSheetRef} trainings={trainingPlans} onSelectTraining={assignPlanToThisDay} />
         </Layout>
     );
 }

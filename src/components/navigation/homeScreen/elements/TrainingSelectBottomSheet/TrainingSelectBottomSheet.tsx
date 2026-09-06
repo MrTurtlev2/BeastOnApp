@@ -1,27 +1,25 @@
-import {BottomSheetBackdrop, BottomSheetFlatList, BottomSheetModal} from '@gorhom/bottom-sheet';
-import {forwardRef, useCallback, useMemo} from 'react';
+import BottomSheet, {BottomSheetBackdrop, BottomSheetFlatList, BottomSheetModal} from '@gorhom/bottom-sheet';
+import {forwardRef, useCallback} from 'react';
 import {ListRenderItem, StyleSheet, Text, View} from 'react-native';
 import {ITrainingPlan} from '../../../../../constants/interfaces';
 import {Colors} from '../../../../../constants/Colors';
 
 type TrainingSelectBottomSheetProps = {
     trainings: ITrainingPlan[];
-    onSelectTraining: (training: ITrainingPlan) => void;
+    onSelectTraining: (uuid: string) => void;
 };
 
 const TrainingSelectBottomSheet = forwardRef<BottomSheetModal, TrainingSelectBottomSheetProps>(({trainings, onSelectTraining}, ref) => {
-    const snapPoints = useMemo(() => ['50%', '80%'], []);
-
     const renderBackdrop = useCallback(
         (props: any) => <BottomSheetBackdrop {...props} disappearsOnIndex={-1} appearsOnIndex={0} opacity={0.5} />,
         [],
     );
-    
+
     const renderItem: ListRenderItem<ITrainingPlan> = useCallback(
         ({item}) => {
             return (
                 <View style={styles.trainingCard}>
-                    <Text style={styles.trainingText} onPress={() => onSelectTraining(item)}>
+                    <Text style={styles.trainingText} onPress={() => onSelectTraining(item.uuid)}>
                         {item.name}
                     </Text>
                 </View>
@@ -31,9 +29,9 @@ const TrainingSelectBottomSheet = forwardRef<BottomSheetModal, TrainingSelectBot
     );
 
     return (
-        <BottomSheetModal
+        <BottomSheet
+            enableDynamicSizing
             ref={ref}
-            snapPoints={snapPoints}
             backdropComponent={renderBackdrop}
             enablePanDownToClose
             backgroundStyle={styles.background}
@@ -51,7 +49,7 @@ const TrainingSelectBottomSheet = forwardRef<BottomSheetModal, TrainingSelectBot
                     showsVerticalScrollIndicator={false}
                 />
             )}
-        </BottomSheetModal>
+        </BottomSheet>
     );
 });
 
@@ -90,6 +88,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         paddingBottom: 40,
+        height: 200,
     },
 
     emptyText: {
