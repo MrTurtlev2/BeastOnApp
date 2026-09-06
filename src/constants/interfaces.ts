@@ -48,7 +48,6 @@ export interface ITrainingPlan {
     name: string;
     exercises: IExercise[];
     daysOfWeek: number[];
-    synced: boolean;
     lastModified: number;
 }
 

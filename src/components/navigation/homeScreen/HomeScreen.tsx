@@ -1,4 +1,4 @@
-import {Animated} from 'react-native';
+import {Animated, Pressable, Text} from 'react-native';
 import Layout from '../../common/layout/Layout';
 import {useTranslation} from 'react-i18next';
 import CustomWeekPicker from './elements/CustomWeekPicker/CustomWeekPicker';
@@ -42,13 +42,14 @@ export default function HomeScreen() {
                 day: t(WEEK_DAYS[i]),
             };
         });
-    }, [weekStart, locale, t]);
+    }, [weekStart, locale]);
 
     const [selectedDay, setSelectedDay] = useState<number>(weekDays.findIndex(day => isToday(day.date)) || 0);
 
     const planForToday = useMemo(() => {
         return trainingPlans.find(item => item.daysOfWeek.includes(selectedDay + 1));
     }, [selectedDay, trainingPlans]);
+    console.log(trainingPlans);
 
     const navigateToExercise = useCallback((item: IExercise) => {
         navigation.push('ExerciseScreen', {exercise: item});
@@ -56,6 +57,10 @@ export default function HomeScreen() {
 
     const onCreatePlan = useCallback(() => {
         navigation.navigate('AddPlanScreen', {selectedDay: selectedDay + 1});
+    }, [selectedDay]);
+
+    const onEditPlan = useCallback(() => {
+        navigation.navigate('AddPlanScreen', {selectedDay: selectedDay + 1, existingPlan: planForToday});
     }, [selectedDay]);
 
     const openSelectTrainingPanel = useCallback(() => {
@@ -84,6 +89,9 @@ export default function HomeScreen() {
                 ],
             }}>
             <CustomWeekPicker weekDays={weekDays} selectedDay={selectedDay} setSelectedDay={onSelectDay} />
+            <Pressable onPress={onEditPlan}>
+                <Text>tedt</Text>
+            </Pressable>
         </Animated.View>
     );
 
@@ -97,7 +105,6 @@ export default function HomeScreen() {
     return (
         <Layout hasBurger>
             <SyncDebugModal />
-
             <Animated.FlatList
                 ListHeaderComponent={headerElement}
                 data={planForToday?.exercises || []}

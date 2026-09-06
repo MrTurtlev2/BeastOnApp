@@ -1,78 +1,37 @@
 import Layout from '../../common/layout/Layout';
 import PagerView from 'react-native-pager-view';
-import {useRef, useState} from 'react';
-import {useTranslation} from 'react-i18next';
+import {useRef} from 'react';
 import {View} from 'react-native';
 import PlanOverviewPage from './pages/PlanOverviewPage';
 import ExerciseEditorPage from './pages/ExerciseEditorPage';
-import {IExercise} from '../../../constants/interfaces';
 import {useRoute} from '@react-navigation/core';
+import {InitialPlan, PlanFormProvider} from '../../../context/PlanFormContext';
 
 const AddPlanScreen = () => {
-    const {t} = useTranslation();
     const route = useRoute();
-    const {selectedDay} = route?.params || {};
+    const {selectedDay, existingPlan} = route?.params || {};
+
     const pagerRef = useRef<PagerView>(null);
 
-    const [exercises, setExercises] = useState<IExercise[]>([]);
-    const [currentExercise, setCurrentExercise] = useState<IExercise | null>(null);
-
-    const goToEditor = (exercise?: IExercise) => {
-        setCurrentExercise(exercise ? {...exercise, sets: [...exercise?.sets]} : {name: '', sets: []});
-        pagerRef.current?.setPage(1);
+    const initialPlan: InitialPlan = {
+        name: '',
+        daysOfWeek: selectedDay ? [selectedDay] : [],
+        exercises: [],
     };
-
-    const goToOverview = () => {
-        setCurrentExercise(null);
-        pagerRef.current?.setPage(0);
-    };
-
-    const onGoBack = () => {
-        console.log(pagerRef.current);
-    };
-
-    const handleSaveExercise = (exercise: IExercise) => {
-        if (!exercise?.name?.trim()) {
-            goToOverview();
-            return;
-        }
-
-        setExercises(prev => {
-            const existingIndex = prev?.findIndex(e => e?.name === exercise?.name);
-            if (existingIndex !== -1) {
-                const updated = [...prev];
-                updated[existingIndex] = exercise;
-                return updated;
-            }
-            return [...prev, exercise];
-        });
-
-        goToOverview();
-    };
-
     return (
-        <Layout hasBackArrow bgImageType={'right-center'} customStyle={{flex: 1, paddingTop: 80}} onGoBack={onGoBack}>
-            {/*@ts-ignore*/}
-            <PagerView ref={pagerRef} style={{flex: 1, height: '100%', width: '100%'}} initialPage={0} scrollEnabled={false}>
-                <View key="1" style={{flex: 1}}>
-                    <PlanOverviewPage
-                        selectedDay={selectedDay}
-                        exercises={exercises}
-                        onAddExercise={() => goToEditor()}
-                        onEditExercise={exercise => goToEditor(exercise)}
-                    />
-                </View>
-
-                <View key="2" style={{flex: 1}}>
-                    <ExerciseEditorPage
-                        key={currentExercise ? currentExercise?.name : 'new'}
-                        existingExercise={currentExercise}
-                        onSave={handleSaveExercise}
-                        onCancel={goToOverview}
-                    />
-                </View>
-            </PagerView>
-        </Layout>
+        <PlanFormProvider pagerRef={pagerRef} initialPlan={existingPlan || initialPlan}>
+            <Layout hasBackArrow bgImageType="right-center" customStyle={{flex: 1, paddingTop: 80}}>
+                {/*@ts-ignore*/}
+                <PagerView ref={pagerRef} style={{flex: 1}} initialPage={0} scrollEnabled={false}>
+                    <View key="1" style={{flex: 1}}>
+                        <PlanOverviewPage />
+                    </View>
+                    <View key="2" style={{flex: 1}}>
+                        <ExerciseEditorPage />
+                    </View>
+                </PagerView>
+            </Layout>
+        </PlanFormProvider>
     );
 };
 
