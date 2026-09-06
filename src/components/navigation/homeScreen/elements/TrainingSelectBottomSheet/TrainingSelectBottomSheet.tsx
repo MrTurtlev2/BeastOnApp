@@ -1,4 +1,4 @@
-import BottomSheet, {BottomSheetBackdrop, BottomSheetFlatList, BottomSheetModal} from '@gorhom/bottom-sheet';
+import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
 import {forwardRef, useCallback} from 'react';
 import {ListRenderItem, StyleSheet, Text, View} from 'react-native';
 import {ITrainingPlan} from '../../../../../constants/interfaces';
@@ -9,11 +9,11 @@ type TrainingSelectBottomSheetProps = {
     onSelectTraining: (uuid: string) => void;
 };
 
-const TrainingSelectBottomSheet = forwardRef<BottomSheetModal, TrainingSelectBottomSheetProps>(({trainings, onSelectTraining}, ref) => {
-    const renderBackdrop = useCallback(
-        (props: any) => <BottomSheetBackdrop {...props} disappearsOnIndex={-1} appearsOnIndex={0} opacity={0.5} />,
-        [],
-    );
+const TrainingSelectBottomSheet = forwardRef<BottomSheet, TrainingSelectBottomSheetProps>(({trainings, onSelectTraining}, ref) => {
+    // const renderBackdrop = useCallback(
+    //     (props: any) => <BottomSheetBackdrop {...props} disappearsOnIndex={-1} appearsOnIndex={0} opacity={0.5} />,
+    //     [],
+    // );
 
     const renderItem: ListRenderItem<ITrainingPlan> = useCallback(
         ({item}) => {
@@ -28,27 +28,29 @@ const TrainingSelectBottomSheet = forwardRef<BottomSheetModal, TrainingSelectBot
         [onSelectTraining],
     );
 
+    const EmptyComponent = () => (
+        <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>No trainings available</Text>
+        </View>
+    );
+
     return (
         <BottomSheet
             enableDynamicSizing
             ref={ref}
-            backdropComponent={renderBackdrop}
+            index={-1}
+            // backdropComponent={renderBackdrop}
             enablePanDownToClose
             backgroundStyle={styles.background}
             handleIndicatorStyle={styles.handleIndicator}>
-            {!trainings?.length ? (
-                <View style={styles.emptyContainer}>
-                    <Text style={styles.emptyText}>No trainings available</Text>
-                </View>
-            ) : (
-                <BottomSheetFlatList
-                    data={trainings}
-                    renderItem={renderItem}
-                    keyExtractor={(item: ITrainingPlan) => item.uuid}
-                    contentContainerStyle={styles.contentContainer}
-                    showsVerticalScrollIndicator={false}
-                />
-            )}
+            <BottomSheetFlatList
+                data={trainings}
+                renderItem={renderItem}
+                keyExtractor={(item: ITrainingPlan) => item.uuid}
+                contentContainerStyle={styles.contentContainer}
+                showsVerticalScrollIndicator={false}
+                ListEmptyComponent={EmptyComponent}
+            />
         </BottomSheet>
     );
 });

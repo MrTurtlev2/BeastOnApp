@@ -9,7 +9,7 @@ import {addDays, format, isToday, startOfWeek} from 'date-fns';
 import {enUS, pl} from 'date-fns/locale';
 import {IExercise} from '../../../constants/interfaces';
 import HomeEmptyListComponent from './elements/HomeEmptyListComponent/HomeEmptyListComponent';
-import {BottomSheetModal} from '@gorhom/bottom-sheet';
+import BottomSheet from '@gorhom/bottom-sheet';
 import TrainingSelectBottomSheet from './elements/TrainingSelectBottomSheet/TrainingSelectBottomSheet';
 import SyncDebugModal from '../../debug/syncDebugModal/SyncDebugModal';
 import {assignTrainingPlanToAnotherDay, removeTrainingPlan} from '../../../store/trainingPlansSlice';
@@ -29,7 +29,7 @@ export default function HomeScreen() {
     const stickyThreshold = 160;
     const {t, i18n} = useTranslation();
     const locale = i18n.language === 'pl' ? pl : enUS;
-    const bottomSheetRef = useRef<BottomSheetModal>(null);
+    const bottomSheetRef = useRef<BottomSheet>(null);
     const today = useMemo(() => new Date(), []);
     const weekStart = useMemo(() => startOfWeek(today, {weekStartsOn: 1}), [today]);
 
