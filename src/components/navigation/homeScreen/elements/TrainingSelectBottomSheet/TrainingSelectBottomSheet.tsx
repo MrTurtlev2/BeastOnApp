@@ -16,7 +16,7 @@ const TrainingSelectBottomSheet = forwardRef<BottomSheetModal, TrainingSelectBot
         (props: any) => <BottomSheetBackdrop {...props} disappearsOnIndex={-1} appearsOnIndex={0} opacity={0.5} />,
         [],
     );
-
+    
     const renderItem: ListRenderItem<ITrainingPlan> = useCallback(
         ({item}) => {
             return (
@@ -46,7 +46,7 @@ const TrainingSelectBottomSheet = forwardRef<BottomSheetModal, TrainingSelectBot
                 <BottomSheetFlatList
                     data={trainings}
                     renderItem={renderItem}
-                    keyExtractor={item => item.trainingPlanId.toString()}
+                    keyExtractor={(item: ITrainingPlan) => item.uuid}
                     contentContainerStyle={styles.contentContainer}
                     showsVerticalScrollIndicator={false}
                 />

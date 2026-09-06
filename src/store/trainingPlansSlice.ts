@@ -1,14 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {IExercise} from '../constants/interfaces';
-
-export interface ITrainingPlan {
-    uuid: string;
-    name: string;
-    exercises: IExercise[];
-    dayOfWeek: number;
-    synced: boolean;
-    lastModified: number;
-}
+import {ITrainingPlan} from '../constants/interfaces';
 
 interface ITrainingPlansState {
     trainingPlans: ITrainingPlan[];

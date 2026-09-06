@@ -5,17 +5,19 @@ import trainingPlansReducer from './trainingPlansSlice';
 import {TypedUseSelectorHook, useDispatch, useSelector} from 'react-redux';
 import {mmkvStorage} from './mmkvStorage';
 import Reactotron from './ReactotronConfig';
+import outboxSlice from './outboxSlice';
 
 const persistConfig = {
     key: 'root',
     storage: mmkvStorage,
 
-    whitelist: ['user', 'trainingPlans'],
+    whitelist: ['user', 'trainingPlans', 'outbox'],
 };
 
 const combinedReducer = combineReducers({
     user: userReducer,
     trainingPlans: trainingPlansReducer,
+    outbox: outboxSlice,
 });
 
 const rootReducer = (state, action: Action) => {
@@ -45,7 +47,7 @@ export const store = configureStore({
 
 export const persistor = persistStore(store);
 
-export type RootState = ReturnType<typeof store.getState>;
+export type RootState = ReturnType<typeof combinedReducer>;
 
 export type AppDispatch = typeof store.dispatch;
 

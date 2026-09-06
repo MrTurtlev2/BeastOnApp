@@ -3,8 +3,8 @@ import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
 import {clearUser, setAccessToken, setUser} from '../store/userSlice';
 import store from '../store';
-import {loadTrainingPlans} from '../store/trainingPlansSlice';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import NetInfo from '@react-native-community/netinfo';
 
 export const handleLoginAsync = async (email: string, password: string) => {
     try {
@@ -40,33 +40,66 @@ export const handleRegisterAsync = async (email: string, password: string) => {
 };
 
 export const handleAutoLogin = async () => {
-    try {
-        const refreshToken = await SecureStore.getItemAsync('refreshToken');
-        if (!refreshToken) {
-            console.log('Brak refreshToken — autologowanie pominięte');
-            return false;
-        }
-        const response = await axios.post(`${baseAppUrl}/api/auth/refresh-token`, {refreshToken});
-        const newAccessToken = response?.data?.accessToken;
-        const userData = response?.data?.user;
+    const refreshToken = await SecureStore.getItemAsync('refreshToken');
 
-        if (newAccessToken) {
-            await SecureStore.setItemAsync('userToken', newAccessToken);
-            store.dispatch(setAccessToken(newAccessToken));
-            if (userData) {
-                store.dispatch(setUser(userData));
-                store.dispatch(loadTrainingPlans());
-            }
-            console.log('Auto-login udany');
-            return true;
-        }
+    const state = store.getState();
 
+    const userData = state.user.userData;
+    const accessToken = state.user.accessToken;
+
+    if (!refreshToken || !userData) {
         return false;
+    }
+
+    const network = await NetInfo.fetch();
+
+    // OFFLINE
+    if (!network.isConnected) {
+        console.log('Offline — używam lokalnej sesji');
+        store.dispatch(
+            setUser({
+                user: userData,
+                accessToken: accessToken ?? '',
+            }),
+        );
+        return true;
+    }
+
+    // online
+    try {
+        const response = await axios.post(`${baseAppUrl}/api/auth/refresh-token`, {refreshToken});
+
+        const newAccessToken = response?.data?.accessToken;
+        const backendUser = response?.data?.user;
+
+        if (!newAccessToken) {
+            throw new Error('Brak access token po refreshu');
+        }
+
+        await SecureStore.setItemAsync('userToken', newAccessToken);
+
+        store.dispatch(setAccessToken(newAccessToken));
+
+        if (backendUser) {
+            store.dispatch(
+                setUser({
+                    user: backendUser,
+                    accessToken: newAccessToken,
+                }),
+            );
+        }
+
+        console.log('Auto-login udany');
+
+        return true;
     } catch (error) {
         console.log('Auto-login nieudany:', error);
+
         await SecureStore.deleteItemAsync('userToken');
         await SecureStore.deleteItemAsync('refreshToken');
+
         store.dispatch(clearUser());
+
         return false;
     }
 };
