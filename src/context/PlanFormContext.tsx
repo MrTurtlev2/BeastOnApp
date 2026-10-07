@@ -1,7 +1,12 @@
 import {createContext, PropsWithChildren, RefObject, useContext, useMemo, useState} from 'react';
 import PagerView from 'react-native-pager-view';
 import {nanoid} from 'nanoid/non-secure';
-import {IExercise} from '../constants/interfaces';
+import {IExercise, ITrainingPlan} from '../constants/interfaces';
+import {addTrainingPlan, updateTrainingPlan} from '../store/trainingPlansSlice';
+import {addToOutbox} from '../store/outboxSlice';
+import {triggerSync} from '../store/syncEngine';
+import {navigationRef} from '../components/navigation/RootNavigation';
+import store from '../store';
 
 export type ExerciseSetUI = {
     uiId: string;
@@ -37,16 +42,20 @@ type PlanFormContextType = {
     saveExercise: () => IExercise | null;
     cancelExercise: () => void;
     resetForm: () => void;
+    onSavePlan: () => void;
+    page: number;
+    goToPage: (index: number) => void;
 };
 
 type Props = PropsWithChildren<{
     pagerRef: RefObject<PagerView | null>;
     initialPlan?: InitialPlan;
+    isUpdateMode?: boolean;
 }>;
 
 const PlanFormContext = createContext<PlanFormContextType | undefined>(undefined);
 
-export const PlanFormProvider = ({children, pagerRef, initialPlan}: Props) => {
+export const PlanFormProvider = ({children, pagerRef, initialPlan, isUpdateMode}: Props) => {
     const [planName, setPlanName] = useState(initialPlan?.name ?? '');
     const [daysOfWeek, setDaysOfWeek] = useState<number[]>(initialPlan?.daysOfWeek ?? []);
     const [exercises, setExercises] = useState<IExercise[]>(initialPlan?.exercises ?? []);
@@ -54,11 +63,15 @@ export const PlanFormProvider = ({children, pagerRef, initialPlan}: Props) => {
     const [exerciseName, setExerciseName] = useState('');
     const [sets, setSets] = useState<ExerciseSetUI[]>([]);
 
+    const goToPage = (index: number) => {
+        pagerRef.current?.setPage(index);
+    };
+
     const goToOverview = () => {
         setCurrentExercise(null);
         setExerciseName('');
         setSets([]);
-        pagerRef.current?.setPage(0);
+        goToPage(0);
     };
 
     const goToEditor = (exercise?: IExercise) => {
@@ -77,7 +90,7 @@ export const PlanFormProvider = ({children, pagerRef, initialPlan}: Props) => {
             setExerciseName('');
             setSets([]);
         }
-        pagerRef.current?.setPage(1);
+        goToPage(1);
     };
 
     const addSet = () => {
@@ -138,7 +151,42 @@ export const PlanFormProvider = ({children, pagerRef, initialPlan}: Props) => {
         setCurrentExercise(null);
         setExerciseName('');
         setSets([]);
-        pagerRef.current?.setPage(0);
+        goToPage(0);
+    };
+
+    const planObject: ITrainingPlan = {
+        uuid: nanoid(),
+        name: planName.trim(),
+        exercises,
+        daysOfWeek,
+        lastModified: Date.now(),
+    };
+
+    const onSavePlan = async () => {
+        if (isUpdateMode) {
+            // const updatedPlan = {...planObject, uuid: existingPlan.uuid};
+            const updatedPlan = {...planObject, uuid: initialPlan.uuid};
+            store.dispatch(updateTrainingPlan({...updatedPlan, synced: false}));
+            store.dispatch(
+                addToOutbox({
+                    url: `/api/training-plans/update-plan/${updatedPlan.uuid}`,
+                    method: 'PUT',
+                    body: updatedPlan,
+                }),
+            );
+        } else {
+            store.dispatch(addTrainingPlan({...planObject, synced: false}));
+            store.dispatch(
+                addToOutbox({
+                    url: '/api/training-plans/add-plan',
+                    method: 'POST',
+                    body: planObject,
+                }),
+            );
+        }
+        navigationRef.goBack();
+        // navigation.goBack();
+        triggerSync();
     };
 
     const value = useMemo(
@@ -146,13 +194,11 @@ export const PlanFormProvider = ({children, pagerRef, initialPlan}: Props) => {
             uuid: initialPlan?.uuid,
             lastModified: initialPlan?.lastModified,
             planName,
-            daysOfWeek,
             exercises,
             currentExercise,
             exerciseName,
             sets,
             setPlanName,
-            setDaysOfWeek,
             goToOverview,
             goToEditor,
             setExerciseName,
@@ -162,6 +208,9 @@ export const PlanFormProvider = ({children, pagerRef, initialPlan}: Props) => {
             saveExercise,
             cancelExercise,
             resetForm,
+            isUpdateMode,
+            onSavePlan,
+            goToPage,
         }),
         [initialPlan?.uuid, initialPlan?.lastModified, planName, daysOfWeek, exercises, currentExercise, exerciseName, sets],
     );

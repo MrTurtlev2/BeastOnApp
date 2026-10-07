@@ -1,36 +1,72 @@
 import Layout from '../../common/layout/Layout';
 import PagerView from 'react-native-pager-view';
-import {useRef} from 'react';
+import {SetStateAction, useRef, useState} from 'react';
 import {View} from 'react-native';
 import PlanOverviewPage from './pages/PlanOverviewPage';
 import ExerciseEditorPage from './pages/ExerciseEditorPage';
 import {RouteProp, useRoute} from '@react-navigation/core';
-import {InitialPlan, PlanFormProvider} from '../../../context/PlanFormContext';
+import {InitialPlan, PlanFormProvider, usePlanForm} from '../../../context/PlanFormContext';
 import {INavigationProps} from '../../../constants/NavigationInterface';
+import CustomBottomSheet from '../../common/bottomSheet/CustomBottomSheet';
+import BottomSheet from '@gorhom/bottom-sheet';
+import ExitWithChangesBottomSheet from './elements/ExitWithChangesBottomSheet';
+import {useNavigation} from '@react-navigation/native';
+
+const AddPlanScreenContent = ({pagerRef}) => {
+    const bottomSheetRef = useRef<BottomSheet>(null);
+    const navigation = useNavigation();
+    const {onSavePlan, goToPage} = usePlanForm();
+    const [page, setPage] = useState(0);
+
+    const onGoBack = () => {
+        if (page === 1) {
+            goToPage(0);
+            return;
+        }
+        bottomSheetRef.current?.expand();
+    };
+
+    return (
+        <Layout hasBackArrow bgImageType="right-center" customStyle={{flex: 1, paddingTop: 80}} onGoBack={onGoBack}>
+            {/*@ts-ignore*/}
+            <PagerView
+                ref={pagerRef}
+                style={{flex: 1}}
+                initialPage={0}
+                scrollEnabled={false}
+                onPageSelected={(event: {nativeEvent: {position: SetStateAction<number>}}) => {
+                    setPage(event.nativeEvent.position);
+                }}>
+                <View key="1" style={{flex: 1}}>
+                    <PlanOverviewPage />
+                </View>
+                <View key="2" style={{flex: 1}}>
+                    <ExerciseEditorPage />
+                </View>
+            </PagerView>
+            <CustomBottomSheet ref={bottomSheetRef}>
+                <ExitWithChangesBottomSheet
+                    onExitWithSave={onSavePlan}
+                    onExitWithoutSave={() => navigation.goBack()}
+                    onCancel={() => bottomSheetRef.current.close()}
+                />
+            </CustomBottomSheet>
+        </Layout>
+    );
+};
 
 const AddPlanScreen = () => {
+    const pagerRef = useRef<PagerView>(null);
     const route = useRoute<RouteProp<INavigationProps, 'AddPlanScreen'>>();
     const {selectedDay, existingPlan} = route?.params;
-    const pagerRef = useRef<PagerView>(null);
-
     const initialPlan: InitialPlan = {
         name: '',
         daysOfWeek: selectedDay ? [selectedDay] : [],
         exercises: [],
     };
     return (
-        <PlanFormProvider pagerRef={pagerRef} initialPlan={existingPlan || initialPlan}>
-            <Layout hasBackArrow bgImageType="right-center" customStyle={{flex: 1, paddingTop: 80}}>
-                {/*@ts-ignore*/}
-                <PagerView ref={pagerRef} style={{flex: 1}} initialPage={0} scrollEnabled={false}>
-                    <View key="1" style={{flex: 1}}>
-                        <PlanOverviewPage existingPlan={existingPlan} />
-                    </View>
-                    <View key="2" style={{flex: 1}}>
-                        <ExerciseEditorPage />
-                    </View>
-                </PagerView>
-            </Layout>
+        <PlanFormProvider pagerRef={pagerRef} initialPlan={existingPlan || initialPlan} isUpdateMode={typeof existingPlan !== 'undefined'}>
+            <AddPlanScreenContent pagerRef={pagerRef} />
         </PlanFormProvider>
     );
 };

@@ -12,14 +12,11 @@ import {ExerciseSetUI, usePlanForm} from '../../../../context/PlanFormContext';
 
 const ExerciseEditorPage = () => {
     const {t} = useTranslation();
-
     const flatListRef = useRef<FlatList>(null);
-
     const {exerciseName, sets, setExerciseName, addSet, removeSet, updateSet, saveExercise, cancelExercise} = usePlanForm();
 
     const handleAddSet = () => {
         addSet();
-
         setTimeout(() => {
             flatListRef.current?.scrollToIndex({
                 index: sets.length,
@@ -30,7 +27,6 @@ const ExerciseEditorPage = () => {
 
     const handleSave = () => {
         const isExerciseNameValid = exerciseName.trim() !== '';
-
         const isSetsValid = sets.every(set => set.weight !== '' && set.repetitions !== '');
 
         if (!isSetsValid || !isExerciseNameValid) {
@@ -39,10 +35,8 @@ const ExerciseEditorPage = () => {
                 text1: !isSetsValid ? t('emptySeries') : t('emptyExerciseName'),
                 useModal: false,
             });
-
             return;
         }
-
         saveExercise();
     };
 

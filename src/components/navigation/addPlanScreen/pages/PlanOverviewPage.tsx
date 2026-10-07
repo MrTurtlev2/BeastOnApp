@@ -4,61 +4,19 @@ import CustomInput from '../../../common/customInput/CustomInput';
 import NewExerciseBar from '../elements/NewExerciseBar';
 import PlanOverviewFooter from '../elements/PlanOverviewFooter';
 import {useState} from 'react';
-import {useNavigation} from '@react-navigation/native';
-import {useAppDispatch} from '../../../../store';
-import {nanoid} from 'nanoid';
-import {addTrainingPlan, updateTrainingPlan} from '../../../../store/trainingPlansSlice';
-import {addToOutbox} from '../../../../store/outboxSlice';
-import {triggerSync} from '../../../../store/syncEngine';
 import {usePlanForm} from '../../../../context/PlanFormContext';
-import {ITrainingPlan} from '../../../../constants/interfaces';
 import CustomWeekPicker from '../../homeScreen/elements/CustomWeekPicker/CustomWeekPicker';
 import {useWeekDays} from '../../../../hooks/useWeekDays';
 
-type PlanOverviewPageType = {
-    existingPlan?: ITrainingPlan;
-};
-
-const PlanOverviewPage = ({existingPlan}: PlanOverviewPageType) => {
+const PlanOverviewPage = () => {
     const {t} = useTranslation();
-    const dispatch = useAppDispatch();
-    const navigation = useNavigation();
-    const {planName, setPlanName, daysOfWeek, exercises, goToEditor} = usePlanForm();
+    const {planName, setPlanName, exercises, goToEditor, onSavePlan} = usePlanForm();
     const [isPlanLoading, setPlanLoading] = useState(false);
     const {weekDays, selectedDay, onSelectDay} = useWeekDays();
 
-    const planObject: ITrainingPlan = {
-        uuid: nanoid(),
-        name: planName.trim(),
-        exercises,
-        daysOfWeek,
-        lastModified: Date.now(),
-    };
-
-    const onSavePlan = async () => {
+    const handleSavePlan = async () => {
         setPlanLoading(true);
-        if (existingPlan) {
-            const updatedPlan = {...planObject, uuid: existingPlan.uuid};
-            dispatch(updateTrainingPlan({...updatedPlan, synced: false}));
-            dispatch(
-                addToOutbox({
-                    url: `/api/training-plans/update-plan/${updatedPlan.uuid}`,
-                    method: 'PUT',
-                    body: updatedPlan,
-                }),
-            );
-        } else {
-            dispatch(addTrainingPlan({...planObject, synced: false}));
-            dispatch(
-                addToOutbox({
-                    url: '/api/training-plans/add-plan',
-                    method: 'POST',
-                    body: planObject,
-                }),
-            );
-        }
-        navigation.goBack();
-        triggerSync();
+        onSavePlan();
     };
 
     return (
@@ -90,7 +48,7 @@ const PlanOverviewPage = ({existingPlan}: PlanOverviewPageType) => {
                     paddingHorizontal: 20,
                 }}
                 ListFooterComponent={
-                    <PlanOverviewFooter onAddExercise={() => goToEditor()} onSavePlan={onSavePlan} isPlanLoading={isPlanLoading} />
+                    <PlanOverviewFooter onAddExercise={() => goToEditor()} onSavePlan={handleSavePlan} isPlanLoading={isPlanLoading} />
                 }
             />
         </View>
