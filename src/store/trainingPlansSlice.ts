@@ -1,5 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {ITrainingPlan} from '../constants/interfaces';
+import {fetchTrainingPlans} from '../api/TrainingShedule';
 
 export interface ReduxTrainingPlan extends ITrainingPlan {
     synced: boolean;
@@ -45,6 +46,11 @@ const trainingPlansSlice = createSlice({
         removeTrainingPlan(state, action: PayloadAction<string>) {
             state.trainingPlans = state.trainingPlans.filter(item => item.uuid !== action.payload);
         },
+    },
+    extraReducers: builder => {
+        builder.addCase(fetchTrainingPlans.fulfilled, (state, action) => {
+            state.trainingPlans = action.payload;
+        });
     },
 });
 

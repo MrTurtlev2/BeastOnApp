@@ -1,4 +1,4 @@
-import {Image, StyleProp, TouchableOpacity, View} from 'react-native';
+import {BackHandler, Image, StyleProp, TouchableOpacity, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import BurgerSvg from '../../../assets/images/svg/BurgerSvg';
@@ -8,7 +8,7 @@ import TopLeftMainMonkey from '../../../assets/images/png/layout/top-left-main-m
 import RightCenterMainMonkey from '../../../assets/images/png/layout/right-center-main-monkey.png';
 import TopCenterMainMonkey from '../../../assets/images/png/layout/top-center-main-monkey.png';
 import LeftBottomMainMonkey from '../../../assets/images/png/layout/bottom-left-main-monkey.png';
-import {ReactNode} from 'react';
+import {ReactNode, useCallback, useEffect} from 'react';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 type LayoutProps = {
@@ -44,12 +44,25 @@ export default function Layout({
             return <Image style={style.bgImageLeftBottom} source={LeftBottomMainMonkey} resizeMode={'stretch'} />;
     };
 
-    const handleBackArrow = () => {
-        if (onGoBack) return onGoBack();
-        if (navigation.canGoBack()) return navigation.goBack();
-        return null;
-    };
+    const handleBackArrow = useCallback(() => {
+        if (onGoBack) {
+            onGoBack();
+            return true;
+        }
+        if (navigation.canGoBack()) {
+            navigation.goBack();
+            return true;
+        }
+        return false;
+    }, [navigation, onGoBack]);
+
     const handleBurgerPress = () => navigation.openDrawer();
+
+    useEffect(() => {
+        if (!onGoBack) return;
+        const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackArrow);
+        return () => backHandler.remove();
+    }, [handleBackArrow]);
 
     return (
         <View style={[style.main, horizontalSpace && {paddingHorizontal: 20}, customStyle]}>

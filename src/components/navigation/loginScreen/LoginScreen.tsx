@@ -1,10 +1,9 @@
 import {useTranslation} from 'react-i18next';
 import Layout from '../../common/layout/Layout';
-import {View} from 'react-native';
+import {Pressable, Text, View} from 'react-native';
 import CustomInput from '../../common/customInput/CustomInput';
 import {configureGoogleSignIn, handleGoogleLogin, handleLoginAsync} from '../../../api/Auth';
 import {setUser} from '../../../store/userSlice';
-import {loadTrainingPlans} from '../../../store/trainingPlansSlice';
 import {useAppDispatch} from '../../../store';
 import {useEffect, useRef, useState} from 'react';
 import {IconFontEnum, ILottiePowerButtonRef} from '../../../constants/interfaces';
@@ -12,12 +11,13 @@ import LottiePowerButton from '../../common/lottiePowerButton/LottiePowerButton'
 import ClawTitle from '../../common/clawTitle/ClawTitle';
 import {IUserLoginState} from '../../../interfaces/userInterface';
 import Separator from '../../common/separator/Separator';
-import CustomButton from '../../common/cuctomBtn/CustomButton';
 import CircleBtn from '../../common/CircleBtn/CircleBtn';
 import GoogleSvg from '../../../assets/images/svg/buttons/GoogleSvg';
 import {Colors} from '../../../constants/Colors';
 import {useAppNavigation} from '../../../constants/NavigationInterface';
 import {style} from './Style';
+import {fetchTrainingPlans} from '../../../api/TrainingShedule';
+import {Toast} from 'toastify-react-native';
 
 export default function LoginScreen() {
     const {t} = useTranslation();
@@ -27,9 +27,16 @@ export default function LoginScreen() {
     const [userPassword, setUserPassword] = useState<string>('');
     const powerBtnRef = useRef<ILottiePowerButtonRef>(null);
 
-    const setUserData = (res: IUserLoginState) => {
+    const setUserData = async (res: IUserLoginState) => {
         dispatch(setUser(res));
-        dispatch(loadTrainingPlans());
+        try {
+            await dispatch(fetchTrainingPlans()).unwrap();
+        } catch (error) {
+            Toast.show({
+                type: 'error',
+                text1: error,
+            });
+        }
     };
 
     const onLogin = async () => {
@@ -83,13 +90,17 @@ export default function LoginScreen() {
                 <LottiePowerButton onPress={onLogin} ref={powerBtnRef} />
                 <Separator text={t('loginBy')} />
                 <CircleBtn onPress={onGoogleLogin} icon={<GoogleSvg />} size={80} bgColor={Colors.overlay} />
-
-                <CustomButton
-                    text={t('register')}
-                    onPress={() => navigation.navigate('Register')}
-                    type={'secondary'}
-                    style={style.registerBtn}
-                />
+                
+                <Pressable onPress={() => navigation.navigate('Register')} style={style.registerBtn}>
+                    <Text style={{color: Colors.pink}}>{t('register')}</Text>
+                    <View
+                        style={{
+                            backgroundColor: Colors.pink,
+                            height: 1,
+                            width: '100%',
+                        }}
+                    />
+                </Pressable>
             </View>
         </Layout>
     );

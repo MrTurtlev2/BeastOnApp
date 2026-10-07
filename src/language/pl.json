@@ -33,5 +33,8 @@
   "passwordHasNumber": "hasło posiada cyfrę",
   "passwordHasSpecialLetter": "hasło posiada znak specjalny",
   "passwordHasUppercase": "hasło posiada dużą literę",
-  "passwordsAreTheSame": "hasła są takie same"
+  "passwordsAreTheSame": "hasła są takie same",
+  "saveAndExit": "zapisz i wyjdź",
+  "exitWithoutSaving": "wyjdź bez zapisu",
+  "cancel": "anuluj"
 }
