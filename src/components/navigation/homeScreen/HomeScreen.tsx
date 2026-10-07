@@ -14,6 +14,7 @@ import {addToOutbox} from '../../../store/outboxSlice';
 import {triggerSync} from '../../../store/syncEngine';
 import {useAppNavigation} from '../../../constants/NavigationInterface';
 import {useWeekDays} from '../../../hooks/useWeekDays';
+import CustomBottomSheet from '../../common/bottomSheet/CustomBottomSheet';
 
 export default function HomeScreen() {
     const navigation = useAppNavigation<'HomeScreen'>();
@@ -122,7 +123,9 @@ export default function HomeScreen() {
                 stickyHeaderIndices={[0]}
                 onScroll={Animated.event([{nativeEvent: {contentOffset: {y: scrollY}}}], {useNativeDriver: true})}
             />
-            <TrainingSelectBottomSheet ref={bottomSheetRef} trainings={trainingPlans} onSelectTraining={assignPlanToThisDay} />
+            <CustomBottomSheet ref={bottomSheetRef}>
+                <TrainingSelectBottomSheet trainings={trainingPlans} onSelectTraining={assignPlanToThisDay} />
+            </CustomBottomSheet>
         </Layout>
     );
 }

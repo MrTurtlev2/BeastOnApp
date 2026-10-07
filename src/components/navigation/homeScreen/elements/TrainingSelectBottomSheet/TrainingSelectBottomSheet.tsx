@@ -1,18 +1,15 @@
-import BottomSheet, {BottomSheetFlatList} from '@gorhom/bottom-sheet';
-import {forwardRef, useCallback} from 'react';
+import {BottomSheetFlatList} from '@gorhom/bottom-sheet';
+import {useCallback} from 'react';
 import {ListRenderItem, StyleSheet, Text, View} from 'react-native';
 import {ITrainingPlan} from '../../../../../constants/interfaces';
 import {Colors} from '../../../../../constants/Colors';
-import CustomBackdrop from '../../../../common/bottomSheet/CustomBackdrop';
 
 type TrainingSelectBottomSheetProps = {
     trainings: ITrainingPlan[];
     onSelectTraining: (uuid: string) => void;
 };
 
-const TrainingSelectBottomSheet = forwardRef<BottomSheet, TrainingSelectBottomSheetProps>(({trainings, onSelectTraining}, ref) => {
-    const renderBackdrop = useCallback((props: any) => <CustomBackdrop animatedIndex={props.animatedIndex} />, []);
-
+const TrainingSelectBottomSheet = ({trainings, onSelectTraining}: TrainingSelectBottomSheetProps) => {
     const renderItem: ListRenderItem<ITrainingPlan> = useCallback(
         ({item}) => {
             return (
@@ -36,25 +33,16 @@ const TrainingSelectBottomSheet = forwardRef<BottomSheet, TrainingSelectBottomSh
     );
 
     return (
-        <BottomSheet
-            ref={ref}
-            index={-1}
-            enableDynamicSizing
-            backdropComponent={renderBackdrop}
-            enablePanDownToClose
-            backgroundStyle={styles.background}
-            handleIndicatorStyle={styles.handleIndicator}>
-            <BottomSheetFlatList
-                data={trainings}
-                renderItem={renderItem}
-                keyExtractor={(item: ITrainingPlan) => item.uuid}
-                contentContainerStyle={styles.contentContainer}
-                showsVerticalScrollIndicator={false}
-                ListEmptyComponent={renderEmptyComponent}
-            />
-        </BottomSheet>
+        <BottomSheetFlatList
+            data={trainings}
+            renderItem={renderItem}
+            keyExtractor={(item: ITrainingPlan) => item.uuid}
+            contentContainerStyle={styles.contentContainer}
+            showsVerticalScrollIndicator={false}
+            ListEmptyComponent={renderEmptyComponent}
+        />
     );
-});
+};
 
 export default TrainingSelectBottomSheet;
 
