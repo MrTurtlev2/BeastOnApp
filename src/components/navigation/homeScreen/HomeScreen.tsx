@@ -1,12 +1,9 @@
 import {Animated, Pressable, Text} from 'react-native';
 import Layout from '../../common/layout/Layout';
-import {useTranslation} from 'react-i18next';
 import CustomWeekPicker from './elements/CustomWeekPicker/CustomWeekPicker';
 import {useAppDispatch, useAppSelector} from '../../../store';
 import ExerciseBar from './elements/ExerciseBar/ExerciseBar';
-import {useCallback, useMemo, useRef, useState} from 'react';
-import {addDays, format, isToday, startOfWeek} from 'date-fns';
-import {enUS, pl} from 'date-fns/locale';
+import {useCallback, useMemo, useRef} from 'react';
 import {IExercise} from '../../../constants/interfaces';
 import HomeEmptyListComponent from './elements/HomeEmptyListComponent/HomeEmptyListComponent';
 import BottomSheet from '@gorhom/bottom-sheet';
@@ -16,8 +13,7 @@ import {assignTrainingPlanToAnotherDay, removeTrainingPlan} from '../../../store
 import {addToOutbox} from '../../../store/outboxSlice';
 import {triggerSync} from '../../../store/syncEngine';
 import {useAppNavigation} from '../../../constants/NavigationInterface';
-
-const WEEK_DAYS = ['mondayShort', 'tuesdayShort', 'wednesdayShort', 'thursdayShort', 'fridayShort', 'saturdayShort', 'sundayShort'];
+import {useWeekDays} from '../../../hooks/useWeekDays';
 
 export default function HomeScreen() {
     const navigation = useAppNavigation<'HomeScreen'>();
@@ -27,24 +23,8 @@ export default function HomeScreen() {
     const scrollY = useRef(new Animated.Value(0)).current;
     const headerHeight = 90;
     const stickyThreshold = 160;
-    const {t, i18n} = useTranslation();
-    const locale = i18n.language === 'pl' ? pl : enUS;
     const bottomSheetRef = useRef<BottomSheet>(null);
-    const today = useMemo(() => new Date(), []);
-    const weekStart = useMemo(() => startOfWeek(today, {weekStartsOn: 1}), [today]);
-
-    const weekDays = useMemo(() => {
-        return Array.from({length: 7}, (_, i) => {
-            const date = addDays(weekStart, i);
-            return {
-                date,
-                dateString: format(date, 'dd', {locale}),
-                day: t(WEEK_DAYS[i]),
-            };
-        });
-    }, [weekStart, locale]);
-
-    const [selectedDay, setSelectedDay] = useState<number>(weekDays.findIndex(day => isToday(day.date)) || 0);
+    const {weekDays, selectedDay, onSelectDay} = useWeekDays();
 
     const planForToday = useMemo(() => {
         return trainingPlans.find(item => item.daysOfWeek.includes(selectedDay + 1));
@@ -88,10 +68,6 @@ export default function HomeScreen() {
 
     const openSelectTrainingPanel = useCallback(() => {
         bottomSheetRef.current?.expand();
-    }, []);
-
-    const onSelectDay = useCallback((index: number) => {
-        setSelectedDay(index);
     }, []);
 
     const headerElement = (

@@ -3,6 +3,7 @@ import {forwardRef, useCallback} from 'react';
 import {ListRenderItem, StyleSheet, Text, View} from 'react-native';
 import {ITrainingPlan} from '../../../../../constants/interfaces';
 import {Colors} from '../../../../../constants/Colors';
+import CustomBackdrop from '../../../../common/bottomSheet/CustomBackdrop';
 
 type TrainingSelectBottomSheetProps = {
     trainings: ITrainingPlan[];
@@ -10,10 +11,7 @@ type TrainingSelectBottomSheetProps = {
 };
 
 const TrainingSelectBottomSheet = forwardRef<BottomSheet, TrainingSelectBottomSheetProps>(({trainings, onSelectTraining}, ref) => {
-    // const renderBackdrop = useCallback(
-    //     (props: any) => <BottomSheetBackdrop {...props} disappearsOnIndex={-1} appearsOnIndex={0} opacity={0.5} />,
-    //     [],
-    // );
+    const renderBackdrop = useCallback((props: any) => <CustomBackdrop animatedIndex={props.animatedIndex} />, []);
 
     const renderItem: ListRenderItem<ITrainingPlan> = useCallback(
         ({item}) => {
@@ -28,18 +26,21 @@ const TrainingSelectBottomSheet = forwardRef<BottomSheet, TrainingSelectBottomSh
         [onSelectTraining],
     );
 
-    const EmptyComponent = () => (
-        <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>No trainings available</Text>
-        </View>
+    const renderEmptyComponent = useCallback(
+        () => (
+            <View style={styles.emptyContainer}>
+                <Text style={styles.emptyText}>No trainings available</Text>
+            </View>
+        ),
+        [],
     );
 
     return (
         <BottomSheet
-            enableDynamicSizing
             ref={ref}
             index={-1}
-            // backdropComponent={renderBackdrop}
+            enableDynamicSizing
+            backdropComponent={renderBackdrop}
             enablePanDownToClose
             backgroundStyle={styles.background}
             handleIndicatorStyle={styles.handleIndicator}>
@@ -49,7 +50,7 @@ const TrainingSelectBottomSheet = forwardRef<BottomSheet, TrainingSelectBottomSh
                 keyExtractor={(item: ITrainingPlan) => item.uuid}
                 contentContainerStyle={styles.contentContainer}
                 showsVerticalScrollIndicator={false}
-                ListEmptyComponent={EmptyComponent}
+                ListEmptyComponent={renderEmptyComponent}
             />
         </BottomSheet>
     );
@@ -64,6 +65,8 @@ const styles = StyleSheet.create({
 
     handleIndicator: {
         backgroundColor: '#666',
+        width: 40,
+        marginBottom: 10,
     },
 
     contentContainer: {

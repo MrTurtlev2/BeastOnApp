@@ -12,6 +12,8 @@ import {addToOutbox} from '../../../../store/outboxSlice';
 import {triggerSync} from '../../../../store/syncEngine';
 import {usePlanForm} from '../../../../context/PlanFormContext';
 import {ITrainingPlan} from '../../../../constants/interfaces';
+import CustomWeekPicker from '../../homeScreen/elements/CustomWeekPicker/CustomWeekPicker';
+import {useWeekDays} from '../../../../hooks/useWeekDays';
 
 type PlanOverviewPageType = {
     existingPlan?: ITrainingPlan;
@@ -23,6 +25,7 @@ const PlanOverviewPage = ({existingPlan}: PlanOverviewPageType) => {
     const navigation = useNavigation();
     const {planName, setPlanName, daysOfWeek, exercises, goToEditor} = usePlanForm();
     const [isPlanLoading, setPlanLoading] = useState(false);
+    const {weekDays, selectedDay, onSelectDay} = useWeekDays();
 
     const planObject: ITrainingPlan = {
         uuid: nanoid(),
@@ -72,10 +75,11 @@ const PlanOverviewPage = ({existingPlan}: PlanOverviewPageType) => {
                     marginBottom: 20,
                 }}
             />
+            <CustomWeekPicker weekDays={weekDays} selectedDay={selectedDay} setSelectedDay={onSelectDay} />
 
             <FlatList
                 data={exercises}
-                keyExtractor={(item, index) => index.toString()}
+                keyExtractor={(_, index) => index.toString()}
                 renderItem={({item, index}) => (
                     <NewExerciseBar index={index + 1} exerciseName={item.name} onPress={() => goToEditor(item)} />
                 )}
