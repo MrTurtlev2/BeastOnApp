@@ -15,12 +15,12 @@ import {useNavigation} from '@react-navigation/native';
 const AddPlanScreenContent = ({pagerRef}) => {
     const bottomSheetRef = useRef<BottomSheet>(null);
     const navigation = useNavigation();
-    const {onSavePlan, goToPage} = usePlanForm();
+    const {onSavePlan} = usePlanForm();
     const [page, setPage] = useState(0);
 
     const onGoBack = () => {
         if (page === 1) {
-            goToPage(0);
+            pagerRef.current?.setPage(0);
             return;
         }
         bottomSheetRef.current?.expand();

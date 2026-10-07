@@ -43,8 +43,6 @@ type PlanFormContextType = {
     cancelExercise: () => void;
     resetForm: () => void;
     onSavePlan: () => void;
-    page: number;
-    goToPage: (index: number) => void;
 };
 
 type Props = PropsWithChildren<{
@@ -164,7 +162,6 @@ export const PlanFormProvider = ({children, pagerRef, initialPlan, isUpdateMode}
 
     const onSavePlan = async () => {
         if (isUpdateMode) {
-            // const updatedPlan = {...planObject, uuid: existingPlan.uuid};
             const updatedPlan = {...planObject, uuid: initialPlan.uuid};
             store.dispatch(updateTrainingPlan({...updatedPlan, synced: false}));
             store.dispatch(
@@ -185,7 +182,6 @@ export const PlanFormProvider = ({children, pagerRef, initialPlan, isUpdateMode}
             );
         }
         navigationRef.goBack();
-        // navigation.goBack();
         triggerSync();
     };
 
@@ -208,9 +204,7 @@ export const PlanFormProvider = ({children, pagerRef, initialPlan, isUpdateMode}
             saveExercise,
             cancelExercise,
             resetForm,
-            isUpdateMode,
             onSavePlan,
-            goToPage,
         }),
         [initialPlan?.uuid, initialPlan?.lastModified, planName, daysOfWeek, exercises, currentExercise, exerciseName, sets],
     );
