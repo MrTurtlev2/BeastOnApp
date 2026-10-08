@@ -3,7 +3,7 @@ import Layout from '../../common/layout/Layout';
 import CustomWeekPicker from './elements/CustomWeekPicker/CustomWeekPicker';
 import {useAppDispatch, useAppSelector} from '../../../store';
 import ExerciseBar from './elements/ExerciseBar/ExerciseBar';
-import {useCallback, useMemo, useRef} from 'react';
+import {useCallback, useMemo, useRef, useState} from 'react';
 import {IExercise} from '../../../constants/interfaces';
 import HomeEmptyListComponent from './elements/HomeEmptyListComponent/HomeEmptyListComponent';
 import BottomSheet from '@gorhom/bottom-sheet';
@@ -19,6 +19,7 @@ import ActionsOnPlanBottomSheet from './elements/ActionsOnPlanBottomSheet/Action
 import CircleBtn from '../../common/CircleBtn/CircleBtn';
 import KebabMenuSvg from '../../../assets/images/svg/common/KebabMenuSvg';
 import {style} from './Style';
+import {isToday} from 'date-fns';
 
 export default function HomeScreen() {
     const navigation = useAppNavigation<'HomeScreen'>();
@@ -30,10 +31,15 @@ export default function HomeScreen() {
     const stickyThreshold = 160;
     const bottomSheetRef = useRef<BottomSheet>(null);
     const onPlanActionsRef = useRef<BottomSheet>(null);
-    const {weekDays, selectedDay, onSelectDay} = useWeekDays();
+    const {weekDays} = useWeekDays();
+
+    const [selectedDay, setSelectedDay] = useState<number>(() => {
+        const todayIndex = weekDays.findIndex(day => isToday(day.date));
+        return todayIndex === -1 ? 1 : todayIndex + 1;
+    });
 
     const planForToday = useMemo(() => {
-        return trainingPlans.find(item => item.daysOfWeek.includes(selectedDay + 1));
+        return trainingPlans.find(item => item.daysOfWeek.includes(selectedDay));
     }, [selectedDay, trainingPlans]);
 
     const navigateToExercise = useCallback((item: IExercise) => {
@@ -41,12 +47,12 @@ export default function HomeScreen() {
     }, []);
 
     const onCreatePlan = useCallback(() => {
-        navigation.navigate('AddPlanScreen', {selectedDay: selectedDay + 1});
+        navigation.navigate('AddPlanScreen', {selectedDay: selectedDay});
     }, [selectedDay]);
 
     const onEditPlan = useCallback(() => {
         onPlanActionsRef.current.close();
-        navigation.navigate('AddPlanScreen', {selectedDay: selectedDay + 1, existingPlan: planForToday});
+        navigation.navigate('AddPlanScreen', {selectedDay: selectedDay, existingPlan: planForToday});
     }, [planForToday]);
 
     const onRemovePlan = () => {
@@ -62,12 +68,12 @@ export default function HomeScreen() {
     };
 
     const assignPlanToThisDay = (uuid: string) => {
-        dispatch(assignTrainingPlanToAnotherDay({uuid, dayToAssign: selectedDay + 1}));
+        dispatch(assignTrainingPlanToAnotherDay({uuid, dayToAssign: selectedDay}));
         dispatch(
             addToOutbox({
                 url: `/api/training-plans/assign-plan-to-day`,
                 method: 'POST',
-                body: {uuid, day: selectedDay + 1},
+                body: {uuid, day: selectedDay},
             }),
         );
         triggerSync();
@@ -76,12 +82,12 @@ export default function HomeScreen() {
 
     const unassignPlanForToday = () => {
         onPlanActionsRef.current.close();
-        dispatch(unassignPlanForDay({uuid: planForToday.uuid, dayToAssign: selectedDay + 1}));
+        dispatch(unassignPlanForDay({uuid: planForToday.uuid, dayToAssign: selectedDay}));
         dispatch(
             addToOutbox({
                 url: `/api/training-plans/unassign-plan-for-day`,
                 method: 'POST',
-                body: {uuid: planForToday.uuid, day: selectedDay + 1},
+                body: {uuid: planForToday.uuid, day: selectedDay},
             }),
         );
         triggerSync();
@@ -108,7 +114,7 @@ export default function HomeScreen() {
                     },
                 ],
             }}>
-            <CustomWeekPicker weekDays={weekDays} selectedDay={selectedDay} setSelectedDay={onSelectDay} />
+            <CustomWeekPicker weekDays={weekDays} selectedDays={[selectedDay]} onSelectDay={setSelectedDay} />
         </Animated.View>
     );
 

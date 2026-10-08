@@ -1,7 +1,7 @@
 import {useTranslation} from 'react-i18next';
 import {enUS, pl} from 'date-fns/locale';
-import {useCallback, useMemo, useState} from 'react';
-import {addDays, format, isToday, startOfWeek} from 'date-fns';
+import {useMemo} from 'react';
+import {addDays, format, startOfWeek} from 'date-fns';
 
 const WEEK_DAYS = ['mondayShort', 'tuesdayShort', 'wednesdayShort', 'thursdayShort', 'fridayShort', 'saturdayShort', 'sundayShort'];
 
@@ -18,19 +18,12 @@ export function useWeekDays() {
                 date,
                 dateString: format(date, 'dd', {locale}),
                 day: t(WEEK_DAYS[i]),
+                dayOfWeek: i + 1,
             };
         });
     }, [weekStart, locale]);
 
-    const [selectedDay, setSelectedDay] = useState<number>(weekDays.findIndex(day => isToday(day.date)) || 0);
-
-    const onSelectDay = useCallback((index: number) => {
-        setSelectedDay(index);
-    }, []);
-
     return {
         weekDays,
-        selectedDay,
-        onSelectDay,
     };
 }

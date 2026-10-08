@@ -10,9 +10,13 @@ import {useWeekDays} from '../../../../hooks/useWeekDays';
 
 const PlanOverviewPage = () => {
     const {t} = useTranslation();
-    const {planName, setPlanName, exercises, goToEditor, onSavePlan} = usePlanForm();
+    const {planName, setPlanName, exercises, goToEditor, onSavePlan, daysOfWeek, setDaysOfWeek} = usePlanForm();
     const [isPlanLoading, setPlanLoading] = useState(false);
-    const {weekDays, selectedDay, onSelectDay} = useWeekDays();
+    const {weekDays} = useWeekDays();
+
+    const handleSelectDay = (day: number) => {
+        setDaysOfWeek(prev => (prev.includes(day) ? prev.filter(item => item !== day) : [...prev, day]));
+    };
 
     const handleSavePlan = async () => {
         setPlanLoading(true);
@@ -33,7 +37,7 @@ const PlanOverviewPage = () => {
                     marginBottom: 20,
                 }}
             />
-            <CustomWeekPicker weekDays={weekDays} selectedDay={selectedDay} setSelectedDay={onSelectDay} />
+            <CustomWeekPicker weekDays={weekDays} selectedDays={daysOfWeek} onSelectDay={handleSelectDay} />
 
             <FlatList
                 data={exercises}

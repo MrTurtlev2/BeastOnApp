@@ -1,4 +1,4 @@
-import {createContext, PropsWithChildren, RefObject, useContext, useMemo, useState} from 'react';
+import {createContext, Dispatch, PropsWithChildren, RefObject, SetStateAction, useContext, useMemo, useState} from 'react';
 import PagerView from 'react-native-pager-view';
 import {nanoid} from 'nanoid/non-secure';
 import {IExercise, ITrainingPlan} from '../constants/interfaces';
@@ -41,6 +41,8 @@ type PlanFormContextType = {
     cancelExercise: () => void;
     resetForm: () => void;
     onSavePlan: () => void;
+    daysOfWeek: number[];
+    setDaysOfWeek: Dispatch<SetStateAction<number[]>>;
 };
 
 type Props = PropsWithChildren<{
@@ -203,6 +205,9 @@ export const PlanFormProvider = ({children, pagerRef, initialPlan, isUpdateMode}
             cancelExercise,
             resetForm,
             onSavePlan,
+            initialPlan,
+            daysOfWeek,
+            setDaysOfWeek,
         }),
         [initialPlan?.uuid, initialPlan?.lastModified, planName, daysOfWeek, exercises, currentExercise, exerciseName, sets],
     );
