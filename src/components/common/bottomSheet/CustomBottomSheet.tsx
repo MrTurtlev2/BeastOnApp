@@ -1,16 +1,23 @@
-import {useCallback} from 'react';
+import {ReactNode, useCallback} from 'react';
 import {StyleSheet} from 'react-native';
 import BottomSheet from '@gorhom/bottom-sheet';
 import {Colors} from '../../../constants/Colors';
 import CustomBackdrop from './CustomBackdrop';
 
-const CustomBottomSheet = ({children, ref}) => {
+interface ICustomBottomSheet {
+    children: ReactNode;
+    ref: any;
+    snapPoints?: number[] | string[];
+}
+ 
+const CustomBottomSheet = ({children, ref, snapPoints}: ICustomBottomSheet) => {
     const renderBackdrop = useCallback((props: any) => <CustomBackdrop animatedIndex={props.animatedIndex} />, []);
     return (
         <BottomSheet
             ref={ref}
             index={-1}
-            enableDynamicSizing
+            snapPoints={snapPoints}
+            enableDynamicSizing={!snapPoints}
             backdropComponent={renderBackdrop}
             enablePanDownToClose
             backgroundStyle={styles.background}

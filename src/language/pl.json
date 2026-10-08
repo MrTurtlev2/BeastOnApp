@@ -36,5 +36,9 @@
   "passwordsAreTheSame": "hasła są takie same",
   "saveAndExit": "zapisz i wyjdź",
   "exitWithoutSaving": "wyjdź bez zapisu",
-  "cancel": "anuluj"
+  "cancel": "anuluj",
+  "edit": "edytuj",
+  "remove": "usuń",
+  "confirmRemove": "potwierdź usunięcie",
+  "confirmRemovePlanMsg": "Potwierdź usunięcie planu, pamiętaj że tej akcji nie można cofnąć."
 }

@@ -26,13 +26,11 @@ type PlanFormContextType = {
     uuid?: string;
     lastModified?: number;
     planName: string;
-    daysOfWeek: number[];
     exercises: IExercise[];
     currentExercise: IExercise | null;
     exerciseName: string;
     sets: ExerciseSetUI[];
     setPlanName: (name: string) => void;
-    setDaysOfWeek: (days: number[]) => void;
     goToOverview: () => void;
     goToEditor: (exercise?: IExercise) => void;
     setExerciseName: (name: string) => void;

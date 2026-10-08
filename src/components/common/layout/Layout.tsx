@@ -49,20 +49,24 @@ export default function Layout({
             onGoBack();
             return true;
         }
-        if (navigation.canGoBack()) {
-            navigation.goBack();
+        if (hasBackArrow) {
+            if (navigation.canGoBack()) {
+                navigation.goBack();
+            }
             return true;
         }
-        return false;
-    }, [navigation, onGoBack]);
+        return true;
+    }, [navigation, onGoBack, hasBackArrow]);
 
     const handleBurgerPress = () => navigation.openDrawer();
 
     useEffect(() => {
-        if (!onGoBack) return;
+        if (!hasBurger && !hasBackArrow && !onGoBack) {
+            return;
+        }
         const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackArrow);
         return () => backHandler.remove();
-    }, [handleBackArrow]);
+    }, [handleBackArrow, hasBurger, hasBackArrow, onGoBack]);
 
     return (
         <View style={[style.main, horizontalSpace && {paddingHorizontal: 20}, customStyle]}>

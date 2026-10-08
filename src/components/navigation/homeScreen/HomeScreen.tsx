@@ -1,4 +1,4 @@
-import {Animated, Pressable, Text} from 'react-native';
+import {Animated} from 'react-native';
 import Layout from '../../common/layout/Layout';
 import CustomWeekPicker from './elements/CustomWeekPicker/CustomWeekPicker';
 import {useAppDispatch, useAppSelector} from '../../../store';
@@ -15,6 +15,10 @@ import {triggerSync} from '../../../store/syncEngine';
 import {useAppNavigation} from '../../../constants/NavigationInterface';
 import {useWeekDays} from '../../../hooks/useWeekDays';
 import CustomBottomSheet from '../../common/bottomSheet/CustomBottomSheet';
+import ActionsOnPlanBottomSheet from './elements/ActionsOnPlanBottomSheet/ActionsOnPlanBottomSheet';
+import CircleBtn from '../../common/CircleBtn/CircleBtn';
+import KebabMenuSvg from '../../../assets/images/svg/common/KebabMenuSvg';
+import {style} from './Style';
 
 export default function HomeScreen() {
     const navigation = useAppNavigation<'HomeScreen'>();
@@ -25,6 +29,7 @@ export default function HomeScreen() {
     const headerHeight = 90;
     const stickyThreshold = 160;
     const bottomSheetRef = useRef<BottomSheet>(null);
+    const onPlanActionsRef = useRef<BottomSheet>(null);
     const {weekDays, selectedDay, onSelectDay} = useWeekDays();
 
     const planForToday = useMemo(() => {
@@ -40,6 +45,7 @@ export default function HomeScreen() {
     }, [selectedDay]);
 
     const onEditPlan = useCallback(() => {
+        onPlanActionsRef.current.close();
         navigation.navigate('AddPlanScreen', {selectedDay: selectedDay + 1, existingPlan: planForToday});
     }, [planForToday]);
 
@@ -52,6 +58,7 @@ export default function HomeScreen() {
             }),
         );
         triggerSync();
+        onPlanActionsRef.current.close();
     };
 
     const assignPlanToThisDay = (uuid: string) => {
@@ -89,12 +96,6 @@ export default function HomeScreen() {
                 ],
             }}>
             <CustomWeekPicker weekDays={weekDays} selectedDay={selectedDay} setSelectedDay={onSelectDay} />
-            <Pressable onPress={onEditPlan}>
-                <Text style={{color: 'white'}}>tedt</Text>
-            </Pressable>
-            <Pressable onPress={onRemovePlan}>
-                <Text style={{color: 'white'}}>remove plan</Text>
-            </Pressable>
         </Animated.View>
     );
 
@@ -108,6 +109,7 @@ export default function HomeScreen() {
     return (
         <Layout hasBurger>
             <SyncDebugModal />
+
             <Animated.FlatList
                 ListHeaderComponent={headerElement}
                 data={planForToday?.exercises || []}
@@ -123,8 +125,20 @@ export default function HomeScreen() {
                 stickyHeaderIndices={[0]}
                 onScroll={Animated.event([{nativeEvent: {contentOffset: {y: scrollY}}}], {useNativeDriver: true})}
             />
+            {planForToday && (
+                <CircleBtn
+                    onPress={() => onPlanActionsRef.current.expand()}
+                    size={80}
+                    icon={<KebabMenuSvg />}
+                    customStyle={style.moreOptionsBtn}
+                />
+            )}
             <CustomBottomSheet ref={bottomSheetRef}>
                 <TrainingSelectBottomSheet trainings={trainingPlans} onSelectTraining={assignPlanToThisDay} />
+            </CustomBottomSheet>
+
+            <CustomBottomSheet ref={onPlanActionsRef}>
+                <ActionsOnPlanBottomSheet onEdit={onEditPlan} onConfirmRemove={onRemovePlan} />
             </CustomBottomSheet>
         </Layout>
     );
