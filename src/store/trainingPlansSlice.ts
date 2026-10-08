@@ -31,8 +31,17 @@ const trainingPlansSlice = createSlice({
             state.trainingPlans.push(action.payload);
         },
         updateTrainingPlan(state, action: PayloadAction<ReduxTrainingPlan>) {
-            const index = state.trainingPlans.findIndex(plan => plan.uuid === action.payload.uuid);
-            if (index !== -1) state.trainingPlans[index] = action.payload;
+            const updatedPlan = action.payload;
+            state.trainingPlans = state.trainingPlans.map(plan => {
+                if (plan.uuid === updatedPlan.uuid) return updatedPlan;
+                const hasConflict = plan.daysOfWeek.some(day => updatedPlan.daysOfWeek.includes(day));
+
+                if (!hasConflict) return plan;
+                return {
+                    ...plan,
+                    daysOfWeek: plan.daysOfWeek.filter(day => !updatedPlan.daysOfWeek.includes(day)),
+                };
+            });
         },
         assignTrainingPlanToAnotherDay(state, action: PayloadAction<IAssignTrainingPlanToAnotherDay>) {
             const planIndex = state.trainingPlans.findIndex(plan => plan.uuid === action.payload.uuid);
