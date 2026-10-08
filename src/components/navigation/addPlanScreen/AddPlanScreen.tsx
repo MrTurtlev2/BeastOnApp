@@ -11,12 +11,16 @@ import CustomBottomSheet from '../../common/bottomSheet/CustomBottomSheet';
 import BottomSheet from '@gorhom/bottom-sheet';
 import ExitWithChangesBottomSheet from './elements/ExitWithChangesBottomSheet';
 import {useNavigation} from '@react-navigation/native';
+import ReassignDayBottomValidator from './elements/ReassignDayBottomValidator';
 
 const AddPlanScreenContent = ({pagerRef}) => {
     const bottomSheetRef = useRef<BottomSheet>(null);
+    const validationBottomSheetRef = useRef<BottomSheet>(null);
+
     const navigation = useNavigation();
-    const {onSavePlan} = usePlanForm();
+    const {onSavePlan, setDaysOfWeek} = usePlanForm();
     const [page, setPage] = useState(0);
+    const [dayToReassign, setDayToReassign] = useState<number | null>(null);
 
     const onGoBack = () => {
         if (page === 1) {
@@ -24,6 +28,12 @@ const AddPlanScreenContent = ({pagerRef}) => {
             return;
         }
         bottomSheetRef.current?.expand();
+    };
+
+    const onConfirmReassign = () => {
+        setDaysOfWeek(prev => [...prev, dayToReassign]);
+        validationBottomSheetRef.current.close();
+        setDayToReassign(null);
     };
 
     return (
@@ -38,7 +48,10 @@ const AddPlanScreenContent = ({pagerRef}) => {
                     setPage(event.nativeEvent.position);
                 }}>
                 <View key="1" style={{flex: 1}}>
-                    <PlanOverviewPage />
+                    <PlanOverviewPage
+                        validationBottomSheetRef={validationBottomSheetRef}
+                        setDayToReassign={(day: number) => setDayToReassign(day)}
+                    />
                 </View>
                 <View key="2" style={{flex: 1}}>
                     <ExerciseEditorPage />
@@ -50,6 +63,9 @@ const AddPlanScreenContent = ({pagerRef}) => {
                     onExitWithoutSave={() => navigation.goBack()}
                     onCancel={() => bottomSheetRef.current.close()}
                 />
+            </CustomBottomSheet>
+            <CustomBottomSheet ref={validationBottomSheetRef}>
+                <ReassignDayBottomValidator onConfirm={onConfirmReassign} onCancel={() => validationBottomSheetRef.current.close()} />
             </CustomBottomSheet>
         </Layout>
     );

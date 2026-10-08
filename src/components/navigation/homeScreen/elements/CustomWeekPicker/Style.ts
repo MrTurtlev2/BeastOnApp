@@ -32,6 +32,9 @@ export const styles = StyleSheet.create({
         borderWidth: 4,
         borderColor: `${Colors.lightRed}`,
     },
+    occupiedDay: {
+        backgroundColor: 'blue',
+    },
     dateText: {
         fontSize: 18,
         fontFamily: `${Fonts.bold}`,

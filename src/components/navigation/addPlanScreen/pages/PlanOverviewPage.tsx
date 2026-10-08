@@ -7,15 +7,28 @@ import {useState} from 'react';
 import {usePlanForm} from '../../../../context/PlanFormContext';
 import CustomWeekPicker from '../../homeScreen/elements/CustomWeekPicker/CustomWeekPicker';
 import {useWeekDays} from '../../../../hooks/useWeekDays';
+import {useAppSelector} from '../../../../store';
 
-const PlanOverviewPage = () => {
+const PlanOverviewPage = ({validationBottomSheetRef, setDayToReassign}) => {
+    const {trainingPlans, loading} = useAppSelector(state => state?.trainingPlans);
     const {t} = useTranslation();
-    const {planName, setPlanName, exercises, goToEditor, onSavePlan, daysOfWeek, setDaysOfWeek} = usePlanForm();
+    const {planName, setPlanName, exercises, goToEditor, onSavePlan, daysOfWeek, setDaysOfWeek, initialPlanUuid} = usePlanForm();
     const [isPlanLoading, setPlanLoading] = useState(false);
     const {weekDays} = useWeekDays();
 
+    const occupiedDays = trainingPlans.filter(plan => plan.uuid !== initialPlanUuid).flatMap(plan => plan.daysOfWeek);
+
     const handleSelectDay = (day: number) => {
-        setDaysOfWeek(prev => (prev.includes(day) ? prev.filter(item => item !== day) : [...prev, day]));
+        if (daysOfWeek.includes(day)) {
+            setDaysOfWeek(prev => prev.filter(item => item !== day));
+            return;
+        }
+        if (occupiedDays.includes(day)) {
+            setDayToReassign(day);
+            validationBottomSheetRef.current?.expand();
+            return;
+        }
+        setDaysOfWeek(prev => [...prev, day]);
     };
 
     const handleSavePlan = async () => {
@@ -37,7 +50,7 @@ const PlanOverviewPage = () => {
                     marginBottom: 20,
                 }}
             />
-            <CustomWeekPicker weekDays={weekDays} selectedDays={daysOfWeek} onSelectDay={handleSelectDay} />
+            <CustomWeekPicker weekDays={weekDays} selectedDays={daysOfWeek} onSelectDay={handleSelectDay} occupiedDays={occupiedDays} />
 
             <FlatList
                 data={exercises}
@@ -45,14 +58,14 @@ const PlanOverviewPage = () => {
                 renderItem={({item, index}) => (
                     <NewExerciseBar index={index + 1} exerciseName={item.name} onPress={() => goToEditor(item)} />
                 )}
-                ListEmptyComponent={<Text style={{color: '#aaa'}}>{t('noExercisesAdded') ?? 'Brak ćwiczeń'}</Text>}
+                ListEmptyComponent={<Text style={{color: '#aaa'}}>{t('noExercisesAdded')}</Text>}
                 showsVerticalScrollIndicator={false}
                 ListHeaderComponent={<View style={{height: 5}} />}
                 contentContainerStyle={{
                     paddingHorizontal: 20,
                 }}
                 ListFooterComponent={
-                    <PlanOverviewFooter onAddExercise={() => goToEditor()} onSavePlan={handleSavePlan} isPlanLoading={isPlanLoading} />
+                    <PlanOverviewFooter onAddExercise={goToEditor} onSavePlan={handleSavePlan} isPlanLoading={isPlanLoading} />
                 }
             />
         </View>

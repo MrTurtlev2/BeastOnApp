@@ -23,7 +23,7 @@ export type InitialPlan = {
 };
 
 type PlanFormContextType = {
-    uuid?: string;
+    initialPlanUuid?: string;
     lastModified?: number;
     planName: string;
     exercises: IExercise[];
@@ -187,7 +187,7 @@ export const PlanFormProvider = ({children, pagerRef, initialPlan, isUpdateMode}
 
     const value = useMemo(
         () => ({
-            uuid: initialPlan?.uuid,
+            initialPlanUuid: initialPlan?.uuid,
             lastModified: initialPlan?.lastModified,
             planName,
             exercises,
@@ -205,7 +205,6 @@ export const PlanFormProvider = ({children, pagerRef, initialPlan, isUpdateMode}
             cancelExercise,
             resetForm,
             onSavePlan,
-            initialPlan,
             daysOfWeek,
             setDaysOfWeek,
         }),

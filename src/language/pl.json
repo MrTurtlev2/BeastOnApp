@@ -41,5 +41,8 @@
   "remove": "usuń",
   "confirmRemove": "potwierdź usunięcie",
   "confirmRemovePlanMsg": "Potwierdź usunięcie planu, pamiętaj że tej akcji nie można cofnąć.",
-  "unassignPlanForToday": "odepnij plan z dzisiaj"
+  "unassignPlanForToday": "odepnij plan z dzisiaj",
+  "noExercisesAdded": "brak ćwiczeń",
+  "AddPlanReassignValidationMsg": "Zaznaczony dzień posiada już przypięty plan treningowy. Możesz go przepiąć a poprzedni plan będzie nadal dostępy do wybrania na inne dni na ekranie głównym. Wybierz czy przepiąć czy nie przypisywać obecnego planu na ten dzień.",
+  "reassignPlan": "przypisz edytowanemu planowi ten dzień"
 }
