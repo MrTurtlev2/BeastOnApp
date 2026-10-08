@@ -38,6 +38,11 @@ const trainingPlansSlice = createSlice({
             const planIndex = state.trainingPlans.findIndex(plan => plan.uuid === action.payload.uuid);
             state.trainingPlans[planIndex].daysOfWeek.push(action.payload.dayToAssign);
         },
+        unassignPlanForDay(state, action: PayloadAction<IAssignTrainingPlanToAnotherDay>) {
+            const planIndex = state.trainingPlans.findIndex(plan => plan.uuid === action.payload.uuid);
+            const foundPlan = state.trainingPlans[planIndex];
+            foundPlan.daysOfWeek = foundPlan.daysOfWeek.filter(day => day !== action.payload.dayToAssign);
+        },
         // markTrainingPlanSynced(state, action: PayloadAction<string>) {
         //     const plan = state.trainingPlans.find(item => item.uuid === action.payload);
         //     if (!plan) return;
@@ -54,6 +59,7 @@ const trainingPlansSlice = createSlice({
     },
 });
 
-export const {addTrainingPlan, updateTrainingPlan, removeTrainingPlan, assignTrainingPlanToAnotherDay} = trainingPlansSlice.actions;
+export const {addTrainingPlan, updateTrainingPlan, removeTrainingPlan, assignTrainingPlanToAnotherDay, unassignPlanForDay} =
+    trainingPlansSlice.actions;
 
 export default trainingPlansSlice.reducer;

@@ -9,7 +9,7 @@ import HomeEmptyListComponent from './elements/HomeEmptyListComponent/HomeEmptyL
 import BottomSheet from '@gorhom/bottom-sheet';
 import TrainingSelectBottomSheet from './elements/TrainingSelectBottomSheet/TrainingSelectBottomSheet';
 import SyncDebugModal from '../../debug/syncDebugModal/SyncDebugModal';
-import {assignTrainingPlanToAnotherDay, removeTrainingPlan} from '../../../store/trainingPlansSlice';
+import {assignTrainingPlanToAnotherDay, removeTrainingPlan, unassignPlanForDay} from '../../../store/trainingPlansSlice';
 import {addToOutbox} from '../../../store/outboxSlice';
 import {triggerSync} from '../../../store/syncEngine';
 import {useAppNavigation} from '../../../constants/NavigationInterface';
@@ -72,6 +72,19 @@ export default function HomeScreen() {
         );
         triggerSync();
         bottomSheetRef.current?.close();
+    };
+
+    const unassignPlanForToday = () => {
+        onPlanActionsRef.current.close();
+        dispatch(unassignPlanForDay({uuid: planForToday.uuid, dayToAssign: selectedDay + 1}));
+        dispatch(
+            addToOutbox({
+                url: `/api/training-plans/unassign-plan-for-day`,
+                method: 'POST',
+                body: {uuid: planForToday.uuid, day: selectedDay + 1},
+            }),
+        );
+        triggerSync();
     };
 
     const openSelectTrainingPanel = useCallback(() => {
@@ -138,7 +151,7 @@ export default function HomeScreen() {
             </CustomBottomSheet>
 
             <CustomBottomSheet ref={onPlanActionsRef}>
-                <ActionsOnPlanBottomSheet onEdit={onEditPlan} onConfirmRemove={onRemovePlan} />
+                <ActionsOnPlanBottomSheet onEdit={onEditPlan} onConfirmRemove={onRemovePlan} onUnassignPlan={unassignPlanForToday} />
             </CustomBottomSheet>
         </Layout>
     );

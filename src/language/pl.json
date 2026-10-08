@@ -40,5 +40,6 @@
   "edit": "edytuj",
   "remove": "usuń",
   "confirmRemove": "potwierdź usunięcie",
-  "confirmRemovePlanMsg": "Potwierdź usunięcie planu, pamiętaj że tej akcji nie można cofnąć."
+  "confirmRemovePlanMsg": "Potwierdź usunięcie planu, pamiętaj że tej akcji nie można cofnąć.",
+  "unassignPlanForToday": "odepnij plan z dzisiaj"
 }

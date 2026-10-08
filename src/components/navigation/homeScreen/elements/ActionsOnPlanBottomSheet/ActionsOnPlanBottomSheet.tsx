@@ -10,9 +10,10 @@ import {style} from './Style';
 interface ActionsOnPlanBottomSheetProps {
     onEdit: () => void;
     onConfirmRemove: () => void;
+    onUnassignPlan: () => void;
 }
 
-const ActionsOnPlanBottomSheet = ({onEdit, onConfirmRemove}: ActionsOnPlanBottomSheetProps) => {
+const ActionsOnPlanBottomSheet = ({onEdit, onConfirmRemove, onUnassignPlan}: ActionsOnPlanBottomSheetProps) => {
     const {t} = useTranslation();
     const {animatedIndex} = useBottomSheet();
 
@@ -64,7 +65,7 @@ const ActionsOnPlanBottomSheet = ({onEdit, onConfirmRemove}: ActionsOnPlanBottom
             <View style={style.container}>
                 <Animated.View style={[style.page, actionsStyle, page === 0 ? style.visible : style.hidden]}>
                     <CustomButton onPress={onEdit} text={t('edit')} type="primary" />
-
+                    <CustomButton onPress={onUnassignPlan} text={t('unassignPlanForToday')} type="primary" />
                     <CustomButton onPress={onRemove} text={t('remove')} type="secondary" />
                 </Animated.View>
 
