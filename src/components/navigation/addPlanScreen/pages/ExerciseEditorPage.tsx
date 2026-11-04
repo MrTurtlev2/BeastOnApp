@@ -85,13 +85,12 @@ const ExerciseEditorPage = () => {
             <CircleBtn onPress={handleAddSet} text="+" />
         </Animated.View>
     );
-
     return (
         <View style={{flex: 1}}>
             <FlatList
                 ref={flatListRef}
                 data={sets}
-                keyExtractor={item => item.uiId}
+                keyExtractor={item => item?.uiId}
                 renderItem={renderSet}
                 contentContainerStyle={{
                     paddingHorizontal: 20,

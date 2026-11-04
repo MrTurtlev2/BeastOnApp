@@ -35,7 +35,6 @@ const PlanOverviewPage = ({validationBottomSheetRef, setDayToReassign}) => {
         setPlanLoading(true);
         onSavePlan();
     };
-
     return (
         <View
             style={{
@@ -65,7 +64,7 @@ const PlanOverviewPage = ({validationBottomSheetRef, setDayToReassign}) => {
                     paddingHorizontal: 20,
                 }}
                 ListFooterComponent={
-                    <PlanOverviewFooter onAddExercise={goToEditor} onSavePlan={handleSavePlan} isPlanLoading={isPlanLoading} />
+                    <PlanOverviewFooter onAddExercise={() => goToEditor(null)} onSavePlan={handleSavePlan} isPlanLoading={isPlanLoading} />
                 }
             />
         </View>

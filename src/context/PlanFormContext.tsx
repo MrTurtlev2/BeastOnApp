@@ -77,7 +77,7 @@ export const PlanFormProvider = ({children, pagerRef, initialPlan, isUpdateMode}
             setCurrentExercise(exercise);
             setExerciseName(exercise.name);
             setSets(
-                exercise.sets.map(set => ({
+                exercise?.sets?.map(set => ({
                     uiId: nanoid(),
                     weight: String(set.weight),
                     repetitions: String(set.repetitions),
