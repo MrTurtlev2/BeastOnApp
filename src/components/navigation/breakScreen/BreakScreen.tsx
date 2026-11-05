@@ -1,15 +1,16 @@
-import {useEffect, useState} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {useEffect, useRef, useState} from 'react';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Svg, {Circle} from 'react-native-svg';
 import Animated, {cancelAnimation, Easing, useAnimatedProps, useSharedValue, withTiming} from 'react-native-reanimated';
-
+import notifee, {AndroidImportance, AndroidVisibility, EventType} from '@notifee/react-native';
+import * as Haptics from 'expo-haptics';
+import {Audio} from 'expo-av';
 import Layout from '../../common/layout/Layout';
 import GorillaImage from '../../../assets/images/png/layout/break-monkey.png';
 import {Colors} from '../../../constants/Colors';
 import {Fonts} from '../../../constants/Fonts';
 
 const BREAK_DURATION = 60;
-
 const SIZE = 240;
 const STROKE_WIDTH = 12;
 const RADIUS = (SIZE - STROKE_WIDTH) / 2;
@@ -25,10 +26,14 @@ type BreakScreenProps = {
     };
 };
 
-const BreakScreen = ({route}: BreakScreenProps) => {
-    const duration = Math.max(1, route.params?.duration ?? BREAK_DURATION);
+const NOTIFICATION_ID = 'break_timer_notification';
 
-    const [secondsLeft, setSecondsLeft] = useState(duration);
+const BreakScreen = ({route}: BreakScreenProps) => {
+    const initialDuration = Math.max(1, route.params?.duration ?? BREAK_DURATION);
+    const [secondsLeft, setSecondsLeft] = useState(initialDuration);
+
+    const endsAtRef = useRef(Date.now() + initialDuration * 1000);
+    const totalDurationRef = useRef(initialDuration);
 
     const progress = useSharedValue(0);
 
@@ -36,32 +41,124 @@ const BreakScreen = ({route}: BreakScreenProps) => {
         strokeDashoffset: CIRCUMFERENCE * (1 - progress.value),
     }));
 
+    const triggerEndAlert = async () => {
+        try {
+            await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+            const {sound} = await Audio.Sound.createAsync(require('../../../assets/sounds/timer-end.mp3'));
+            await sound.playAsync();
+        } catch (e) {
+            await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+        }
+    };
+
+    const displayTimerNotification = async (remaining: number, total: number) => {
+        try {
+            const minutes = Math.floor(remaining / 60)
+                .toString()
+                .padStart(2, '0');
+            const seconds = (remaining % 60).toString().padStart(2, '0');
+
+            await notifee.displayNotification({
+                id: NOTIFICATION_ID,
+                title: 'Trwa przerwa',
+                body: `Pozostało: ${minutes}:${seconds}`,
+                android: {
+                    channelId: 'break_timer_channel',
+                    ongoing: true,
+                    asForegroundService: true,
+                    visibility: AndroidVisibility.PUBLIC,
+                    progress: {
+                        max: total,
+                        current: total - remaining,
+                        indeterminate: false,
+                    },
+                    pressAction: {
+                        id: 'default',
+                    },
+                    actions: [
+                        {
+                            title: '+30s',
+                            pressAction: {id: 'add_30s'},
+                        },
+                    ],
+                },
+            });
+        } catch (error) {
+            console.log('Notification error:', error);
+        }
+    };
+
     useEffect(() => {
-        const startedAt = Date.now();
-        const endsAt = startedAt + duration * 1000;
+        return notifee.onBackgroundEvent(async ({type, detail}) => {
+            if (type === EventType.ACTION_PRESS && detail.pressAction?.id === 'add_30s') {
+                handleAddTime(30);
+            }
+        });
+    }, []);
 
-        progress.value = 0;
+    const handleAddTime = async (secondsToAdd: number) => {
+        endsAtRef.current += secondsToAdd * 1000;
+        totalDurationRef.current += secondsToAdd;
 
+        const newRemaining = Math.max(0, Math.ceil((endsAtRef.current - Date.now()) / 1000));
+        setSecondsLeft(newRemaining);
+
+        const elapsed = totalDurationRef.current - newRemaining;
+        progress.value = elapsed / totalDurationRef.current;
         progress.value = withTiming(1, {
-            duration: duration * 1000,
+            duration: newRemaining * 1000,
             easing: Easing.linear,
         });
 
-        const interval = setInterval(() => {
-            const remaining = Math.max(0, Math.ceil((endsAt - Date.now()) / 1000));
+        await displayTimerNotification(newRemaining, totalDurationRef.current);
+    };
 
-            setSecondsLeft(prev => (prev === remaining ? prev : remaining));
+    useEffect(() => {
+        let interval: NodeJS.Timeout;
 
-            if (remaining === 0) {
-                clearInterval(interval);
-            }
-        }, 250);
+        const setupAndRun = async () => {
+            await notifee.requestPermission();
+
+            await notifee.createChannel({
+                id: 'break_timer_channel',
+                name: 'Przerwa',
+                importance: AndroidImportance.HIGH,
+                visibility: AndroidVisibility.PUBLIC,
+            });
+
+            endsAtRef.current = Date.now() + initialDuration * 1000;
+            totalDurationRef.current = initialDuration;
+
+            progress.value = 0;
+            progress.value = withTiming(1, {
+                duration: initialDuration * 1000,
+                easing: Easing.linear,
+            });
+
+            await displayTimerNotification(initialDuration, initialDuration);
+
+            interval = setInterval(async () => {
+                const remaining = Math.max(0, Math.ceil((endsAtRef.current - Date.now()) / 1000));
+                setSecondsLeft(remaining);
+
+                if (remaining > 0) await displayTimerNotification(remaining, totalDurationRef.current);
+
+                if (remaining === 0) {
+                    clearInterval(interval);
+                    await notifee.stopForegroundService();
+                    await triggerEndAlert();
+                }
+            }, 1000);
+        };
+
+        setupAndRun();
 
         return () => {
             clearInterval(interval);
             cancelAnimation(progress);
+            notifee.stopForegroundService();
         };
-    }, [duration, progress]);
+    }, []);
 
     const formattedTime = `${Math.floor(secondsLeft / 60)
         .toString()
@@ -95,6 +192,10 @@ const BreakScreen = ({route}: BreakScreenProps) => {
                         <Text style={styles.timerSubtitle}>PRZERWA</Text>
                     </View>
                 </View>
+
+                <TouchableOpacity style={styles.addButton} onPress={() => handleAddTime(30)}>
+                    <Text style={styles.addButtonText}>+30 SEKUND</Text>
+                </TouchableOpacity>
             </View>
         </Layout>
     );
@@ -132,6 +233,19 @@ const styles = StyleSheet.create({
     timerSubtitle: {
         fontFamily: Fonts.regular,
         color: Colors.white,
+        fontSize: 16,
+    },
+    addButton: {
+        position: 'absolute',
+        top: 600,
+        backgroundColor: Colors.pink,
+        paddingVertical: 12,
+        paddingHorizontal: 32,
+        borderRadius: 24,
+    },
+    addButtonText: {
+        color: '#FFFFFF',
+        fontFamily: Fonts.Marker,
         fontSize: 16,
     },
 });

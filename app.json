@@ -17,7 +17,9 @@
         "backgroundColor": "#ffffff"
       },
       "permissions": [
-        "android.permission.POST_NOTIFICATIONS",
+        "FOREGROUND_SERVICE",
+        "FOREGROUND_SERVICE_MEDIA_PLAYBACK",
+        "POST_NOTIFICATIONS",
         "android.permission.SCHEDULE_EXACT_ALARM"
       ],
       "package": "com.beaston.app"
