@@ -8,12 +8,13 @@ import {Fonts} from '../../../constants/Fonts';
 import {Colors} from '../../../constants/Colors';
 import ExerciseBottomManager from './elements/ExerciseBottomManager';
 import ClawTitle from '../../common/clawTitle/ClawTitle';
+import {useAppNavigation} from '../../../constants/NavigationInterface';
 
 const BREAK_DURATION = 30;
 
 const ExerciseScreen = ({route}: any) => {
     const {exercise} = route.params;
-
+    const navigation = useAppNavigation<'BreakScreen'>();
     const [currentIdx, setCurrentIdx] = useState(0);
     const [isBreakActive, setIsBreakActive] = useState(false);
     const [secondsLeft, setSecondsLeft] = useState(BREAK_DURATION);
@@ -23,30 +24,7 @@ const ExerciseScreen = ({route}: any) => {
     const progressPercent = ((currentIdx + 1) / exercise?.sets?.length) * 100 || 0;
 
     const startBreak = () => {
-        if (isBreakActive || currentIdx >= exercise.sets.length - 1) return;
-
-        setIsBreakActive(true);
-        setSecondsLeft(BREAK_DURATION);
-
-        Animated.timing(progressAnim, {
-            toValue: 1,
-            duration: BREAK_DURATION * 1000,
-            useNativeDriver: false,
-        }).start(({finished}) => {
-            if (finished) {
-                finishBreak();
-            }
-        });
-
-        timerRef.current = setInterval(() => {
-            setSecondsLeft(prev => {
-                if (prev <= 1) {
-                    timerRef.current && clearInterval(timerRef.current);
-                    return 0;
-                }
-                return prev - 1;
-            });
-        }, 1000);
+        navigation.navigate('BreakScreen');
     };
 
     const finishBreak = () => {

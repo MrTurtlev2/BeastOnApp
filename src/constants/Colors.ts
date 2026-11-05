@@ -1,6 +1,7 @@
 export const Colors = {
     darkGrey: '#1E1E1E',
-    bgGrey: '#262626',
+    // bgGrey: '#262626',
+    bgGrey: '#101010',
     overlay: '#313131C2',
     placeholderColor: '#414141',
     lightGrey: '#8C8C8C',

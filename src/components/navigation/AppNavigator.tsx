@@ -15,6 +15,7 @@ import {Colors} from '../../constants/Colors';
 import AddPlanScreen from './addPlanScreen/AddPlanScreen';
 import CustomModalScreen from './customModalScreen/CustomModalScreen';
 import ExerciseScreen from './exerciseScreen/ExerciseScreen';
+import BreakScreen from './breakScreen/BreakScreen';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -43,6 +44,7 @@ const HomeStackNavigator = () => {
             <HomeStack.Screen name="HomeMain" component={HomeScreen} options={{headerShown: false}} />
             <HomeStack.Screen name="AddPlanScreen" component={AddPlanScreen} />
             <HomeStack.Screen name="ExerciseScreen" component={ExerciseScreen} />
+            <HomeStack.Screen name="BreakScreen" component={BreakScreen} />
         </HomeStack.Navigator>
     );
 };
