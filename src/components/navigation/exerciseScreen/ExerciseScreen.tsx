@@ -1,14 +1,13 @@
 import {useEffect, useRef, useState} from 'react';
-import {Animated, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
+import {Animated, FlatList, StyleSheet} from 'react-native';
 import Layout from '../../common/layout/Layout';
-import TimelineItem from './elements/TimelineItem';
-import {Ionicons} from '@expo/vector-icons';
 import LiquidProgress from './elements/LiquidProgress';
 import {Fonts} from '../../../constants/Fonts';
 import {Colors} from '../../../constants/Colors';
 import ExerciseBottomManager from './elements/ExerciseBottomManager';
 import ClawTitle from '../../common/clawTitle/ClawTitle';
 import {useAppNavigation} from '../../../constants/NavigationInterface';
+import ExerciseSetRow from './elements/ExerciseSetRow';
 
 const BREAK_DURATION = 30;
 
@@ -44,23 +43,7 @@ const ExerciseScreen = ({route}: any) => {
                 keyExtractor={(_, i) => i.toString()}
                 contentContainerStyle={styles.listPadding}
                 renderItem={({item, index}) => (
-                    <TimelineItem
-                        set={item}
-                        index={index}
-                        isActive={index === currentIdx}
-                        isCompleted={index < currentIdx}
-                        isLast={index === exercise.sets.length - 1}
-                        progressAnim={progressAnim}
-                        renderAction={
-                            index === currentIdx && !isBreakActive ? (
-                                <TouchableOpacity onPress={startBreak}>
-                                    <Ionicons name="time-outline" size={36} color={Colors.lightRed} />
-                                </TouchableOpacity>
-                            ) : index === currentIdx && isBreakActive ? (
-                                <Ionicons name="ellipsis-horizontal" size={30} color={Colors.lightRed} />
-                            ) : null
-                        }
-                    />
+                    <ExerciseSetRow set={item} index={index} isActive={index === currentIdx} isCompleted={index < currentIdx} />
                 )}
             />
 
