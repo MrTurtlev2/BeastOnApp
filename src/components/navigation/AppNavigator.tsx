@@ -2,6 +2,8 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {useSelector} from 'react-redux';
+import {useEffect} from 'react';
+import notifee, {EventType} from '@notifee/react-native';
 import {RootState} from '../../store';
 
 import HomeScreen from './homeScreen/HomeScreen';
@@ -10,7 +12,7 @@ import RegisterScreen from './registerScreen/RegisterScreen';
 import MotivationScreen from './motivationScreen/MotivationScreen';
 import LoginScreen from './loginScreen/LoginScreen';
 import ErrorScreen from './errorScreen/ErrorScreen';
-import {navigationRef} from './RootNavigation';
+import {navigateToExerciseFromNotification, navigationRef, processPendingNotificationNavigation} from './RootNavigation';
 import {Colors} from '../../constants/Colors';
 import AddPlanScreen from './addPlanScreen/AddPlanScreen';
 import CustomModalScreen from './customModalScreen/CustomModalScreen';
@@ -43,7 +45,7 @@ const HomeStackNavigator = () => {
         <HomeStack.Navigator screenOptions={{headerShown: false}}>
             <HomeStack.Screen name="HomeMain" component={HomeScreen} options={{headerShown: false}} />
             <HomeStack.Screen name="AddPlanScreen" component={AddPlanScreen} />
-            <HomeStack.Screen name="ExerciseScreen" component={ExerciseScreen} />
+            <HomeStack.Screen name="ExerciseScreen" component={ExerciseScreen} options={{detachPreviousScreen: false}} />
             <HomeStack.Screen name="BreakScreen" component={BreakScreen} />
         </HomeStack.Navigator>
     );
@@ -93,8 +95,24 @@ const RootAppNavigator = () => {
 };
 
 export default function AppNavigator() {
+    useEffect(() => {
+        const unsubscribe = notifee.onForegroundEvent(({type, detail}) => {
+            if (type === EventType.PRESS && detail.notification?.data?.destination === 'ExerciseScreen') {
+                navigateToExerciseFromNotification(detail.notification.data);
+            }
+        });
+
+        notifee.getInitialNotification().then(initialNotification => {
+            if (initialNotification?.notification.data?.destination === 'ExerciseScreen') {
+                navigateToExerciseFromNotification(initialNotification.notification.data);
+            }
+        });
+
+        return unsubscribe;
+    }, []);
+
     return (
-        <NavigationContainer ref={navigationRef} theme={defaultTheme}>
+        <NavigationContainer ref={navigationRef} theme={defaultTheme} onReady={processPendingNotificationNavigation}>
             <RootAppNavigator />
         </NavigationContainer>
     );

@@ -24,15 +24,7 @@ const ExerciseScreen = ({route}: any) => {
     const progressPercent = ((currentIdx + 1) / exercise?.sets?.length) * 100 || 0;
 
     const startBreak = () => {
-        navigation.navigate('BreakScreen');
-    };
-
-    const finishBreak = () => {
-        timerRef.current && clearInterval(timerRef.current);
-
-        setIsBreakActive(false);
-        setCurrentIdx(prev => prev + 1);
-        progressAnim.setValue(0);
+        navigation.navigate('BreakScreen', {exercise});
     };
 
     useEffect(() => {

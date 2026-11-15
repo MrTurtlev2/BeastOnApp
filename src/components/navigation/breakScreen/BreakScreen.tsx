@@ -2,13 +2,13 @@ import {useEffect, useRef, useState} from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Svg, {Circle} from 'react-native-svg';
 import Animated, {cancelAnimation, Easing, useAnimatedProps, useSharedValue, withTiming} from 'react-native-reanimated';
-import notifee, {AndroidImportance, AndroidVisibility, EventType} from '@notifee/react-native';
-import * as Haptics from 'expo-haptics';
-import {Audio} from 'expo-av';
+import notifee, {AndroidImportance, AndroidVisibility} from '@notifee/react-native';
+import {IExercise} from '../../../constants/interfaces';
 import Layout from '../../common/layout/Layout';
 import GorillaImage from '../../../assets/images/png/layout/break-monkey.png';
 import {Colors} from '../../../constants/Colors';
 import {Fonts} from '../../../constants/Fonts';
+import {setAddBreakTimeHandler} from './breakTimerNotificationActions';
 
 const BREAK_DURATION = 60;
 const SIZE = 240;
@@ -22,11 +22,21 @@ type BreakScreenProps = {
     route: {
         params?: {
             duration?: number;
+            exercise: IExercise;
         };
     };
 };
 
 const NOTIFICATION_ID = 'break_timer_notification';
+const END_NOTIFICATION_ID = 'break_end_notification';
+const TIMER_CHANNEL_ID = 'break_timer_public_silent_channel';
+const END_CHANNEL_ID = 'break_end_public_channel';
+
+notifee.registerForegroundService(notification => {
+    return new Promise(() => {
+        // Usługa działa w tle, dopóki nie wywołamy stopForegroundService()
+    });
+});
 
 const BreakScreen = ({route}: BreakScreenProps) => {
     const initialDuration = Math.max(1, route.params?.duration ?? BREAK_DURATION);
@@ -41,14 +51,27 @@ const BreakScreen = ({route}: BreakScreenProps) => {
         strokeDashoffset: CIRCUMFERENCE * (1 - progress.value),
     }));
 
-    const triggerEndAlert = async () => {
-        try {
-            await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-            const {sound} = await Audio.Sound.createAsync(require('../../../assets/sounds/timer-end.mp3'));
-            await sound.playAsync();
-        } catch (e) {
-            await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-        }
+    const exercise = route.params?.exercise;
+
+    const displayEndNotification = async () => {
+        await notifee.cancelNotification(NOTIFICATION_ID);
+        await notifee.displayNotification({
+            id: END_NOTIFICATION_ID,
+            title: 'Koniec przerwy!',
+            body: 'Czas na wycisk 💪',
+            data: {
+                destination: 'ExerciseScreen',
+                exercise: JSON.stringify(exercise),
+                navigationRequestId: Date.now().toString(),
+            },
+            android: {
+                channelId: END_CHANNEL_ID,
+                importance: AndroidImportance.HIGH,
+                onlyAlertOnce: true,
+                visibility: AndroidVisibility.PUBLIC,
+                pressAction: {id: 'open_exercise', launchActivity: 'com.beaston.app.MainActivity'},
+            },
+        });
     };
 
     const displayTimerNotification = async (remaining: number, total: number) => {
@@ -60,11 +83,12 @@ const BreakScreen = ({route}: BreakScreenProps) => {
 
             await notifee.displayNotification({
                 id: NOTIFICATION_ID,
-                title: 'Trwa przerwa',
+                title: 'Trwa przerwa 🦍',
                 body: `Pozostało: ${minutes}:${seconds}`,
                 android: {
-                    channelId: 'break_timer_channel',
+                    channelId: TIMER_CHANNEL_ID,
                     ongoing: true,
+                    onlyAlertOnce: true,
                     asForegroundService: true,
                     visibility: AndroidVisibility.PUBLIC,
                     progress: {
@@ -88,13 +112,7 @@ const BreakScreen = ({route}: BreakScreenProps) => {
         }
     };
 
-    useEffect(() => {
-        return notifee.onBackgroundEvent(async ({type, detail}) => {
-            if (type === EventType.ACTION_PRESS && detail.pressAction?.id === 'add_30s') {
-                handleAddTime(30);
-            }
-        });
-    }, []);
+    useEffect(() => setAddBreakTimeHandler(() => handleAddTime(30)), []);
 
     const handleAddTime = async (secondsToAdd: number) => {
         endsAtRef.current += secondsToAdd * 1000;
@@ -120,9 +138,20 @@ const BreakScreen = ({route}: BreakScreenProps) => {
             await notifee.requestPermission();
 
             await notifee.createChannel({
-                id: 'break_timer_channel',
-                name: 'Przerwa',
+                id: TIMER_CHANNEL_ID,
+                name: 'Przerwa (cicha)',
+                importance: AndroidImportance.LOW,
+                visibility: AndroidVisibility.PUBLIC,
+                sound: undefined,
+                vibration: false,
+            });
+
+            await notifee.createChannel({
+                id: END_CHANNEL_ID,
+                name: 'Koniec przerwy',
                 importance: AndroidImportance.HIGH,
+                sound: 'default',
+                vibration: true,
                 visibility: AndroidVisibility.PUBLIC,
             });
 
@@ -141,12 +170,14 @@ const BreakScreen = ({route}: BreakScreenProps) => {
                 const remaining = Math.max(0, Math.ceil((endsAtRef.current - Date.now()) / 1000));
                 setSecondsLeft(remaining);
 
-                if (remaining > 0) await displayTimerNotification(remaining, totalDurationRef.current);
+                if (remaining > 0) {
+                    await displayTimerNotification(remaining, totalDurationRef.current);
+                }
 
                 if (remaining === 0) {
                     clearInterval(interval);
                     await notifee.stopForegroundService();
-                    await triggerEndAlert();
+                    await displayEndNotification();
                 }
             }, 1000);
         };

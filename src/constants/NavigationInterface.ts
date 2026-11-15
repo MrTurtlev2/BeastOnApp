@@ -14,7 +14,10 @@ export type INavigationProps = {
     ExerciseScreen: {
         exercise: IExercise;
     };
-    BreakScreen: undefined;
+    BreakScreen: {
+        exercise: IExercise;
+        duration?: number;
+    };
     MotivationScreen: undefined;
     ErrorScreen: undefined;
     CustomModalScreen: undefined;
