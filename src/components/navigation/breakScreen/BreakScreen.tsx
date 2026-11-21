@@ -9,8 +9,9 @@ import GorillaImage from '../../../assets/images/png/layout/break-monkey.png';
 import {Colors} from '../../../constants/Colors';
 import {Fonts} from '../../../constants/Fonts';
 import {setAddBreakTimeHandler} from './breakTimerNotificationActions';
+import {useTranslation} from 'react-i18next';
 
-const BREAK_DURATION = 60;
+const BREAK_DURATION = 120;
 const SIZE = 240;
 const STROKE_WIDTH = 12;
 const RADIUS = (SIZE - STROKE_WIDTH) / 2;
@@ -41,7 +42,7 @@ notifee.registerForegroundService(notification => {
 const BreakScreen = ({route}: BreakScreenProps) => {
     const initialDuration = Math.max(1, route.params?.duration ?? BREAK_DURATION);
     const [secondsLeft, setSecondsLeft] = useState(initialDuration);
-
+    const {t} = useTranslation();
     const endsAtRef = useRef(Date.now() + initialDuration * 1000);
     const totalDurationRef = useRef(initialDuration);
 
@@ -57,8 +58,8 @@ const BreakScreen = ({route}: BreakScreenProps) => {
         await notifee.cancelNotification(NOTIFICATION_ID);
         await notifee.displayNotification({
             id: END_NOTIFICATION_ID,
-            title: 'Koniec przerwy!',
-            body: 'Czas na wycisk 💪',
+            title: `${t('breakEndTitle')}`,
+            body: `${t('breakEndDesc')}`,
             data: {
                 destination: 'ExerciseScreen',
                 exercise: JSON.stringify(exercise),

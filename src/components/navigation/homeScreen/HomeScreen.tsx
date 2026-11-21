@@ -24,7 +24,7 @@ import {isToday} from 'date-fns';
 export default function HomeScreen() {
     const navigation = useAppNavigation<'HomeScreen'>();
     const user = useAppSelector(state => state?.user?.userData);
-    const {trainingPlans, loading} = useAppSelector(state => state?.trainingPlans);
+    const trainingPlans = useAppSelector(state => state?.trainingPlans.trainingPlans);
     const dispatch = useAppDispatch();
     const scrollY = useRef(new Animated.Value(0)).current;
     const headerHeight = 90;

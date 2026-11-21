@@ -1,5 +1,5 @@
-import {useEffect, useRef, useState} from 'react';
-import {Animated, FlatList, StyleSheet} from 'react-native';
+import {useState} from 'react';
+import {FlatList, StyleSheet} from 'react-native';
 import Layout from '../../common/layout/Layout';
 import LiquidProgress from './elements/LiquidProgress';
 import {Fonts} from '../../../constants/Fonts';
@@ -9,28 +9,15 @@ import ClawTitle from '../../common/clawTitle/ClawTitle';
 import {useAppNavigation} from '../../../constants/NavigationInterface';
 import ExerciseSetRow from './elements/ExerciseSetRow';
 
-const BREAK_DURATION = 30;
-
 const ExerciseScreen = ({route}: any) => {
     const {exercise} = route.params;
     const navigation = useAppNavigation<'BreakScreen'>();
     const [currentIdx, setCurrentIdx] = useState(0);
-    const [isBreakActive, setIsBreakActive] = useState(false);
-    const [secondsLeft, setSecondsLeft] = useState(BREAK_DURATION);
-
-    const progressAnim = useRef(new Animated.Value(0)).current;
-    const timerRef = useRef<number | null>(null);
     const progressPercent = ((currentIdx + 1) / exercise?.sets?.length) * 100 || 0;
 
     const startBreak = () => {
         navigation.navigate('BreakScreen', {exercise});
     };
-
-    useEffect(() => {
-        return () => {
-            timerRef.current && clearInterval(timerRef.current);
-        };
-    }, []);
 
     return (
         <Layout hasBackArrow bgImageType="right-center" customStyle={{flex: 1, paddingTop: 80}}>
@@ -47,7 +34,7 @@ const ExerciseScreen = ({route}: any) => {
                 )}
             />
 
-            <ExerciseBottomManager isBreakActive={isBreakActive} secondsLeft={secondsLeft} onStartBreak={startBreak} />
+            <ExerciseBottomManager isBreakActive={false} secondsLeft={60} onStartBreak={startBreak} />
         </Layout>
     );
 };
