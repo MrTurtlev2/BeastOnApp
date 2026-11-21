@@ -80,7 +80,5 @@ yarn-error.log
 expo-env.d.ts
 .env
 .expo/
-android/
-ios/
 google-services.json
 # @end expo-cli
