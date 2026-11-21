@@ -10,8 +10,9 @@ import {Colors} from '../../../constants/Colors';
 import {Fonts} from '../../../constants/Fonts';
 import {setAddBreakTimeHandler} from './breakTimerNotificationActions';
 import {useTranslation} from 'react-i18next';
+import {useAppNavigation} from '../../../constants/NavigationInterface';
 
-const BREAK_DURATION = 120;
+const BREAK_DURATION = 20;
 const SIZE = 240;
 const STROKE_WIDTH = 12;
 const RADIUS = (SIZE - STROKE_WIDTH) / 2;
@@ -24,6 +25,10 @@ type BreakScreenProps = {
         params?: {
             duration?: number;
             exercise: IExercise;
+            setIndex: number;
+            totalSets: number;
+            isLastSet: boolean;
+            endsAt?: number;
         };
     };
 };
@@ -40,11 +45,13 @@ notifee.registerForegroundService(notification => {
 });
 
 const BreakScreen = ({route}: BreakScreenProps) => {
-    const initialDuration = Math.max(1, route.params?.duration ?? BREAK_DURATION);
+    const remainingFromRoute = route.params?.endsAt ? Math.ceil((route.params.endsAt - Date.now()) / 1000) : undefined;
+    const initialDuration = Math.max(0, remainingFromRoute ?? route.params?.duration ?? BREAK_DURATION);
     const [secondsLeft, setSecondsLeft] = useState(initialDuration);
     const {t} = useTranslation();
-    const endsAtRef = useRef(Date.now() + initialDuration * 1000);
+    const endsAtRef = useRef(route.params?.endsAt ?? Date.now() + initialDuration * 1000);
     const totalDurationRef = useRef(initialDuration);
+    const timerStartedAtRef = useRef(Date.now());
 
     const progress = useSharedValue(0);
 
@@ -53,6 +60,19 @@ const BreakScreen = ({route}: BreakScreenProps) => {
     }));
 
     const exercise = route.params?.exercise;
+    const navigation = useAppNavigation<'BreakScreen'>();
+    const isLastSet = route.params?.isLastSet ?? false;
+
+    const continueWorkout = () => {
+        navigation.popToTop();
+        navigation.navigate(
+            'ExerciseScreen' as never,
+            {
+                exercise,
+                completedSets: (route.params?.setIndex ?? 0) + 1,
+            } as never,
+        );
+    };
 
     const displayEndNotification = async () => {
         await notifee.cancelNotification(NOTIFICATION_ID);
@@ -86,6 +106,16 @@ const BreakScreen = ({route}: BreakScreenProps) => {
                 id: NOTIFICATION_ID,
                 title: 'Trwa przerwa 🦍',
                 body: `Pozostało: ${minutes}:${seconds}`,
+                data: {
+                    destination: 'BreakScreen',
+                    exercise: JSON.stringify(exercise),
+                    duration: remaining,
+                    endsAt: endsAtRef.current,
+                    setIndex: route.params?.setIndex ?? 0,
+                    totalSets: route.params?.totalSets ?? 1,
+                    isLastSet: isLastSet ? 'true' : 'false',
+                    navigationRequestId: `break-${route.params?.setIndex ?? 0}-${endsAtRef.current}`,
+                },
                 android: {
                     channelId: TIMER_CHANNEL_ID,
                     ongoing: true,
@@ -97,9 +127,7 @@ const BreakScreen = ({route}: BreakScreenProps) => {
                         current: total - remaining,
                         indeterminate: false,
                     },
-                    pressAction: {
-                        id: 'default',
-                    },
+                    pressAction: {id: 'open_break', launchActivity: 'com.beaston.app.MainActivity'},
                     actions: [
                         {
                             title: '+30s',
@@ -118,6 +146,8 @@ const BreakScreen = ({route}: BreakScreenProps) => {
     const handleAddTime = async (secondsToAdd: number) => {
         endsAtRef.current += secondsToAdd * 1000;
         totalDurationRef.current += secondsToAdd;
+        timerStartedAtRef.current =
+            Date.now() - (totalDurationRef.current - Math.max(0, Math.ceil((endsAtRef.current - Date.now()) / 1000))) * 1000;
 
         const newRemaining = Math.max(0, Math.ceil((endsAtRef.current - Date.now()) / 1000));
         setSecondsLeft(newRemaining);
@@ -156,10 +186,18 @@ const BreakScreen = ({route}: BreakScreenProps) => {
                 visibility: AndroidVisibility.PUBLIC,
             });
 
-            endsAtRef.current = Date.now() + initialDuration * 1000;
-            totalDurationRef.current = initialDuration;
+            endsAtRef.current = route.params?.endsAt ?? Date.now() + initialDuration * 1000;
+            totalDurationRef.current = Math.max(initialDuration, route.params?.duration ?? initialDuration);
+            timerStartedAtRef.current = endsAtRef.current - totalDurationRef.current * 1000;
 
-            progress.value = 0;
+            if (initialDuration === 0) {
+                setSecondsLeft(0);
+                await notifee.stopForegroundService();
+                return;
+            }
+
+            const elapsed = Math.max(0, totalDurationRef.current - initialDuration);
+            progress.value = elapsed / totalDurationRef.current;
             progress.value = withTiming(1, {
                 duration: initialDuration * 1000,
                 easing: Easing.linear,
@@ -190,7 +228,7 @@ const BreakScreen = ({route}: BreakScreenProps) => {
             cancelAnimation(progress);
             notifee.stopForegroundService();
         };
-    }, []);
+    }, [isLastSet]);
 
     const formattedTime = `${Math.floor(secondsLeft / 60)
         .toString()
@@ -228,6 +266,11 @@ const BreakScreen = ({route}: BreakScreenProps) => {
                 <TouchableOpacity style={styles.addButton} onPress={() => handleAddTime(30)}>
                     <Text style={styles.addButtonText}>+30 SEKUND</Text>
                 </TouchableOpacity>
+                {secondsLeft === 0 && (
+                    <TouchableOpacity style={styles.returnButton} onPress={continueWorkout}>
+                        <Text style={styles.returnButtonText}>{isLastSet ? t('exerciseCompleteTitle') : t('returnToExercise')}</Text>
+                    </TouchableOpacity>
+                )}
             </View>
         </Layout>
     );
@@ -276,6 +319,19 @@ const styles = StyleSheet.create({
         borderRadius: 24,
     },
     addButtonText: {
+        color: '#FFFFFF',
+        fontFamily: Fonts.Marker,
+        fontSize: 16,
+    },
+    returnButton: {
+        position: 'absolute',
+        top: 660,
+        backgroundColor: Colors.pink,
+        paddingVertical: 12,
+        paddingHorizontal: 28,
+        borderRadius: 24,
+    },
+    returnButtonText: {
         color: '#FFFFFF',
         fontFamily: Fonts.Marker,
         fontSize: 16,

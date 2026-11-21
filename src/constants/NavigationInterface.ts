@@ -13,10 +13,15 @@ export type INavigationProps = {
     };
     ExerciseScreen: {
         exercise: IExercise;
+        completedSets?: number;
     };
     BreakScreen: {
         exercise: IExercise;
         duration?: number;
+        setIndex: number;
+        totalSets: number;
+        isLastSet: boolean;
+        endsAt?: number;
     };
     MotivationScreen: undefined;
     ErrorScreen: undefined;

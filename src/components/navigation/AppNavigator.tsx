@@ -12,7 +12,7 @@ import RegisterScreen from './registerScreen/RegisterScreen';
 import MotivationScreen from './motivationScreen/MotivationScreen';
 import LoginScreen from './loginScreen/LoginScreen';
 import ErrorScreen from './errorScreen/ErrorScreen';
-import {navigateToExerciseFromNotification, navigationRef, processPendingNotificationNavigation} from './RootNavigation';
+import {navigateToBreakFromNotification, navigateToExerciseFromNotification, navigationRef, processPendingNotificationNavigation} from './RootNavigation';
 import {Colors} from '../../constants/Colors';
 import AddPlanScreen from './addPlanScreen/AddPlanScreen';
 import CustomModalScreen from './customModalScreen/CustomModalScreen';
@@ -100,11 +100,17 @@ export default function AppNavigator() {
             if (type === EventType.PRESS && detail.notification?.data?.destination === 'ExerciseScreen') {
                 navigateToExerciseFromNotification(detail.notification.data);
             }
+            if (type === EventType.PRESS && detail.notification?.data?.destination === 'BreakScreen') {
+                navigateToBreakFromNotification(detail.notification.data);
+            }
         });
 
         notifee.getInitialNotification().then(initialNotification => {
             if (initialNotification?.notification.data?.destination === 'ExerciseScreen') {
                 navigateToExerciseFromNotification(initialNotification.notification.data);
+            }
+            if (initialNotification?.notification.data?.destination === 'BreakScreen') {
+                navigateToBreakFromNotification(initialNotification.notification.data);
             }
         });
 

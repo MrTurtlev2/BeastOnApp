@@ -46,5 +46,9 @@
   "AddPlanReassignValidationMsg": "Zaznaczony dzień posiada już przypięty plan treningowy. Możesz go przepiąć a poprzedni plan będzie nadal dostępy do wybrania na inne dni na ekranie głównym. Wybierz czy przepiąć czy nie przypisywać obecnego planu na ten dzień.",
   "reassignPlan": "przypisz edytowanemu planowi ten dzień",
   "breakEndTitle": "Koniec przerwy!",
-  "breakEndDesc": "Czas na wycisk!"
+  "breakEndDesc": "Czas na wycisk!",
+  "exerciseCompleteTitle": "Ćwiczenie ukończone!",
+  "exerciseCompleteDesc": "Świetna robota. Wszystkie serie za Tobą.",
+  "finishWorkout": "Zakończ trening",
+  "returnToExercise": "Wracam do ćwiczeń"
 }
