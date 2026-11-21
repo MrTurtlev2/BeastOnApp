@@ -1,18 +1,22 @@
 import {createDrawerNavigator} from '@react-navigation/drawer';
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, Theme} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {useSelector} from 'react-redux';
 import {useEffect} from 'react';
 import notifee, {EventType} from '@notifee/react-native';
 import {RootState} from '../../store';
-
 import HomeScreen from './homeScreen/HomeScreen';
 import CustomDrawer from './CustomDrawer';
 import RegisterScreen from './registerScreen/RegisterScreen';
 import MotivationScreen from './motivationScreen/MotivationScreen';
 import LoginScreen from './loginScreen/LoginScreen';
 import ErrorScreen from './errorScreen/ErrorScreen';
-import {navigateToBreakFromNotification, navigateToExerciseFromNotification, navigationRef, processPendingNotificationNavigation} from './RootNavigation';
+import {
+    navigateToBreakFromNotification,
+    navigateToExerciseFromNotification,
+    navigationRef,
+    processPendingNotificationNavigation,
+} from './RootNavigation';
 import {Colors} from '../../constants/Colors';
 import AddPlanScreen from './addPlanScreen/AddPlanScreen';
 import CustomModalScreen from './customModalScreen/CustomModalScreen';
@@ -34,9 +38,16 @@ const AuthNavigator = () => {
 
 const HomeStack = createStackNavigator();
 
-const defaultTheme = {
+const defaultTheme: Theme = {
+    dark: true,
+    fonts: {},
     colors: {
         background: Colors.bgGrey,
+        primary: '',
+        card: '',
+        text: Colors.white,
+        border: '',
+        notification: '',
     },
 };
 

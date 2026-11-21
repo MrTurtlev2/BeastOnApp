@@ -13,7 +13,6 @@ export const handleLoginAsync = async (email: string, password: string) => {
             password,
         });
         if (response?.data) {
-            console.log(response.data);
             await SecureStore.setItemAsync('refreshToken', response?.data?.refreshToken);
             return response?.data;
         }

@@ -264,24 +264,26 @@ const BreakScreen = ({route}: BreakScreenProps) => {
                     </View>
                 </View>
 
-                <CustomButton
-                    onPress={() => handleAddTime(30)}
-                    text={'+30 SEKUND'}
-                    style={{
-                        position: 'absolute',
-                        top: 600,
-                    }}
-                />
-                {secondsLeft === 0 && (
+                <View style={styles.buttonsWrapper}>
                     <CustomButton
-                        onPress={continueWorkout}
-                        text={isLastSet ? t('exerciseCompleteTitle') : t('returnToExercise')}
+                        onPress={() => handleAddTime(30)}
+                        text={'+30 SEKUND'}
                         style={{
                             position: 'absolute',
-                            top: 660,
+                            top: 600,
                         }}
                     />
-                )}
+                    {secondsLeft === 0 && (
+                        <CustomButton
+                            onPress={continueWorkout}
+                            text={isLastSet ? t('exerciseCompleteTitle') : t('returnToExercise')}
+                            style={{
+                                position: 'absolute',
+                                top: 660,
+                            }}
+                        />
+                    )}
+                </View>
             </View>
         </Layout>
     );
@@ -291,7 +293,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        paddingHorizontal: 20,
     },
     gorilla: {
         position: 'absolute',
@@ -306,6 +307,10 @@ const styles = StyleSheet.create({
         height: SIZE,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    buttonsWrapper: {
+        alignItems: 'center',
+        paddingHorizontal: 20,
     },
     timerContent: {
         position: 'absolute',

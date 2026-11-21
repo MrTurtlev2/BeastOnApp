@@ -6,7 +6,11 @@ import {styles} from './Style';
 const CustomWeekPicker = ({weekDays, selectedDays, onSelectDay, occupiedDays}) => {
     return (
         <View style={styles.container}>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{paddingHorizontal: 10}}>
+            <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{paddingHorizontal: 10}}
+                overScrollMode={'never'}>
                 {weekDays.map(item => {
                     const isSelected = selectedDays.includes(item.dayOfWeek);
                     const isOccupied = occupiedDays ? occupiedDays.includes(item.dayOfWeek) : false;
@@ -14,7 +18,6 @@ const CustomWeekPicker = ({weekDays, selectedDays, onSelectDay, occupiedDays}) =
                         <TouchableOpacity key={item.date.toISOString()} onPress={() => onSelectDay(item.dayOfWeek)} style={styles.button}>
                             <View style={[styles.dayContainer, isOccupied && styles.occupiedDay, isSelected && styles.selectedDay]}>
                                 <Text style={styles.dateText}>{item.dateString}</Text>
-
                                 <Text style={styles.dayText}>{item.day}</Text>
                             </View>
                         </TouchableOpacity>
