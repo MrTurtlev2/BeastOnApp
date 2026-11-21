@@ -1,65 +1,69 @@
 import {useEffect} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import Svg, {Circle, Defs, Mask, Path, Rect} from 'react-native-svg';
-import Animated, {Easing, useAnimatedProps, useSharedValue, withRepeat, withTiming} from 'react-native-reanimated';
+import Svg, {Path} from 'react-native-svg';
+import {useFocusEffect, useIsFocused} from '@react-navigation/native';
+import Animated, {cancelAnimation, Easing, useAnimatedStyle, useSharedValue, withRepeat, withTiming} from 'react-native-reanimated';
+import {useCallback, useMemo} from 'react';
 
-const AnimatedPath = Animated.createAnimatedComponent(Path);
+type LiquidProgressProps = {
+    percent?: number;
+    size?: number;
+};
 
-const LiquidProgress = ({percent = 40, size = 250}) => {
-    const translateX = useSharedValue(0);
-    const translateX2 = useSharedValue(-size);
+const WAVE_AMPLITUDE = 10;
+
+const createWavePath = (size: number, waveCount: number) => {
+    const width = size * waveCount;
+    let path = `M 0 ${WAVE_AMPLITUDE}`;
+
+    for (let wave = 0; wave < waveCount; wave += 1) {
+        path += ` q ${size / 4} ${-WAVE_AMPLITUDE} ${size / 2} 0 t ${size / 2} 0`;
+    }
+
+    return `${path} v ${size} h ${-width} Z`;
+};
+
+const LiquidProgress = ({percent = 40, size = 250}: LiquidProgressProps) => {
+    const isFocused = useIsFocused();
+    const frontWaveX = useSharedValue(0);
+    const backWaveX = useSharedValue(0);
     const liquidLevel = useSharedValue(size);
+    const normalizedPercent = Math.max(0, Math.min(percent, 100));
+
+    const frontWavePath = useMemo(() => createWavePath(size, 2), [size]);
+    const backWavePath = useMemo(() => createWavePath(size, 4), [size]);
+
+    useFocusEffect(
+        useCallback(() => {
+            frontWaveX.value = 0;
+            backWaveX.value = 0;
+            frontWaveX.value = withRepeat(withTiming(-size, {duration: 3000, easing: Easing.linear}), -1, false);
+            backWaveX.value = withRepeat(withTiming(size, {duration: 3500, easing: Easing.linear}), -1, false);
+
+            return () => {
+                cancelAnimation(frontWaveX);
+                cancelAnimation(backWaveX);
+            };
+        }, [backWaveX, frontWaveX, size]),
+    );
 
     useEffect(() => {
-        translateX.value = withRepeat(withTiming(-size, {duration: 3000, easing: Easing.linear}), -1, false);
+        if (!isFocused) return;
 
-        translateX2.value = withRepeat(withTiming(0, {duration: 3500, easing: Easing.linear}), -1, false);
-    }, []);
-
-    useEffect(() => {
-        liquidLevel.value = withTiming(size * (1 - percent / 100), {
+        liquidLevel.value = withTiming(size * (1 - normalizedPercent / 100), {
             duration: 800,
             easing: Easing.out(Easing.quad),
         });
-    }, [percent, size]);
 
-    const animatedProps = useAnimatedProps(() => {
-        const h = 10;
-        const y = liquidLevel.value;
-        const x = translateX.value;
-        const d = `
-      M ${x} ${y} 
-      q ${size / 4} ${-h} ${size / 2} 0 
-      t ${size / 2} 0
-      q ${size / 4} ${-h} ${size / 2} 0 
-      t ${size / 2} 0
-      v ${size} 
-      h ${-size * 2} 
-      Z
-    `;
-        return {d};
-    });
-    const backgroundWaveProps = useAnimatedProps(() => {
-        const h = 10;
-        const y = liquidLevel.value - 2;
-        const x = translateX2.value;
-        const startX = x - size;
-        const d = `
-      M ${startX} ${y} 
-      q ${size / 4} ${-h} ${size / 2} 0 
-      t ${size / 2} 0
-      q ${size / 4} ${-h} ${size / 2} 0 
-      t ${size / 2} 0
-      q ${size / 4} ${-h} ${size / 2} 0 
-      t ${size / 2} 0
-      q ${size / 4} ${-h} ${size / 2} 0 
-      t ${size / 2} 0
-      v ${size} 
-      h ${-size * 4} 
-      Z
-    `;
-        return {d};
-    });
+        return () => cancelAnimation(liquidLevel);
+    }, [isFocused, liquidLevel, normalizedPercent, size]);
+
+    const frontWaveStyle = useAnimatedStyle(() => ({
+        transform: [{translateX: frontWaveX.value}, {translateY: liquidLevel.value - WAVE_AMPLITUDE}],
+    }));
+    const backWaveStyle = useAnimatedStyle(() => ({
+        transform: [{translateX: backWaveX.value}, {translateY: liquidLevel.value - WAVE_AMPLITUDE - 2}],
+    }));
 
     return (
         <View style={styles.container}>
@@ -67,19 +71,24 @@ const LiquidProgress = ({percent = 40, size = 250}) => {
             <View style={[styles.decorCircle, {bottom: 40, right: 10, width: 50, height: 50, opacity: 0.5}]} />
 
             <View style={[styles.circleWrapper, {width: size, height: size, borderRadius: size / 2}]}>
-                <Svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-                    <Defs>
-                        <Mask id="mask">
-                            <Circle cx={size / 2} cy={size / 2} r={size / 2} fill="white" />
-                        </Mask>
-                    </Defs>
-                    <Rect width="100%" height="100%" fill="#1a1a1a" mask="url(#mask)" />
-                    <AnimatedPath animatedProps={backgroundWaveProps} fill="#A3243D" opacity={0.4} mask="url(#mask)" />
-                    <AnimatedPath animatedProps={animatedProps} fill="#A3243D" mask="url(#mask)" />
-                </Svg>
+                <Animated.View
+                    pointerEvents="none"
+                    style={[styles.waveLayer, {left: -size * 2, width: size * 4, height: size}, backWaveStyle]}>
+                    <Svg width={size * 4} height={size} viewBox={`0 0 ${size * 4} ${size}`}>
+                        <Path d={backWavePath} fill="#A3243D" opacity={0.4} />
+                    </Svg>
+                </Animated.View>
+
+                <Animated.View
+                    pointerEvents="none"
+                    style={[styles.waveLayer, {width: size * 2, height: size}, frontWaveStyle]}>
+                    <Svg width={size * 2} height={size} viewBox={`0 0 ${size * 2} ${size}`}>
+                        <Path d={frontWavePath} fill="#A3243D" />
+                    </Svg>
+                </Animated.View>
 
                 <View style={styles.textContainer}>
-                    <Text style={styles.percentText}>{Math.round(percent)}%</Text>
+                    <Text style={styles.percentText}>{Math.round(normalizedPercent)}%</Text>
                 </View>
             </View>
         </View>
@@ -92,7 +101,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     circleWrapper: {
-        backgroundColor: '#111',
+        backgroundColor: '#1a1a1a',
         overflow: 'hidden',
         borderWidth: 1,
         borderColor: 'rgba(255,255,255,0.1)',
@@ -101,6 +110,10 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.6,
         shadowRadius: 20,
         elevation: 15,
+    },
+    waveLayer: {
+        position: 'absolute',
+        top: 0,
     },
     decorCircle: {
         position: 'absolute',

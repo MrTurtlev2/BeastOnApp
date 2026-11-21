@@ -1,27 +1,20 @@
-import {BottomSheetBackdrop, BottomSheetFlatList, BottomSheetModal} from '@gorhom/bottom-sheet';
-import {forwardRef, useCallback, useMemo} from 'react';
+import {BottomSheetFlatList} from '@gorhom/bottom-sheet';
+import {useCallback} from 'react';
 import {ListRenderItem, StyleSheet, Text, View} from 'react-native';
 import {ITrainingPlan} from '../../../../../constants/interfaces';
 import {Colors} from '../../../../../constants/Colors';
 
 type TrainingSelectBottomSheetProps = {
     trainings: ITrainingPlan[];
-    onSelectTraining: (training: ITrainingPlan) => void;
+    onSelectTraining: (uuid: string) => void;
 };
 
-const TrainingSelectBottomSheet = forwardRef<BottomSheetModal, TrainingSelectBottomSheetProps>(({trainings, onSelectTraining}, ref) => {
-    const snapPoints = useMemo(() => ['50%', '80%'], []);
-
-    const renderBackdrop = useCallback(
-        (props: any) => <BottomSheetBackdrop {...props} disappearsOnIndex={-1} appearsOnIndex={0} opacity={0.5} />,
-        [],
-    );
-    
+const TrainingSelectBottomSheet = ({trainings, onSelectTraining}: TrainingSelectBottomSheetProps) => {
     const renderItem: ListRenderItem<ITrainingPlan> = useCallback(
         ({item}) => {
             return (
                 <View style={styles.trainingCard}>
-                    <Text style={styles.trainingText} onPress={() => onSelectTraining(item)}>
+                    <Text style={styles.trainingText} onPress={() => onSelectTraining(item.uuid)}>
                         {item.name}
                     </Text>
                 </View>
@@ -30,30 +23,26 @@ const TrainingSelectBottomSheet = forwardRef<BottomSheetModal, TrainingSelectBot
         [onSelectTraining],
     );
 
-    return (
-        <BottomSheetModal
-            ref={ref}
-            snapPoints={snapPoints}
-            backdropComponent={renderBackdrop}
-            enablePanDownToClose
-            backgroundStyle={styles.background}
-            handleIndicatorStyle={styles.handleIndicator}>
-            {!trainings?.length ? (
-                <View style={styles.emptyContainer}>
-                    <Text style={styles.emptyText}>No trainings available</Text>
-                </View>
-            ) : (
-                <BottomSheetFlatList
-                    data={trainings}
-                    renderItem={renderItem}
-                    keyExtractor={(item: ITrainingPlan) => item.uuid}
-                    contentContainerStyle={styles.contentContainer}
-                    showsVerticalScrollIndicator={false}
-                />
-            )}
-        </BottomSheetModal>
+    const renderEmptyComponent = useCallback(
+        () => (
+            <View style={styles.emptyContainer}>
+                <Text style={styles.emptyText}>No trainings available</Text>
+            </View>
+        ),
+        [],
     );
-});
+
+    return (
+        <BottomSheetFlatList
+            data={trainings}
+            renderItem={renderItem}
+            keyExtractor={(item: ITrainingPlan) => item.uuid}
+            contentContainerStyle={styles.contentContainer}
+            showsVerticalScrollIndicator={false}
+            ListEmptyComponent={renderEmptyComponent}
+        />
+    );
+};
 
 export default TrainingSelectBottomSheet;
 
@@ -64,6 +53,8 @@ const styles = StyleSheet.create({
 
     handleIndicator: {
         backgroundColor: '#666',
+        width: 40,
+        marginBottom: 10,
     },
 
     contentContainer: {
@@ -90,6 +81,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         paddingBottom: 40,
+        height: 200,
     },
 
     emptyText: {

@@ -17,6 +17,19 @@ import {triggerSync} from './src/store/syncEngine';
 import NetInfo from '@react-native-community/netinfo';
 import * as TaskManager from 'expo-task-manager';
 import * as BackgroundFetch from 'expo-background-fetch';
+import notifee, {EventType} from '@notifee/react-native';
+import {navigateToExerciseFromNotification} from './src/components/navigation/RootNavigation';
+import {handleAddBreakTimeAction} from './src/components/navigation/breakScreen/breakTimerNotificationActions';
+
+notifee.onBackgroundEvent(async ({type, detail}) => {
+    if (type === EventType.ACTION_PRESS && detail.pressAction?.id === 'add_30s') {
+        await handleAddBreakTimeAction();
+    }
+
+    if (type === EventType.PRESS && detail.notification?.data?.destination === 'ExerciseScreen') {
+        navigateToExerciseFromNotification(detail.notification.data);
+    }
+});
 
 SplashScreen.preventAutoHideAsync();
 

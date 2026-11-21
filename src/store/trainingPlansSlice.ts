@@ -1,5 +1,15 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {ITrainingPlan} from '../constants/interfaces';
+import {fetchTrainingPlans} from '../api/TrainingShedule';
+
+export interface ReduxTrainingPlan extends ITrainingPlan {
+    synced: boolean;
+}
+
+interface IAssignTrainingPlanToAnotherDay {
+    uuid: string;
+    dayToAssign: number;
+}
 
 interface ITrainingPlansState {
     trainingPlans: ITrainingPlan[];
@@ -17,20 +27,48 @@ const trainingPlansSlice = createSlice({
     name: 'trainingPlans',
     initialState,
     reducers: {
-        addTrainingPlan(state, action: PayloadAction<ITrainingPlan>) {
+        addTrainingPlan(state, action: PayloadAction<ReduxTrainingPlan>) {
             state.trainingPlans.push(action.payload);
         },
-        markTrainingPlanSynced(state, action: PayloadAction<string>) {
-            const plan = state.trainingPlans.find(item => item.uuid === action.payload);
-            if (!plan) return;
-            plan.synced = true;
+        updateTrainingPlan(state, action: PayloadAction<ReduxTrainingPlan>) {
+            const updatedPlan = action.payload;
+            state.trainingPlans = state.trainingPlans.map(plan => {
+                if (plan.uuid === updatedPlan.uuid) return updatedPlan;
+                const hasConflict = plan.daysOfWeek.some(day => updatedPlan.daysOfWeek.includes(day));
+
+                if (!hasConflict) return plan;
+                return {
+                    ...plan,
+                    daysOfWeek: plan.daysOfWeek.filter(day => !updatedPlan.daysOfWeek.includes(day)),
+                };
+            });
         },
+        assignTrainingPlanToAnotherDay(state, action: PayloadAction<IAssignTrainingPlanToAnotherDay>) {
+            const planIndex = state.trainingPlans.findIndex(plan => plan.uuid === action.payload.uuid);
+            state.trainingPlans[planIndex].daysOfWeek.push(action.payload.dayToAssign);
+        },
+        unassignPlanForDay(state, action: PayloadAction<IAssignTrainingPlanToAnotherDay>) {
+            const planIndex = state.trainingPlans.findIndex(plan => plan.uuid === action.payload.uuid);
+            const foundPlan = state.trainingPlans[planIndex];
+            foundPlan.daysOfWeek = foundPlan.daysOfWeek.filter(day => day !== action.payload.dayToAssign);
+        },
+        // markTrainingPlanSynced(state, action: PayloadAction<string>) {
+        //     const plan = state.trainingPlans.find(item => item.uuid === action.payload);
+        //     if (!plan) return;
+        //     plan.synced = true;
+        // },
         removeTrainingPlan(state, action: PayloadAction<string>) {
             state.trainingPlans = state.trainingPlans.filter(item => item.uuid !== action.payload);
         },
     },
+    extraReducers: builder => {
+        builder.addCase(fetchTrainingPlans.fulfilled, (state, action) => {
+            state.trainingPlans = action.payload;
+        });
+    },
 });
 
-export const {addTrainingPlan, markTrainingPlanSynced, removeTrainingPlan} = trainingPlansSlice.actions;
+export const {addTrainingPlan, updateTrainingPlan, removeTrainingPlan, assignTrainingPlanToAnotherDay, unassignPlanForDay} =
+    trainingPlansSlice.actions;
 
 export default trainingPlansSlice.reducer;

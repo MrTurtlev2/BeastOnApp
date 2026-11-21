@@ -1,71 +1,70 @@
 import {FlatList, Text, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import CustomInput from '../../../common/customInput/CustomInput';
-import {IExercise} from '../../../../constants/interfaces';
 import NewExerciseBar from '../elements/NewExerciseBar';
 import PlanOverviewFooter from '../elements/PlanOverviewFooter';
 import {useState} from 'react';
-import {useNavigation} from '@react-navigation/native';
-import {useAppDispatch} from '../../../../store';
-import {nanoid} from 'nanoid';
-import {addTrainingPlan} from '../../../../store/trainingPlansSlice';
-import {addToOutbox} from '../../../../store/outboxSlice';
-import {triggerSync} from '../../../../store/syncEngine';
+import {usePlanForm} from '../../../../context/PlanFormContext';
+import CustomWeekPicker from '../../homeScreen/elements/CustomWeekPicker/CustomWeekPicker';
+import {useWeekDays} from '../../../../hooks/useWeekDays';
+import {useAppSelector} from '../../../../store';
 
-type Props = {
-    planName: string;
-    setPlanName: (val: string) => void;
-    exercises: IExercise[];
-    onAddExercise: () => void;
-    onEditExercise: (exercise: IExercise) => void;
-    selectedDay: number;
-};
-
-const PlanOverviewPage = ({exercises, onAddExercise, onEditExercise, selectedDay}: Props) => {
+const PlanOverviewPage = ({validationBottomSheetRef, setDayToReassign}) => {
+    const {trainingPlans, loading} = useAppSelector(state => state?.trainingPlans);
     const {t} = useTranslation();
-    const dispatch = useAppDispatch();
-    const navigation = useNavigation();
-    const [planName, setPlanName] = useState<string>('');
-    const [isPlanLoading, setPlanLoading] = useState<boolean>(false);
+    const {planName, setPlanName, exercises, goToEditor, onSavePlan, daysOfWeek, setDaysOfWeek, initialPlanUuid} = usePlanForm();
+    const [isPlanLoading, setPlanLoading] = useState(false);
+    const {weekDays} = useWeekDays();
 
-    const onSavePlan = async () => {
-        setPlanLoading(true);
-        const newPlan = {
-            uuid: nanoid(),
-            name: planName,
-            exercises,
-            daysOfWeek: [selectedDay],
-            lastModified: Date.now(),
-            synced: false,
-        };
-        dispatch(addTrainingPlan(newPlan));
-        dispatch(
-            addToOutbox({
-                url: '/api/training-plans/add-plan',
-                method: 'POST',
-                body: newPlan,
-            }),
-        );
-        navigation.goBack();
-        triggerSync();
+    const occupiedDays = trainingPlans.filter(plan => plan.uuid !== initialPlanUuid).flatMap(plan => plan.daysOfWeek);
+
+    const handleSelectDay = (day: number) => {
+        if (daysOfWeek.includes(day)) {
+            setDaysOfWeek(prev => prev.filter(item => item !== day));
+            return;
+        }
+        if (occupiedDays.includes(day)) {
+            setDayToReassign(day);
+            validationBottomSheetRef.current?.expand();
+            return;
+        }
+        setDaysOfWeek(prev => [...prev, day]);
     };
 
+    const handleSavePlan = async () => {
+        setPlanLoading(true);
+        onSavePlan();
+    };
     return (
-        <View style={{flex: 1, paddingHorizontal: 20}}>
-            <CustomInput value={planName} onChangeText={setPlanName} placeholder={t('planName')} containerStyle={{marginBottom: 20}} />
+        <View
+            style={{
+                flex: 1,
+                paddingHorizontal: 20,
+            }}>
+            <CustomInput
+                value={planName}
+                onChangeText={setPlanName}
+                placeholder={t('planName')}
+                containerStyle={{
+                    marginBottom: 20,
+                }}
+            />
+            <CustomWeekPicker weekDays={weekDays} selectedDays={daysOfWeek} onSelectDay={handleSelectDay} occupiedDays={occupiedDays} />
 
             <FlatList
                 data={exercises}
-                keyExtractor={(item, index) => index?.toString()}
+                keyExtractor={(_, index) => index.toString()}
                 renderItem={({item, index}) => (
-                    <NewExerciseBar index={index + 1} exerciseName={item?.name} onPress={() => onEditExercise(item)} />
+                    <NewExerciseBar index={index + 1} exerciseName={item.name} onPress={() => goToEditor(item)} />
                 )}
-                ListEmptyComponent={<Text style={{color: '#aaa'}}>{t('noExercisesAdded') ?? 'Brak ćwiczeń'}</Text>}
+                ListEmptyComponent={<Text style={{color: '#aaa'}}>{t('noExercisesAdded')}</Text>}
                 showsVerticalScrollIndicator={false}
                 ListHeaderComponent={<View style={{height: 5}} />}
-                contentContainerStyle={{paddingHorizontal: 20}}
+                contentContainerStyle={{
+                    paddingHorizontal: 20,
+                }}
                 ListFooterComponent={
-                    <PlanOverviewFooter onAddExercise={onAddExercise} onSavePlan={onSavePlan} isPlanLoading={isPlanLoading} />
+                    <PlanOverviewFooter onAddExercise={() => goToEditor(null)} onSavePlan={handleSavePlan} isPlanLoading={isPlanLoading} />
                 }
             />
         </View>

@@ -47,9 +47,7 @@ export const handleAutoLogin = async () => {
     const userData = state.user.userData;
     const accessToken = state.user.accessToken;
 
-    if (!refreshToken || !userData) {
-        return false;
-    }
+    if (!refreshToken || !userData) return false;
 
     const network = await NetInfo.fetch();
 
@@ -68,7 +66,6 @@ export const handleAutoLogin = async () => {
     // online
     try {
         const response = await axios.post(`${baseAppUrl}/api/auth/refresh-token`, {refreshToken});
-
         const newAccessToken = response?.data?.accessToken;
         const backendUser = response?.data?.user;
 
