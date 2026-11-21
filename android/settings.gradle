@@ -31,7 +31,7 @@ extensions.configure(com.facebook.react.ReactSettingsExtension) { ex ->
 }
 expoAutolinking.useExpoModules()
 
-rootProject.name = 'BeastOnApp'
+rootProject.name = 'Beast Mode'
 
 expoAutolinking.useExpoVersionCatalog()
 
