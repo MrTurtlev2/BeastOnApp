@@ -13,6 +13,7 @@ const button: ViewStyle = {
     alignItems: 'center',
     paddingVertical: 10,
     marginVertical: 10,
+    width: '100%',
 };
 
 export const styles = StyleSheet.create({

@@ -6,7 +6,7 @@ const ExitWithChangesBottomSheet = ({onExitWithSave, onExitWithoutSave, onCancel
     const {t} = useTranslation();
     return (
         <BottomSheetView style={{paddingBottom: 50, paddingHorizontal: 10}}>
-            <CustomButton onPress={onExitWithSave} text={t('saveAndExit')} type={'primary'} />
+            <CustomButton onPress={onExitWithSave} text={t('saveAndExit')} />
             <CustomButton onPress={onExitWithoutSave} text={t('exitWithoutSaving')} type={'secondary'} />
             <CustomButton onPress={onCancel} text={t('cancel')} type={'secondary'} />
         </BottomSheetView>

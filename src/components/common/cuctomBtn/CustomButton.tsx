@@ -4,11 +4,11 @@ import {styles} from './Style';
 interface ICustomButton {
     onPress: () => void;
     text: string;
-    type: 'primary' | 'secondary';
+    type?: 'primary' | 'secondary';
     style?: ViewStyle;
 }
 
-const CustomButton = ({onPress, text, type, style}: ICustomButton) => {
+const CustomButton = ({onPress, text, type = 'primary', style}: ICustomButton) => {
     const buttonStyle = {
         primary: styles.primaryMain,
         secondary: styles.secondaryMain,
@@ -17,7 +17,7 @@ const CustomButton = ({onPress, text, type, style}: ICustomButton) => {
         primary: styles.primaryText,
         secondary: styles.secondaryText,
     };
-  
+
     return (
         <Pressable onPress={onPress} style={[buttonStyle[type], style]}>
             <Text style={textStyle[type]}>{text}</Text>

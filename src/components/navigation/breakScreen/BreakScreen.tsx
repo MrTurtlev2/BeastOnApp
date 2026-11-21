@@ -1,5 +1,5 @@
 import {useEffect, useRef, useState} from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, Text, View} from 'react-native';
 import Svg, {Circle} from 'react-native-svg';
 import Animated, {cancelAnimation, Easing, useAnimatedProps, useSharedValue, withTiming} from 'react-native-reanimated';
 import notifee, {AndroidImportance, AndroidVisibility} from '@notifee/react-native';
@@ -11,6 +11,7 @@ import {Fonts} from '../../../constants/Fonts';
 import {setAddBreakTimeHandler} from './breakTimerNotificationActions';
 import {useTranslation} from 'react-i18next';
 import {useAppNavigation} from '../../../constants/NavigationInterface';
+import CustomButton from '../../common/cuctomBtn/CustomButton';
 
 const BREAK_DURATION = 20;
 const SIZE = 240;
@@ -263,13 +264,23 @@ const BreakScreen = ({route}: BreakScreenProps) => {
                     </View>
                 </View>
 
-                <TouchableOpacity style={styles.addButton} onPress={() => handleAddTime(30)}>
-                    <Text style={styles.addButtonText}>+30 SEKUND</Text>
-                </TouchableOpacity>
+                <CustomButton
+                    onPress={() => handleAddTime(30)}
+                    text={'+30 SEKUND'}
+                    style={{
+                        position: 'absolute',
+                        top: 600,
+                    }}
+                />
                 {secondsLeft === 0 && (
-                    <TouchableOpacity style={styles.returnButton} onPress={continueWorkout}>
-                        <Text style={styles.returnButtonText}>{isLastSet ? t('exerciseCompleteTitle') : t('returnToExercise')}</Text>
-                    </TouchableOpacity>
+                    <CustomButton
+                        onPress={continueWorkout}
+                        text={isLastSet ? t('exerciseCompleteTitle') : t('returnToExercise')}
+                        style={{
+                            position: 'absolute',
+                            top: 660,
+                        }}
+                    />
                 )}
             </View>
         </Layout>
@@ -280,6 +291,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
+        paddingHorizontal: 20,
     },
     gorilla: {
         position: 'absolute',
@@ -308,32 +320,6 @@ const styles = StyleSheet.create({
     timerSubtitle: {
         fontFamily: Fonts.regular,
         color: Colors.white,
-        fontSize: 16,
-    },
-    addButton: {
-        position: 'absolute',
-        top: 600,
-        backgroundColor: Colors.pink,
-        paddingVertical: 12,
-        paddingHorizontal: 32,
-        borderRadius: 24,
-    },
-    addButtonText: {
-        color: '#FFFFFF',
-        fontFamily: Fonts.Marker,
-        fontSize: 16,
-    },
-    returnButton: {
-        position: 'absolute',
-        top: 660,
-        backgroundColor: Colors.pink,
-        paddingVertical: 12,
-        paddingHorizontal: 28,
-        borderRadius: 24,
-    },
-    returnButtonText: {
-        color: '#FFFFFF',
-        fontFamily: Fonts.Marker,
         fontSize: 16,
     },
 });
