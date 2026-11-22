@@ -25,6 +25,8 @@ export default function LoginScreen() {
     const dispatch = useAppDispatch();
     const [userLogin, setUserLogin] = useState<string>('');
     const [userPassword, setUserPassword] = useState<string>('');
+    const [isLoginLoading, setLoginLoading] = useState<boolean>(false);
+    const [isGoogleLoading, setGoogleLoading] = useState<boolean>(false);
     const powerBtnRef = useRef<ILottiePowerButtonRef>(null);
 
     const setUserData = async (res: IUserLoginState) => {
@@ -40,7 +42,10 @@ export default function LoginScreen() {
     };
 
     const onLogin = async () => {
+        if (isLoginLoading) return;
+        setLoginLoading(true);
         handleLoginAsync(userLogin, userPassword).then(res => {
+            setLoginLoading(false);
             if (!res) {
                 powerBtnRef.current?.resetAnimation();
                 return;
@@ -49,7 +54,10 @@ export default function LoginScreen() {
         });
     };
     const onGoogleLogin = async () => {
+        if (isGoogleLoading) return;
+        setGoogleLoading(true);
         handleGoogleLogin().then(res => {
+            setGoogleLoading(false);
             if (!res) return;
             setUserData(res);
         });
@@ -58,7 +66,7 @@ export default function LoginScreen() {
     useEffect(() => {
         configureGoogleSignIn();
     }, []);
-
+    
     return (
         <Layout hasBurger={false} bgImageType={'left-bottom'} horizontalSpace>
             <View style={style.container}>
@@ -87,10 +95,10 @@ export default function LoginScreen() {
                     secureTextEntry
                     importantForAutofill={'yes'}
                 />
-                <LottiePowerButton onPress={onLogin} ref={powerBtnRef} />
+                <LottiePowerButton onPress={onLogin} ref={powerBtnRef} isLoading={isLoginLoading} />
                 <Separator text={t('loginBy')} />
-                <CircleBtn onPress={onGoogleLogin} icon={<GoogleSvg />} size={80} bgColor={Colors.overlay} />
-                
+                <CircleBtn onPress={onGoogleLogin} icon={<GoogleSvg />} size={80} bgColor={Colors.overlay} isLoading={isGoogleLoading} />
+
                 <Pressable onPress={() => navigation.navigate('Register')} style={style.registerBtn}>
                     <Text style={{color: Colors.pink}}>{t('register')}</Text>
                     <View

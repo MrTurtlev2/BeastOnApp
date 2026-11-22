@@ -3,12 +3,12 @@ import Layout from '../../common/layout/Layout';
 import {Text, View} from 'react-native';
 import LottiePowerButton from '../../common/lottiePowerButton/LottiePowerButton';
 import {styles} from './Style';
-import {useNavigation} from '@react-navigation/native';
 import ClawTitle from '../../common/clawTitle/ClawTitle';
+import {useAppNavigation} from '../../../constants/NavigationInterface';
 
 const MotivationScreen = () => {
     const {t} = useTranslation();
-    const navigation = useNavigation();
+    const navigation = useAppNavigation();
 
     return (
         <Layout hasBurger={false} bgImageType={'top-center'} customStyle={{paddingHorizontal: 20}}>

@@ -67,6 +67,7 @@ export interface ILottiePowerButtonRef {
 export interface ILottiePowerButton {
     onPress: () => void;
     style?: StyleProp<ViewStyle>;
+    isLoading?: boolean;
 }
 
 export interface ICircleBtn {

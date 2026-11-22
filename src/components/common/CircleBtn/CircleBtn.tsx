@@ -8,10 +8,18 @@ export default function CircleBtn({icon, customStyle, onPress, text, isLoading =
         <View style={[style.btnShadow, {width: size, height: size, borderRadius: size / 2}, customStyle]}>
             <TouchableOpacity
                 onPress={onPress}
-                style={[style.main, {width: size, height: size, borderRadius: size / 2}, bgColor && {backgroundColor: bgColor}]}>
-                {icon}
+                style={[
+                    style.main,
+                    {
+                        width: size,
+                        height: size,
+                        borderRadius: size / 2,
+                    },
+                    bgColor && {backgroundColor: bgColor},
+                ]}>
+                {!isLoading && icon}
                 {text && !isLoading && <Text style={[style.text, textColor && {color: textColor}]}>{text}</Text>}
-                {isLoading && <ActivityIndicator size={'large'} color={Colors.white} />}
+                {isLoading && <ActivityIndicator size={'large'} color={Colors.pink} />}
             </TouchableOpacity>
         </View>
     );

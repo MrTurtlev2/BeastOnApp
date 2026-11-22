@@ -1,4 +1,4 @@
-import {Animated, Pressable, Text, View} from 'react-native';
+import {ActivityIndicator, Animated, Pressable, Text, View} from 'react-native';
 import LottieView from 'lottie-react-native';
 import {styles} from './Style';
 import {forwardRef, useImperativeHandle, useRef} from 'react';
@@ -6,7 +6,7 @@ import {LinearGradient} from 'expo-linear-gradient';
 import {Colors} from '../../../constants/Colors';
 import {ILottiePowerButton, ILottiePowerButtonRef} from '../../../constants/interfaces';
 
-const LottiePowerButton = forwardRef<ILottiePowerButtonRef, ILottiePowerButton>(({onPress, style}, ref) => {
+const LottiePowerButton = forwardRef<ILottiePowerButtonRef, ILottiePowerButton>(({onPress, style, isLoading = false}, ref) => {
     const animation = useRef<LottieView>(null);
     const borderColorAnim = useRef(new Animated.Value(0)).current;
 
@@ -36,6 +36,7 @@ const LottiePowerButton = forwardRef<ILottiePowerButtonRef, ILottiePowerButton>(
 
     return (
         <View style={[styles.wrapper, style]}>
+            {/*@ts-ignore*/}
             <LottieView
                 ref={animation}
                 style={styles.lottieView}
@@ -48,7 +49,11 @@ const LottiePowerButton = forwardRef<ILottiePowerButtonRef, ILottiePowerButton>(
                 <Animated.View style={[styles.btnBorder, {backgroundColor: animatedBackgroundColor}]}>
                     <LinearGradient colors={['#282828', '#202020']} style={styles.btnGradientOuter}>
                         <LinearGradient colors={['#202020', '#282828']} style={styles.btnGradient}>
-                            <Text style={styles.btnText}>ON</Text>
+                            {!isLoading ? (
+                                <Text style={styles.btnText}>ON</Text>
+                            ) : (
+                                <ActivityIndicator size={'large'} color={Colors.white} />
+                            )}
                         </LinearGradient>
                     </LinearGradient>
                 </Animated.View>
