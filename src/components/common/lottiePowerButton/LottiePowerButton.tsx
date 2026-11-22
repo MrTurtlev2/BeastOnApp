@@ -9,14 +9,23 @@ import {ILottiePowerButton, ILottiePowerButtonRef} from '../../../constants/inte
 const LottiePowerButton = forwardRef<ILottiePowerButtonRef, ILottiePowerButton>(({onPress, style, isLoading = false}, ref) => {
     const animation = useRef<LottieView>(null);
     const borderColorAnim = useRef(new Animated.Value(0)).current;
+    const isAnimating = useRef(false);
 
     const onButtonPress = () => {
+        if (isAnimating.current) return;
+        isAnimating.current = true;
         animation.current?.play();
         Animated.timing(borderColorAnim, {
             toValue: 1,
             duration: 400,
             useNativeDriver: false,
-        }).start(() => onPress());
+        }).start();
+    };
+
+    const onAnimationFinish = (isCancelled: boolean) => {
+        if (!isAnimating.current) return;
+        isAnimating.current = false;
+        if (!isCancelled) onPress();
     };
 
     useImperativeHandle(ref, () => ({
@@ -44,6 +53,7 @@ const LottiePowerButton = forwardRef<ILottiePowerButtonRef, ILottiePowerButton>(
                 progress={0}
                 autoPlay={false}
                 loop={false}
+                onAnimationFinish={onAnimationFinish}
             />
             <Pressable onPress={onButtonPress} style={styles.btn}>
                 <Animated.View style={[styles.btnBorder, {backgroundColor: animatedBackgroundColor}]}>

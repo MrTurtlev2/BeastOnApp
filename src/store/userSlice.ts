@@ -12,7 +12,7 @@ const userSlice = createSlice({
     initialState,
     reducers: {
         setUser(state, action: PayloadAction<IUserLoginState>) {
-            console.log(action?.payload);
+            // console.log(action?.payload);
             state.userData = action?.payload?.user;
             state.accessToken = action?.payload?.accessToken;
             state.isLoggedIn = true;

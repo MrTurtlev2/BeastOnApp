@@ -10,7 +10,6 @@ import outboxSlice from './outboxSlice';
 const persistConfig = {
     key: 'root',
     storage: mmkvStorage,
-
     whitelist: ['user', 'trainingPlans', 'outbox'],
 };
 
