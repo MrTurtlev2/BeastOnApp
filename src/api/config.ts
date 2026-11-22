@@ -5,7 +5,8 @@ import * as SecureStore from 'expo-secure-store';
 import {clearUser, setAccessToken} from '../store/userSlice';
 import store from '../store';
 
-export const baseAppUrl: string = 'http://192.168.0.41:8080';
+// export const baseAppUrl: string = 'http://192.168.0.41:8080';
+export const baseAppUrl: string = process.env.EXPO_PUBLIC_BASE_URL;
 
 const api = axios.create({
     baseURL: baseAppUrl,
