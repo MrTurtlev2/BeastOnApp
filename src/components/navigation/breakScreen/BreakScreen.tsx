@@ -260,7 +260,7 @@ const BreakScreen = ({route}: BreakScreenProps) => {
 
                     <View style={styles.timerContent}>
                         <Text style={styles.timer}>{formattedTime}</Text>
-                        <Text style={styles.timerSubtitle}>PRZERWA</Text>
+                        <Text style={styles.timerSubtitle}>{t('break').toLocaleUpperCase()}</Text>
                     </View>
                 </View>
 

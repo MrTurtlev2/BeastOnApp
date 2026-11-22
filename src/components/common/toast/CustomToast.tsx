@@ -3,6 +3,7 @@ import {LinearGradient} from 'expo-linear-gradient';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import {customToastStyles, TOAST_CONFIG} from './Style';
 import {Colors} from '../../../constants/Colors';
+import {useTranslation} from 'react-i18next';
 
 interface ICustomToast {
     text1: string;
@@ -11,6 +12,7 @@ interface ICustomToast {
 
 const CustomToast = ({type = 'info', text1}: ICustomToast) => {
     const config = TOAST_CONFIG[type] || TOAST_CONFIG.info;
+    const {t} = useTranslation();
     const {icon, title, mainColor, secondaryColor} = config;
 
     const colors = [mainColor, mainColor, secondaryColor, secondaryColor];
@@ -26,8 +28,8 @@ const CustomToast = ({type = 'info', text1}: ICustomToast) => {
                     <FontAwesome6 name={icon} size={30} color={Colors.white} />
                 </View>
                 <View style={customToastStyles.textContainer}>
-                    <Text style={customToastStyles.title}>{title || 'Brak wiadomości.'}</Text>
-                    <Text style={customToastStyles.message}>{text1?.replace(/;/g, '\n') || 'Brak wiadomości. Sprawdź konfigurację.'}</Text>
+                    <Text style={customToastStyles.title}>{t(title || 'toastInfo')}</Text>
+                    <Text style={customToastStyles.message}>{text1?.replace(/;/g, '\n') || t('toastFallbackMessage')}</Text>
                 </View>
             </View>
         </LinearGradient>

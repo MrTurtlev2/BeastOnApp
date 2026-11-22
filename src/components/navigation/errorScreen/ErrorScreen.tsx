@@ -15,7 +15,7 @@ const ErrorScreen = () => {
         <Layout bgImageType={'none'} hasBurger={false} customStyle={{paddingTop: 40}}>
             {/*<Image style={style.bgImage} source={ErrorImage} />*/}
             <ErrorPinSvg />
-            <Text style={style.errorText}>ERROR</Text>
+            <Text style={style.errorText}>{i18n.t('toastError')}</Text>
             <Text style={style.infoText}>{i18n.t('baseErrorText')}</Text>
             <Text style={style.infoText}>{message}</Text>
             <CircleBtn onPress={() => null} icon={<RetrySvg />} />

@@ -3,6 +3,7 @@ import {useCallback} from 'react';
 import {ListRenderItem, StyleSheet, Text, View} from 'react-native';
 import {ITrainingPlan} from '../../../../../constants/interfaces';
 import {Colors} from '../../../../../constants/Colors';
+import {useTranslation} from 'react-i18next';
 
 type TrainingSelectBottomSheetProps = {
     trainings: ITrainingPlan[];
@@ -10,6 +11,7 @@ type TrainingSelectBottomSheetProps = {
 };
 
 const TrainingSelectBottomSheet = ({trainings, onSelectTraining}: TrainingSelectBottomSheetProps) => {
+    const {t} = useTranslation();
     const renderItem: ListRenderItem<ITrainingPlan> = useCallback(
         ({item}) => {
             return (
@@ -26,10 +28,10 @@ const TrainingSelectBottomSheet = ({trainings, onSelectTraining}: TrainingSelect
     const renderEmptyComponent = useCallback(
         () => (
             <View style={styles.emptyContainer}>
-                <Text style={styles.emptyText}>No trainings available</Text>
+                <Text style={styles.emptyText}>{t('noTrainingsAvailable')}</Text>
             </View>
         ),
-        [],
+        [t],
     );
 
     return (

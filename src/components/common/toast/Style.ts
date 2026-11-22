@@ -5,19 +5,19 @@ import {Colors} from '../../../constants/Colors';
 export const TOAST_CONFIG = {
     error: {
         icon: 'xmark',
-        title: 'ERROR',
+        title: 'toastError',
         mainColor: '#E03F52',
         secondaryColor: Colors.bgGrey,
     },
     success: {
         icon: 'check',
-        title: 'SUKCES',
+        title: 'toastSuccess',
         mainColor: '#4CAF50',
         secondaryColor: Colors.bgGrey,
     },
     info: {
         icon: 'info',
-        title: 'INFO',
+        title: 'toastInfo',
         mainColor: '#654CD2',
         secondaryColor: Colors.bgGrey,
     },

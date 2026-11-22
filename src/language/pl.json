@@ -50,5 +50,21 @@
   "exerciseCompleteTitle": "Ćwiczenie ukończone!",
   "exerciseCompleteDesc": "Świetna robota. Wszystkie serie za Tobą.",
   "finishWorkout": "Zakończ trening",
-  "returnToExercise": "Wracam do ćwiczeń"
+  "returnToExercise": "Wracam do ćwiczeń",
+  "saveWorkoutQuestion": "ZAPISAĆ TRENING?",
+  "confirmSaveWorkout": "Czy na pewno chcesz zapisać ten trening?",
+  "save": "ZAPISZ",
+  "settings": "Ustawienia",
+  "myAccount": "Moje konto",
+  "logOut": "Wyloguj się",
+  "noTrainingsAvailable": "Brak dostępnych treningów",
+  "setCompleted": "zaliczona",
+  "setCurrent": "aktualna",
+  "setPending": "oczekująca",
+  "setAccessibilityLabel": "Seria {{index}}, {{repetitions}} powtórzeń, {{weight}} kilogramów, {{status}}",
+  "repetitionsShort": "powt.",
+  "toastError": "BŁĄD",
+  "toastSuccess": "SUKCES",
+  "toastInfo": "INFO",
+  "toastFallbackMessage": "Brak wiadomości. Sprawdź konfigurację."
 }

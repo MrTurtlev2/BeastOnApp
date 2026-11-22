@@ -6,5 +6,21 @@
   "thursdayShort": "thu",
   "fridayShort": "fri",
   "saturdayShort": "sat",
-  "sundayShort": "sun"
+  "sundayShort": "sun",
+  "saveWorkoutQuestion": "SAVE WORKOUT?",
+  "confirmSaveWorkout": "Are you sure you want to save this workout?",
+  "save": "SAVE",
+  "settings": "Settings",
+  "myAccount": "My account",
+  "logOut": "Log out",
+  "noTrainingsAvailable": "No workouts available",
+  "setCompleted": "completed",
+  "setCurrent": "current",
+  "setPending": "upcoming",
+  "setAccessibilityLabel": "Set {{index}}, {{repetitions}} reps, {{weight}} kilograms, {{status}}",
+  "repetitionsShort": "reps",
+  "toastError": "ERROR",
+  "toastSuccess": "SUCCESS",
+  "toastInfo": "INFO",
+  "toastFallbackMessage": "No message. Check the configuration."
 }

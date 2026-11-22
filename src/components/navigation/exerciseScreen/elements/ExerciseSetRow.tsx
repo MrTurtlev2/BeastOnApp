@@ -5,6 +5,7 @@ import {Ionicons} from '@expo/vector-icons';
 import {Colors} from '../../../../constants/Colors';
 import {Fonts} from '../../../../constants/Fonts';
 import type {IExerciseSet} from '../../../../constants/interfaces';
+import {useTranslation} from 'react-i18next';
 
 interface IExerciseSetRow {
     set: IExerciseSet;
@@ -14,13 +15,14 @@ interface IExerciseSetRow {
 }
 
 const ExerciseSetRow = memo(({set, index, isActive, isCompleted}: IExerciseSetRow) => {
-    const status = isCompleted ? 'zaliczona' : isActive ? 'aktualna' : 'oczekująca';
+    const {t} = useTranslation();
+    const status = isCompleted ? t('setCompleted') : isActive ? t('setCurrent') : t('setPending');
 
     return (
         <View
             accessible
             accessibilityRole="summary"
-            accessibilityLabel={`Seria ${index + 1}, ${set.repetitions} powtórzeń, ${set.weight} kilogramów, ${status}`}
+            accessibilityLabel={t('setAccessibilityLabel', {index: index + 1, repetitions: set.repetitions, weight: set.weight, status})}
             style={[styles.row, isActive && styles.activeRow]}>
             {isActive && <View style={styles.focusBar} />}
 
@@ -28,7 +30,7 @@ const ExerciseSetRow = memo(({set, index, isActive, isCompleted}: IExerciseSetRo
                 <Text style={[styles.number, isActive && styles.activeNumber]}>{index + 1}</Text>
             </View>
 
-            <Text style={styles.repetitions}>{set.repetitions} powt.</Text>
+            <Text style={styles.repetitions}>{set.repetitions} {t('repetitionsShort')}</Text>
             <Text style={styles.weight}>{set.weight} kg</Text>
 
             <View style={[styles.statusCircle, isCompleted && styles.completedCircle]}>

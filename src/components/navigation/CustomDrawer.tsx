@@ -5,10 +5,12 @@ import {Fonts} from '../../constants/Fonts';
 import {Colors} from '../../constants/Colors';
 import * as SecureStore from 'expo-secure-store';
 import {useAppDispatch} from '../../store';
+import {useTranslation} from 'react-i18next';
 
 export default function CustomDrawer(props: any) {
     const {navigation} = props;
     const appDispatch = useAppDispatch();
+    const {t} = useTranslation();
     const logout = async () => {
         await SecureStore.deleteItemAsync('userToken');
         await SecureStore.deleteItemAsync('refreshToken');
@@ -22,14 +24,12 @@ export default function CustomDrawer(props: any) {
                 <BurgerSvg />
             </TouchableOpacity>
             <View style={styles.container}>
-                <Text style={styles.itemText}>Ustawienia</Text>
+                <Text style={styles.itemText}>{t('settings')}</Text>
                 <View style={styles.separator} />
-                <Text style={styles.itemText}>Moje konto</Text>
-                <View style={styles.separator} />
-                <Text style={styles.itemText}>Moje konto</Text>
+                <Text style={styles.itemText}>{t('myAccount')}</Text>
                 <View style={styles.separator} />
                 <TouchableOpacity onPress={logout}>
-                    <Text style={styles.itemText}>wyloguj sie</Text>
+                    <Text style={styles.itemText}>{t('logOut')}</Text>
                 </TouchableOpacity>
             </View>
         </View>

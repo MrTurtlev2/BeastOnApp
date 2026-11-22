@@ -1,21 +1,23 @@
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {BlurView} from 'expo-blur';
 import {useNavigation} from '@react-navigation/native';
+import {useTranslation} from 'react-i18next';
 
 const CustomModalScreen = () => {
     const navigation = useNavigation();
+    const {t} = useTranslation();
     return (
         <View style={styles.container}>
             <BlurView intensity={50} tint="dark" experimentalBlurMethod="dither" style={StyleSheet.absoluteFill} />
             <View style={styles.modalContent}>
-                <Text style={styles.title}>PYTANKO...?</Text>
-                <Text style={styles.subtitle}>Czy na pewno chcesz zapisać ten trening?</Text>
+                <Text style={styles.title}>{t('saveWorkoutQuestion')}</Text>
+                <Text style={styles.subtitle}>{t('confirmSaveWorkout')}</Text>
                 <View style={styles.buttonRow}>
                     <Pressable onPress={() => navigation.goBack()}>
                         <Text style={{color: 'red', fontSize: 20}}>X</Text>
                     </Pressable>
                     <Pressable>
-                        <Text>ZAPISZ</Text>
+                        <Text>{t('save')}</Text>
                     </Pressable>
                 </View>
             </View>
