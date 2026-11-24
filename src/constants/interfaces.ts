@@ -57,6 +57,7 @@ export interface ITrainingPlansState {
 export interface IHomeEmptyListComponent {
     onCreatePlan: () => void;
     onAssignPlan: () => void;
+    hasNoPlansAtAll: boolean;
 }
 
 export interface ILottiePowerButtonRef {

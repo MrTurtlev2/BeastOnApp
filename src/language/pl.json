@@ -66,5 +66,11 @@
   "toastError": "BŁĄD",
   "toastSuccess": "SUKCES",
   "toastInfo": "INFO",
-  "toastFallbackMessage": "Brak wiadomości. Sprawdź konfigurację."
+  "toastFallbackMessage": "Brak wiadomości. Sprawdź konfigurację.",
+  "yourPlans": "Twoje plany",
+  "createNewPlan": "Utwórz nowy plan",
+  "startTrainingAdventure": "Zacznij swoją przygodę z treningiem",
+  "pickExistingPlan": "Wybierz stworzony wcześniej plan",
+  "noPlansYet": "Nie masz jeszcze żadnych planów",
+  "createFirstTrainingPlan": "'Utwórz swój pierwszy plan treningowy i osiągaj swoje cele"
 }

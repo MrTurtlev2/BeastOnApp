@@ -124,7 +124,6 @@ export default function HomeScreen() {
         ),
         [],
     );
-
     return (
         <Layout hasBurger>
             <SyncDebugModal />
@@ -135,7 +134,7 @@ export default function HomeScreen() {
                 renderItem={renderExerciseItem}
                 ListEmptyComponent={
                     <HomeEmptyListComponent
-                        // customerName={user?.customerName}
+                        hasNoPlansAtAll={!trainingPlans?.length}
                         onCreatePlan={onCreatePlan}
                         onAssignPlan={openSelectTrainingPanel}
                     />
