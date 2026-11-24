@@ -7,6 +7,8 @@ export default function CircleBtn({icon, customStyle, onPress, text, isLoading =
     return (
         <View style={[style.btnShadow, {width: size, height: size, borderRadius: size / 2}, customStyle]}>
             <TouchableOpacity
+                disabled={!onPress}
+                activeOpacity={onPress ? 0.2 : 1}
                 onPress={onPress}
                 style={[
                     style.main,

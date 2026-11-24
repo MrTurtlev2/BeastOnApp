@@ -135,7 +135,7 @@ export default function HomeScreen() {
                 renderItem={renderExerciseItem}
                 ListEmptyComponent={
                     <HomeEmptyListComponent
-                        customerName={user?.customerName}
+                        // customerName={user?.customerName}
                         onCreatePlan={onCreatePlan}
                         onAssignPlan={openSelectTrainingPanel}
                     />

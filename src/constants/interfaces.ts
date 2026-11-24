@@ -55,7 +55,6 @@ export interface ITrainingPlansState {
 }
 
 export interface IHomeEmptyListComponent {
-    customerName: string;
     onCreatePlan: () => void;
     onAssignPlan: () => void;
 }
@@ -74,7 +73,7 @@ export interface ICircleBtn {
     customStyle?: StyleProp<any>;
     icon?: any;
     text?: string;
-    onPress: () => void;
+    onPress?: () => void;
     isLoading?: boolean;
     textColor?: string;
     bgColor?: string;

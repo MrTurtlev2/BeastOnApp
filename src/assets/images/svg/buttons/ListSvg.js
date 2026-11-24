@@ -3,7 +3,13 @@ import Svg, {Path} from 'react-native-svg';
 
 function ListSvg(props) {
     return (
-        <Svg width={52} height={47} viewBox="0 0 52 47" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+        <Svg
+            width={props?.width ?? 52}
+            height={props?.height ?? 47}
+            viewBox="0 0 52 47"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            {...props}>
             <Path
                 fillRule="evenodd"
                 clipRule="evenodd"
