@@ -1,6 +1,6 @@
 import {useTranslation} from 'react-i18next';
 import Layout from '../../common/layout/Layout';
-import {Pressable, Text, View} from 'react-native';
+import {Pressable, ScrollView, Text, View} from 'react-native';
 import CustomInput from '../../common/customInput/CustomInput';
 import {configureGoogleSignIn, handleGoogleLogin, handleLoginAsync} from '../../../api/Auth';
 import {setUser} from '../../../store/userSlice';
@@ -66,10 +66,10 @@ export default function LoginScreen() {
     useEffect(() => {
         configureGoogleSignIn();
     }, []);
-    
+
     return (
         <Layout hasBurger={false} bgImageType={'left-bottom'} horizontalSpace>
-            <View style={style.container}>
+            <ScrollView contentContainerStyle={style.container} showsVerticalScrollIndicator={false}>
                 <ClawTitle text={'BeastMode'} type={'heading'} style={{height: 200}} />
                 <CustomInput
                     value={userLogin}
@@ -109,7 +109,7 @@ export default function LoginScreen() {
                         }}
                     />
                 </Pressable>
-            </View>
+            </ScrollView>
         </Layout>
     );
 }
