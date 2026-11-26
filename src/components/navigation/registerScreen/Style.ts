@@ -13,6 +13,15 @@ export const styles = StyleSheet.create({
         marginBottom: 20,
     },
     repeatPasswordInput: {
-        marginBottom: 60,
+        marginBottom: 40,
+    },
+    validatorCard: {
+        backgroundColor: 'rgba(24, 24, 26, 0.7)',
+        borderRadius: 12,
+        borderWidth: 1,
+        borderColor: 'rgba(255, 255, 255, 0.07)',
+        padding: 16,
+        marginBottom: 50,
+        width: '100%',
     },
 });

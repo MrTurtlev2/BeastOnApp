@@ -8,7 +8,7 @@ const text: TextStyle = {
     fontFamily: Fonts.bold,
 };
 const button: ViewStyle = {
-    borderRadius: 50,
+    borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 10,
@@ -26,11 +26,12 @@ export const styles = StyleSheet.create({
             width: 2,
             height: 3,
         },
-        // backgroundColor: '#333',
         ...simpleShadow,
     },
     secondaryMain: {
         ...button,
+        borderWidth: 1,
+        borderColor: Colors.pink,
     },
     primaryText: {
         ...text,

@@ -19,6 +19,7 @@ import ClawTitle from '../../common/clawTitle/ClawTitle';
 import {useRegistrationForm} from './hooks/useRegistrationForm';
 import RegisterFormValidator from './components/RegisterFormValidator';
 import LayoutScroll from '../../common/layoutScroll/LayoutScroll';
+import EnergyBlocks from './components/elements/EnergyBlock';
 
 const RegisterScreen = () => {
     const {t} = useTranslation();
@@ -52,10 +53,19 @@ const RegisterScreen = () => {
         });
     };
 
+    const validationItems = [
+        {key: 'email', isValid: formValidator.isEmailValid, text: t('emailValid')},
+        {key: 'minLen', isValid: formValidator.hasMinLength, text: t('passwordMinLen')},
+        {key: 'number', isValid: formValidator.hasNumber, text: t('passwordHasNumber')},
+        {key: 'special', isValid: formValidator.hasSpecialChar, text: t('passwordHasSpecialLetter')},
+        {key: 'uppercase', isValid: formValidator.hasUppercase, text: t('passwordHasUppercase')},
+        {key: 'same', isValid: formValidator.isPasswordSame, text: t('passwordsAreTheSame')},
+    ];
+    const activeCount = validationItems.filter(item => item.isValid).length;
+
     useEffect(() => {
         configureGoogleSignIn();
     }, []);
-
     return (
         <Layout hasBackArrow={true} bgImageType={'left-bottom'}>
             <LayoutScroll>
@@ -97,14 +107,14 @@ const RegisterScreen = () => {
                         secureTextEntry
                         importantForAutofill={'yes'}
                     />
-                    <View style={{marginBottom: 50}}>
-                        <RegisterFormValidator isValid={formValidator.isEmailValid} text={t('emailValid')} />
-                        <RegisterFormValidator isValid={formValidator.hasMinLength} text={t('passwordMinLen')} />
-                        <RegisterFormValidator isValid={formValidator.hasNumber} text={t('passwordHasNumber')} />
-                        <RegisterFormValidator isValid={formValidator.hasSpecialChar} text={t('passwordHasSpecialLetter')} />
-                        <RegisterFormValidator isValid={formValidator.hasUppercase} text={t('passwordHasUppercase')} />
-                        <RegisterFormValidator isValid={formValidator.isPasswordSame} text={t('passwordsAreTheSame')} />
+
+                    <View style={styles.validatorCard}>
+                        <EnergyBlocks total={validationItems.length} activeCount={activeCount} />
+                        {validationItems.map(item => (
+                            <RegisterFormValidator key={item.key} isValid={item.isValid} text={item.text} />
+                        ))}
                     </View>
+
                     <LottiePowerButton onPress={onRegister} ref={powerBtnRef} />
                     <Separator text={t('registerBy')} />
                     <CircleBtn onPress={onGoogleLogin} icon={<GoogleSvg />} size={80} bgColor={Colors.overlay} />

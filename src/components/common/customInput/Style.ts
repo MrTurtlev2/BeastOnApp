@@ -8,7 +8,7 @@ export const Styles = (size: 'small' | 'default' = 'default') => {
             flexDirection: 'row',
             alignItems: 'center',
             backgroundColor: '#1E1E1E',
-            borderRadius: 30,
+            borderRadius: 10,
             paddingHorizontal: size === 'small' ? 10 : 20,
             paddingVertical: 8,
             marginVertical: 10,
@@ -20,7 +20,6 @@ export const Styles = (size: 'small' | 'default' = 'default') => {
         icon: {
             marginRight: 12,
             position: 'absolute',
-            top: -15,
             left: 20,
         },
         input: {
