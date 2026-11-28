@@ -24,4 +24,12 @@ export const styles = StyleSheet.create({
         marginBottom: 50,
         width: '100%',
     },
+    clawMarkValidation: {
+        width: 120,
+        height: 120,
+        position: 'absolute',
+        bottom: 0,
+        right: 0,
+        opacity: 0.3,
+    },
 });

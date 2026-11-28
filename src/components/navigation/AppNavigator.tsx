@@ -19,7 +19,6 @@ import {
 } from './RootNavigation';
 import {Colors} from '../../constants/Colors';
 import AddPlanScreen from './addPlanScreen/AddPlanScreen';
-import CustomModalScreen from './customModalScreen/CustomModalScreen';
 import ExerciseScreen from './exerciseScreen/ExerciseScreen';
 import BreakScreen from './breakScreen/BreakScreen';
 
@@ -91,16 +90,6 @@ const RootAppNavigator = () => {
         <RootStack.Navigator screenOptions={{headerShown: false}}>
             <RootStack.Screen name="AppRoot">{() => (isUserLoggedIn ? <MainNavigator /> : <AuthNavigator />)}</RootStack.Screen>
             <RootStack.Screen name="ErrorScreen" component={ErrorScreen} />
-            <RootStack.Screen
-                name="CustomModalScreen"
-                component={CustomModalScreen}
-                options={{
-                    headerShown: false,
-                    animation: 'fade',
-                    presentation: 'transparentModal',
-                    contentStyle: {backgroundColor: 'transparent'},
-                }}
-            />
         </RootStack.Navigator>
     );
 };

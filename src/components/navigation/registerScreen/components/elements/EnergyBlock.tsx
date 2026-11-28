@@ -35,7 +35,6 @@ const EnergyBlock = ({isActive}: {isActive: boolean}) => {
                 {
                     backgroundColor,
                     transform: [{skewX: '-16deg'}, {scale}],
-                    boxShadow: isActive ? '0 0 10px rgba(208, 76, 99, 0.65)' : 'inset 0 1px 2px rgba(0, 0, 0, 0.5)',
                 },
             ]}
         />

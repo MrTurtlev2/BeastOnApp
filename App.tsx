@@ -25,11 +25,12 @@ notifee.onBackgroundEvent(async ({type, detail}) => {
     if (type === EventType.ACTION_PRESS && detail.pressAction?.id === 'add_30s') {
         await handleAddBreakTimeAction();
     }
-
     if (type === EventType.PRESS && detail.notification?.data?.destination === 'ExerciseScreen') {
+        // @ts-ignore
         navigateToExerciseFromNotification(detail.notification.data);
     }
     if (type === EventType.PRESS && detail.notification?.data?.destination === 'BreakScreen') {
+        // @ts-ignore
         navigateToBreakFromNotification(detail.notification.data);
     }
 });
@@ -79,7 +80,7 @@ export default function App() {
             try {
                 await handleAutoLogin();
                 await registerBackgroundTasks();
-                triggerSync();
+                await triggerSync();
             } catch (e) {
                 console.log('Auto login skipped', e);
             }
@@ -105,8 +106,10 @@ export default function App() {
                 <BottomSheetModalProvider>
                     <Provider store={store}>
                         <PersistGate loading={null} persistor={persistor}>
-                            <MainNavigator />
-                            <ToastManager config={toastConfig} />
+                            <KeyboardProvider>
+                                <MainNavigator />
+                                <ToastManager config={toastConfig} />
+                            </KeyboardProvider>
                         </PersistGate>
                     </Provider>
                 </BottomSheetModalProvider>

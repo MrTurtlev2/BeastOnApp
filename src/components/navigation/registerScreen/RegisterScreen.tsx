@@ -7,7 +7,7 @@ import {setUser} from '../../../store/userSlice';
 import {loadTrainingPlans} from '../../../store/trainingPlansSlice';
 import {configureGoogleSignIn, handleGoogleLogin, handleRegisterAsync} from '../../../api/Auth';
 import Layout from '../../common/layout/Layout';
-import {View} from 'react-native';
+import {Image, View} from 'react-native';
 import CustomInput from '../../common/customInput/CustomInput';
 import LottiePowerButton from '../../common/lottiePowerButton/LottiePowerButton';
 import Separator from '../../common/separator/Separator';
@@ -20,6 +20,7 @@ import {useRegistrationForm} from './hooks/useRegistrationForm';
 import RegisterFormValidator from './components/RegisterFormValidator';
 import LayoutScroll from '../../common/layoutScroll/LayoutScroll';
 import EnergyBlocks from './components/elements/EnergyBlock';
+import ClawMarksBg from '../../../assets/images/png/common/claw-marks-bg.png';
 
 const RegisterScreen = () => {
     const {t} = useTranslation();
@@ -30,13 +31,25 @@ const RegisterScreen = () => {
     const powerBtnRef = useRef<ILottiePowerButtonRef>(null);
 
     const formValidator = useRegistrationForm(userEmail, userPassword, userRepeatedPassword);
-
+    const validationItems = [
+        {key: 'email', isValid: formValidator.isEmailValid, text: t('emailValid')},
+        {key: 'minLen', isValid: formValidator.hasMinLength, text: t('passwordMinLen')},
+        {key: 'number', isValid: formValidator.hasNumber, text: t('passwordHasNumber')},
+        {key: 'special', isValid: formValidator.hasSpecialChar, text: t('passwordHasSpecialLetter')},
+        {key: 'uppercase', isValid: formValidator.hasUppercase, text: t('passwordHasUppercase')},
+        {key: 'same', isValid: formValidator.isPasswordSame, text: t('passwordsAreTheSame')},
+    ];
     const setUserData = (res: IUserLoginState) => {
         dispatch(setUser(res));
         dispatch(loadTrainingPlans());
     };
 
     const onRegister = async () => {
+        const isFormValid = validationItems.every(validator => validator.isValid === true);
+        if (!isFormValid) {
+            powerBtnRef.current.resetAnimation();
+            return;
+        }
         handleRegisterAsync(userEmail, userPassword).then(res => {
             if (!res) {
                 powerBtnRef.current?.resetAnimation();
@@ -53,14 +66,6 @@ const RegisterScreen = () => {
         });
     };
 
-    const validationItems = [
-        {key: 'email', isValid: formValidator.isEmailValid, text: t('emailValid')},
-        {key: 'minLen', isValid: formValidator.hasMinLength, text: t('passwordMinLen')},
-        {key: 'number', isValid: formValidator.hasNumber, text: t('passwordHasNumber')},
-        {key: 'special', isValid: formValidator.hasSpecialChar, text: t('passwordHasSpecialLetter')},
-        {key: 'uppercase', isValid: formValidator.hasUppercase, text: t('passwordHasUppercase')},
-        {key: 'same', isValid: formValidator.isPasswordSame, text: t('passwordsAreTheSame')},
-    ];
     const activeCount = validationItems.filter(item => item.isValid).length;
 
     useEffect(() => {
@@ -68,7 +73,7 @@ const RegisterScreen = () => {
     }, []);
     return (
         <Layout hasBackArrow={true} bgImageType={'left-bottom'}>
-            <LayoutScroll>
+            <LayoutScroll type={'keyboard-aware'}>
                 <View style={styles.header}>
                     <ClawTitle text={'BeastMode'} type={'heading'} style={{height: 200}} />
                     <CustomInput
@@ -113,6 +118,7 @@ const RegisterScreen = () => {
                         {validationItems.map(item => (
                             <RegisterFormValidator key={item.key} isValid={item.isValid} text={item.text} />
                         ))}
+                        <Image source={ClawMarksBg} style={styles.clawMarkValidation} />
                     </View>
 
                     <LottiePowerButton onPress={onRegister} ref={powerBtnRef} />
